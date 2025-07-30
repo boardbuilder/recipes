@@ -2248,23 +2248,23 @@
         }
 
         function createMultiIngredientRecipe(ingredients, restrictions) {
-            const mainIngredient = ingredients[0];
-            const secondaryIngredients = ingredients.slice(1);
+            // Include ALL ingredients in the recipe, not just the first one
+            const allIngredients = ingredients.map(ing => ing.toLowerCase());
             
             let recipeTitle, description, additionalIngredients, instructions, calories;
             
             // Determine recipe type based on ingredients
-            const hasProtein = ingredients.some(i => ['chicken', 'beef', 'pork', 'fish', 'salmon', 'tuna', 'shrimp', 'tofu', 'lamb', 'turkey'].includes(i.toLowerCase()));
-            const hasVegetables = ingredients.some(i => ['carrot', 'broccoli', 'spinach', 'tomato', 'onion', 'pepper', 'mushroom', 'zucchini', 'cucumber', 'lettuce', 'celery', 'potato', 'sweet potato'].includes(i.toLowerCase()));
-            const hasGrains = ingredients.some(i => ['rice', 'pasta', 'quinoa', 'bread', 'noodles', 'couscous'].includes(i.toLowerCase()));
-            const hasFruits = ingredients.some(i => ['apple', 'banana', 'orange', 'strawberry', 'blueberry', 'mango', 'pineapple'].includes(i.toLowerCase()));
+            const hasProtein = allIngredients.some(i => ['chicken', 'beef', 'pork', 'fish', 'salmon', 'tuna', 'shrimp', 'tofu', 'lamb', 'turkey'].includes(i));
+            const hasVegetables = allIngredients.some(i => ['carrot', 'broccoli', 'spinach', 'tomato', 'onion', 'pepper', 'mushroom', 'zucchini', 'cucumber', 'lettuce', 'celery', 'potato', 'sweet potato'].includes(i));
+            const hasGrains = allIngredients.some(i => ['rice', 'pasta', 'quinoa', 'bread', 'noodles', 'couscous'].includes(i));
+            const hasFruits = allIngredients.some(i => ['apple', 'banana', 'orange', 'strawberry', 'blueberry', 'mango', 'pineapple'].includes(i));
             
             if (hasProtein && hasVegetables) {
-                recipeTitle = `${mainIngredient} Stir-Fry with ${secondaryIngredients.join(', ')}`;
-                description = `A delicious stir-fry combining your ingredients with Asian flavors`;
+                recipeTitle = `${ingredients[0]} Stir-Fry with ${ingredients.slice(1).join(', ')}`;
+                description = `A delicious stir-fry combining all your ingredients with Asian flavors`;
                 additionalIngredients = [
-                    { item: mainIngredient, amount: '1', unit: 'pound' },
-                    ...secondaryIngredients.map(ing => ({ item: ing, amount: '1', unit: 'cup' })),
+                    // Include ALL user ingredients
+                    ...ingredients.map(ing => ({ item: ing, amount: '1', unit: hasProtein && allIngredients.includes(ing.toLowerCase()) ? 'pound' : 'cup' })),
                     { item: 'soy sauce', amount: '3', unit: 'tablespoons' },
                     { item: 'sesame oil', amount: '1', unit: 'tablespoon' },
                     { item: 'garlic', amount: '3', unit: 'cloves' },
@@ -2274,18 +2274,18 @@
                 instructions = [
                     'Heat vegetable oil in a large wok or skillet over high heat',
                     'Add minced garlic and ginger, cook for 30 seconds',
-                    `Add ${mainIngredient} and stir-fry for 3-4 minutes`,
-                    `Add ${secondaryIngredients.join(', ')} and continue cooking for 2-3 minutes`,
+                    `Add ${ingredients[0]} and stir-fry for 3-4 minutes`,
+                    `Add ${ingredients.slice(1).join(', ')} and continue cooking for 2-3 minutes`,
                     'Add soy sauce and sesame oil, cook for 1 minute',
                     'Serve hot with steamed rice'
                 ];
                 calories = '320 calories per serving';
             } else if (hasGrains && hasVegetables) {
-                recipeTitle = `${mainIngredient} Bowl with ${secondaryIngredients.join(', ')}`;
-                description = `A healthy grain bowl featuring your ingredients`;
+                recipeTitle = `${ingredients[0]} Bowl with ${ingredients.slice(1).join(', ')}`;
+                description = `A healthy grain bowl featuring all your ingredients`;
                 additionalIngredients = [
-                    { item: mainIngredient, amount: '2', unit: 'cups' },
-                    ...secondaryIngredients.map(ing => ({ item: ing, amount: '1', unit: 'cup' })),
+                    // Include ALL user ingredients
+                    ...ingredients.map(ing => ({ item: ing, amount: '1', unit: 'cup' })),
                     { item: 'olive oil', amount: '2', unit: 'tablespoons' },
                     { item: 'lemon', amount: '1', unit: 'whole' },
                     { item: 'garlic', amount: '2', unit: 'cloves' },
@@ -2297,17 +2297,17 @@
                     'Meanwhile, prepare vegetables and chop herbs',
                     'Heat olive oil in a large skillet over medium heat',
                     'Add garlic and cook for 1 minute until fragrant',
-                    `Add ${secondaryIngredients.join(', ')} and cook for 3-4 minutes`,
+                    `Add ${ingredients.slice(1).join(', ')} and cook for 3-4 minutes`,
                     'Combine with cooked grains and fresh herbs',
                     'Squeeze lemon juice over and season to taste'
                 ];
                 calories = '280 calories per serving';
             } else if (hasFruits && hasGrains) {
-                recipeTitle = `${mainIngredient} and ${secondaryIngredients.join(', ')} Breakfast Bowl`;
-                description = `A nutritious breakfast bowl combining grains and fruits`;
+                recipeTitle = `${ingredients[0]} and ${ingredients.slice(1).join(', ')} Breakfast Bowl`;
+                description = `A nutritious breakfast bowl combining all your ingredients`;
                 additionalIngredients = [
-                    { item: mainIngredient, amount: '2', unit: 'cups' },
-                    ...secondaryIngredients.map(ing => ({ item: ing, amount: '1', unit: 'cup' })),
+                    // Include ALL user ingredients
+                    ...ingredients.map(ing => ({ item: ing, amount: '1', unit: 'cup' })),
                     { item: 'honey', amount: '2', unit: 'tablespoons' },
                     { item: 'cinnamon', amount: '1', unit: 'teaspoon' },
                     { item: 'vanilla extract', amount: '1', unit: 'teaspoon' },
@@ -2318,17 +2318,17 @@
                     'Cook grains according to package directions',
                     'Meanwhile, prepare and chop fruits',
                     'Combine cooked grains with honey, cinnamon, and vanilla',
-                    `Add ${secondaryIngredients.join(', ')} and gently fold in`,
+                    `Add ${ingredients.slice(1).join(', ')} and gently fold in`,
                     'Top with nuts and serve with milk',
                     'Enjoy as a healthy breakfast or snack'
                 ];
                 calories = '220 calories per serving';
             } else {
-                recipeTitle = `${mainIngredient} and ${secondaryIngredients.join(', ')} Medley`;
+                recipeTitle = `${ingredients[0]} and ${ingredients.slice(1).join(', ')} Medley`;
                 description = `A flavorful dish combining all your ingredients`;
                 additionalIngredients = [
-                    { item: mainIngredient, amount: '2', unit: 'cups' },
-                    ...secondaryIngredients.map(ing => ({ item: ing, amount: '1', unit: 'cup' })),
+                    // Include ALL user ingredients
+                    ...ingredients.map(ing => ({ item: ing, amount: '1', unit: 'cup' })),
                     { item: 'olive oil', amount: '3', unit: 'tablespoons' },
                     { item: 'garlic', amount: '3', unit: 'cloves' },
                     { item: 'fresh herbs', amount: '2', unit: 'tablespoons' },
@@ -2338,8 +2338,8 @@
                 instructions = [
                     'Heat olive oil in a large skillet over medium heat',
                     'Add minced garlic and cook for 1 minute until fragrant',
-                    `Add ${mainIngredient} and cook for 3-4 minutes`,
-                    `Add ${secondaryIngredients.join(', ')} and continue cooking for 2-3 minutes`,
+                    `Add ${ingredients[0]} and cook for 3-4 minutes`,
+                    `Add ${ingredients.slice(1).join(', ')} and continue cooking for 2-3 minutes`,
                     'Add fresh herbs and squeeze lemon juice over',
                     'Season with salt and pepper to taste',
                     'Serve hot as a side dish or over rice'
