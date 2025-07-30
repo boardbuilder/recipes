@@ -319,86 +319,104 @@
         function generateRecipeFromIngredients(ingredients, restrictions) {
             const recipes = {
                 'chicken': {
-                    title: 'Chicken Stir-Fry',
-                    description: 'A quick and delicious stir-fry with vegetables and soy sauce',
+                    title: 'Classic Chicken Cacciatore',
+                    description: 'Traditional Italian hunter-style chicken with tomatoes and herbs',
                     ingredients: [
-                        { item: 'chicken breast', amount: '1', unit: 'pound' },
-                        { item: 'broccoli', amount: '2', unit: 'cups' },
-                        { item: 'soy sauce', amount: '3', unit: 'tablespoons' },
-                        { item: 'garlic', amount: '3', unit: 'cloves' },
-                        { item: 'ginger', amount: '1', unit: 'tablespoon' }
+                        { item: 'chicken pieces (legs and thighs)', amount: '3', unit: 'pounds' },
+                        { item: 'tomatoes', amount: '4', unit: 'medium' },
+                        { item: 'onion', amount: '1', unit: 'large' },
+                        { item: 'garlic', amount: '4', unit: 'cloves' },
+                        { item: 'bell peppers', amount: '2', unit: 'medium' },
+                        { item: 'olive oil', amount: '3', unit: 'tablespoons' },
+                        { item: 'dried oregano', amount: '1', unit: 'teaspoon' },
+                        { item: 'dried basil', amount: '1', unit: 'teaspoon' },
+                        { item: 'red wine', amount: '1/2', unit: 'cup' },
+                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
                     ],
                     instructions: [
-                        'Cut chicken into bite-sized pieces',
-                        'Heat oil in a large wok or skillet',
-                        'Stir-fry chicken until golden brown',
-                        'Add garlic and ginger, cook for 1 minute',
-                        'Add broccoli and stir-fry for 3 minutes',
-                        'Add soy sauce and cook for 2 more minutes',
-                        'Serve hot with rice'
+                        'Season chicken with salt and pepper',
+                        'Heat olive oil in a large Dutch oven over medium heat',
+                        'Brown chicken pieces on all sides, about 8 minutes',
+                        'Remove chicken and set aside',
+                        'Add chopped onion and garlic, cook until softened',
+                        'Add chopped tomatoes and bell peppers',
+                        'Add oregano, basil, and red wine',
+                        'Return chicken to pot and simmer covered for 45 minutes',
+                        'Serve hot with crusty bread or pasta'
                     ],
-                    cookingTime: '25 minutes',
-                    servings: '4 servings',
-                    calories: '285 calories per serving'
+                    cookingTime: '1 hour 15 minutes',
+                    servings: '6 servings',
+                    calories: '380 calories per serving'
                 },
                 'beef': {
-                    title: 'Beef Tacos',
-                    description: 'Flavorful ground beef tacos with fresh toppings',
+                    title: 'Traditional Beef Bourguignon',
+                    description: 'Classic French beef stew with red wine and mushrooms',
                     ingredients: [
-                        { item: 'ground beef (85% lean)', amount: '1', unit: 'pound' },
-                        { item: 'taco seasoning', amount: '1', unit: 'packet' },
-                        { item: 'corn tortillas', amount: '8', unit: 'pieces' },
-                        { item: 'shredded lettuce', amount: '2', unit: 'cups' },
-                        { item: 'diced tomatoes', amount: '2', unit: 'medium' },
-                        { item: 'shredded cheese', amount: '1', unit: 'cup' },
-                        { item: 'sour cream', amount: '1/2', unit: 'cup' }
+                        { item: 'beef chuck roast', amount: '2', unit: 'pounds' },
+                        { item: 'red wine', amount: '2', unit: 'cups' },
+                        { item: 'beef broth', amount: '2', unit: 'cups' },
+                        { item: 'mushrooms', amount: '1', unit: 'pound' },
+                        { item: 'pearl onions', amount: '1', unit: 'cup' },
+                        { item: 'carrots', amount: '4', unit: 'medium' },
+                        { item: 'garlic', amount: '6', unit: 'cloves' },
+                        { item: 'tomato paste', amount: '2', unit: 'tablespoons' },
+                        { item: 'thyme', amount: '2', unit: 'sprigs' },
+                        { item: 'bay leaves', amount: '2', unit: 'pieces' }
                     ],
                     instructions: [
-                        'Brown ground beef in a large skillet over medium heat',
-                        'Drain excess fat and add taco seasoning with 1/2 cup water',
-                        'Simmer for 5 minutes until thickened',
-                        'Warm tortillas in a dry skillet for 30 seconds each',
-                        'Assemble tacos: beef, cheese, lettuce, tomatoes',
-                        'Top with sour cream and serve immediately'
+                        'Cut beef into 2-inch cubes and season with salt and pepper',
+                        'Heat oil in a large Dutch oven and brown beef in batches',
+                        'Remove beef and add chopped onions and garlic',
+                        'Add wine and scrape up browned bits from bottom',
+                        'Add beef broth, tomato paste, thyme, and bay leaves',
+                        'Return beef to pot and simmer covered for 2 hours',
+                        'Add carrots, mushrooms, and pearl onions',
+                        'Continue cooking for 30 minutes until vegetables are tender',
+                        'Serve with mashed potatoes or crusty bread'
+                    ],
+                    cookingTime: '2 hours 30 minutes',
+                    servings: '6 servings',
+                    calories: '450 calories per serving'
+                },
+                'salmon': {
+                    title: 'Traditional Scottish Salmon with Whisky Sauce',
+                    description: 'Classic Scottish salmon with a rich whisky cream sauce',
+                    ingredients: [
+                        { item: 'salmon fillets', amount: '4', unit: 'pieces' },
+                        { item: 'scottish whisky', amount: '1/4', unit: 'cup' },
+                        { item: 'heavy cream', amount: '1', unit: 'cup' },
+                        { item: 'butter', amount: '4', unit: 'tablespoons' },
+                        { item: 'shallots', amount: '2', unit: 'medium' },
+                        { item: 'dill', amount: '2', unit: 'tablespoons' },
+                        { item: 'lemon', amount: '1', unit: 'whole' },
+                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                    ],
+                    instructions: [
+                        'Season salmon with salt and pepper',
+                        'Heat butter in a large skillet over medium heat',
+                        'Cook salmon skin-side down for 4 minutes',
+                        'Flip and cook for 3 more minutes, then remove',
+                        'Add chopped shallots to the same pan',
+                        'Add whisky and let it reduce for 1 minute',
+                        'Add cream and simmer until thickened',
+                        'Stir in chopped dill and lemon juice',
+                        'Pour sauce over salmon and serve'
                     ],
                     cookingTime: '20 minutes',
                     servings: '4 servings',
-                    calories: '425 calories per serving'
-                },
-                'salmon': {
-                    title: 'Baked Salmon',
-                    description: 'Simple and healthy baked salmon with herbs',
-                    ingredients: [
-                        { item: 'salmon fillets (6 oz each)', amount: '4', unit: 'pieces' },
-                        { item: 'lemon', amount: '1', unit: 'whole' },
-                        { item: 'olive oil', amount: '2', unit: 'tablespoons' },
-                        { item: 'fresh dill', amount: '2', unit: 'tablespoons' },
-                        { item: 'garlic powder', amount: '1', unit: 'teaspoon' },
-                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
-                    ],
-                    instructions: [
-                        'Preheat oven to 400°F (200°C)',
-                        'Line a baking sheet with parchment paper',
-                        'Place salmon fillets skin-side down on the sheet',
-                        'Drizzle with olive oil and squeeze lemon juice over',
-                        'Sprinkle with dill, garlic powder, salt, and pepper',
-                        'Bake for 12-15 minutes until flaky',
-                        'Serve with steamed vegetables'
-                    ],
-                    cookingTime: '15 minutes',
-                    servings: '4 servings',
-                    calories: '320 calories per serving'
+                    calories: '420 calories per serving'
                 },
                 'pasta': {
-                    title: 'Creamy Pasta',
-                    description: 'Rich and creamy pasta with parmesan cheese',
+                    title: 'Authentic Carbonara',
+                    description: 'Traditional Roman pasta with eggs, cheese, and pancetta',
                     ingredients: [
-                        { item: 'fettuccine pasta', amount: '1', unit: 'pound' },
-                        { item: 'heavy cream', amount: '1', unit: 'cup' },
-                        { item: 'parmesan cheese', amount: '1', unit: 'cup' },
-                        { item: 'garlic', amount: '4', unit: 'cloves' },
-                        { item: 'butter', amount: '3', unit: 'tablespoons' },
-                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                        { item: 'spaghetti', amount: '1', unit: 'pound' },
+                        { item: 'pancetta', amount: '8', unit: 'ounces' },
+                        { item: 'eggs', amount: '4', unit: 'large' },
+                        { item: 'pecorino romano', amount: '1', unit: 'cup' },
+                        { item: 'black pepper', amount: '2', unit: 'teaspoons' },
+                        { item: 'garlic', amount: '3', unit: 'cloves' },
+                        { item: 'salt', amount: 'to taste', unit: '' }
                     ],
                     instructions: [
                         'Bring a large pot of salted water to boil',
@@ -560,75 +578,84 @@
                     calories: '140 calories per serving'
                 },
                 'broccoli': {
-                    title: 'Roasted Broccoli with Garlic',
-                    description: 'Crispy roasted broccoli with garlic and parmesan',
+                    title: 'Traditional Chinese Stir-Fried Broccoli',
+                    description: 'Classic Chinese broccoli with oyster sauce and garlic',
                     ingredients: [
                         { item: 'broccoli', amount: '2', unit: 'heads' },
-                        { item: 'olive oil', amount: '3', unit: 'tablespoons' },
+                        { item: 'oyster sauce', amount: '3', unit: 'tablespoons' },
                         { item: 'garlic', amount: '4', unit: 'cloves' },
-                        { item: 'parmesan cheese', amount: '1/2', unit: 'cup' },
-                        { item: 'lemon', amount: '1', unit: 'whole' },
-                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                        { item: 'ginger', amount: '1', unit: 'tablespoon' },
+                        { item: 'vegetable oil', amount: '2', unit: 'tablespoons' },
+                        { item: 'sesame oil', amount: '1', unit: 'teaspoon' },
+                        { item: 'soy sauce', amount: '1', unit: 'tablespoon' }
                     ],
                     instructions: [
-                        'Preheat oven to 425°F (220°C)',
-                        'Cut broccoli into florets and mince garlic',
-                        'Toss with olive oil, garlic, salt, and pepper',
-                        'Spread on baking sheet in single layer',
-                        'Roast for 20 minutes until crispy',
-                        'Sprinkle with parmesan and lemon zest',
-                        'Serve immediately'
+                        'Cut broccoli into florets and mince garlic and ginger',
+                        'Heat vegetable oil in a wok over high heat',
+                        'Add garlic and ginger, stir-fry for 30 seconds',
+                        'Add broccoli and stir-fry for 2 minutes',
+                        'Add oyster sauce, soy sauce, and sesame oil',
+                        'Continue cooking for 2 more minutes until tender',
+                        'Serve hot with steamed rice'
                     ],
-                    cookingTime: '25 minutes',
+                    cookingTime: '10 minutes',
                     servings: '4 servings',
                     calories: '120 calories per serving'
                 },
                 'spinach': {
-                    title: 'Creamed Spinach',
-                    description: 'Rich and creamy spinach with garlic and cream',
+                    title: 'Traditional Greek Spanakopita',
+                    description: 'Classic Greek spinach pie with feta and phyllo dough',
                     ingredients: [
                         { item: 'spinach', amount: '2', unit: 'pounds' },
-                        { item: 'heavy cream', amount: '1/2', unit: 'cup' },
-                        { item: 'garlic', amount: '3', unit: 'cloves' },
-                        { item: 'butter', amount: '2', unit: 'tablespoons' },
-                        { item: 'nutmeg', amount: '1/4', unit: 'teaspoon' },
-                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                        { item: 'feta cheese', amount: '1', unit: 'pound' },
+                        { item: 'phyllo dough', amount: '1', unit: 'package' },
+                        { item: 'onion', amount: '1', unit: 'large' },
+                        { item: 'dill', amount: '1/2', unit: 'cup' },
+                        { item: 'eggs', amount: '3', unit: 'large' },
+                        { item: 'butter', amount: '1/2', unit: 'cup' },
+                        { item: 'olive oil', amount: '1/4', unit: 'cup' }
                     ],
                     instructions: [
-                        'Wash spinach thoroughly and remove stems',
-                        'Melt butter in large skillet over medium heat',
-                        'Add minced garlic and cook for 1 minute',
-                        'Add spinach in batches, stirring until wilted',
-                        'Add cream and nutmeg, simmer for 3 minutes',
-                        'Season with salt and pepper, serve hot'
+                        'Wash and chop spinach, removing excess water',
+                        'Sauté chopped onion in olive oil until soft',
+                        'Mix spinach with crumbled feta, dill, and beaten eggs',
+                        'Layer phyllo sheets with melted butter between each',
+                        'Spread spinach mixture over half the phyllo layers',
+                        'Fold over remaining layers and brush with butter',
+                        'Bake at 375°F for 45 minutes until golden brown',
+                        'Let cool for 10 minutes before cutting'
                     ],
-                    cookingTime: '15 minutes',
-                    servings: '4 servings',
-                    calories: '180 calories per serving'
+                    cookingTime: '1 hour 15 minutes',
+                    servings: '8 servings',
+                    calories: '320 calories per serving'
                 },
                 'apple': {
-                    title: 'Apple Cinnamon Oatmeal',
-                    description: 'Warm oatmeal with fresh apples and cinnamon',
+                    title: 'Traditional German Apple Strudel',
+                    description: 'Classic German apple strudel with flaky pastry and warm spices',
                     ingredients: [
-                        { item: 'apples', amount: '2', unit: 'medium' },
-                        { item: 'oats', amount: '2', unit: 'cups' },
-                        { item: 'milk', amount: '4', unit: 'cups' },
-                        { item: 'cinnamon', amount: '1', unit: 'teaspoon' },
-                        { item: 'honey', amount: '2', unit: 'tablespoons' },
+                        { item: 'apples', amount: '6', unit: 'medium' },
+                        { item: 'phyllo dough', amount: '1', unit: 'package' },
+                        { item: 'breadcrumbs', amount: '1', unit: 'cup' },
+                        { item: 'raisins', amount: '1/2', unit: 'cup' },
+                        { item: 'cinnamon', amount: '2', unit: 'teaspoons' },
+                        { item: 'sugar', amount: '1/2', unit: 'cup' },
+                        { item: 'butter', amount: '1/2', unit: 'cup' },
+                        { item: 'lemon', amount: '1', unit: 'whole' },
                         { item: 'vanilla', amount: '1', unit: 'teaspoon' }
                     ],
                     instructions: [
-                        'Dice apples and set aside',
-                        'Bring milk to boil in large saucepan',
-                        'Add oats and reduce heat to simmer',
-                        'Cook for 5 minutes, stirring occasionally',
-                        'Add diced apples, cinnamon, and honey',
-                        'Cook for 2 more minutes until apples are tender',
-                        'Stir in vanilla and serve hot'
+                        'Peel, core, and thinly slice apples',
+                        'Mix apples with sugar, cinnamon, raisins, and lemon juice',
+                        'Melt butter and brush over phyllo sheets',
+                        'Sprinkle breadcrumbs over buttered phyllo',
+                        'Spread apple mixture over half the phyllo',
+                        'Roll up tightly, tucking in edges',
+                        'Brush with remaining butter and bake at 375°F for 45 minutes',
+                        'Serve warm with vanilla ice cream'
                     ],
-                    cookingTime: '15 minutes',
-                    servings: '4 servings',
-                    calories: '220 calories per serving'
+                    cookingTime: '1 hour',
+                    servings: '8 servings',
+                    calories: '280 calories per serving'
                 },
                 'banana': {
                     title: 'Banana Bread',
