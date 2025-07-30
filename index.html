@@ -285,16 +285,20 @@
 
         function removeIngredient(button) {
             button.parentElement.remove();
+            // Update ingredient count to reflect actual number of inputs
+            const remainingInputs = document.querySelectorAll('input[id^="ingredient-"]');
+            ingredientCount = remainingInputs.length;
         }
 
         function generateRecipe() {
             const ingredients = [];
-            for (let i = 0; i < ingredientCount; i++) {
-                const input = document.getElementById(`ingredient-${i}`);
-                if (input && input.value.trim()) {
+            // Get all ingredient inputs that actually exist and have values
+            const ingredientInputs = document.querySelectorAll('input[id^="ingredient-"]');
+            ingredientInputs.forEach(input => {
+                if (input.value.trim()) {
                     ingredients.push(input.value.trim());
                 }
-            }
+            });
 
             if (ingredients.length === 0) {
                 alert('Please add at least one ingredient!');
@@ -2250,9 +2254,10 @@
             let recipeTitle, description, additionalIngredients, instructions, calories;
             
             // Determine recipe type based on ingredients
-            const hasProtein = ingredients.some(i => ['chicken', 'beef', 'pork', 'fish', 'salmon', 'tuna', 'shrimp', 'tofu'].includes(i.toLowerCase()));
-            const hasVegetables = ingredients.some(i => ['carrot', 'broccoli', 'spinach', 'tomato', 'onion', 'pepper', 'mushroom', 'zucchini'].includes(i.toLowerCase()));
-            const hasGrains = ingredients.some(i => ['rice', 'pasta', 'quinoa', 'bread'].includes(i.toLowerCase()));
+            const hasProtein = ingredients.some(i => ['chicken', 'beef', 'pork', 'fish', 'salmon', 'tuna', 'shrimp', 'tofu', 'lamb', 'turkey'].includes(i.toLowerCase()));
+            const hasVegetables = ingredients.some(i => ['carrot', 'broccoli', 'spinach', 'tomato', 'onion', 'pepper', 'mushroom', 'zucchini', 'cucumber', 'lettuce', 'celery', 'potato', 'sweet potato'].includes(i.toLowerCase()));
+            const hasGrains = ingredients.some(i => ['rice', 'pasta', 'quinoa', 'bread', 'noodles', 'couscous'].includes(i.toLowerCase()));
+            const hasFruits = ingredients.some(i => ['apple', 'banana', 'orange', 'strawberry', 'blueberry', 'mango', 'pineapple'].includes(i.toLowerCase()));
             
             if (hasProtein && hasVegetables) {
                 recipeTitle = `${mainIngredient} Stir-Fry with ${secondaryIngredients.join(', ')}`;
@@ -2297,6 +2302,27 @@
                     'Squeeze lemon juice over and season to taste'
                 ];
                 calories = '280 calories per serving';
+            } else if (hasFruits && hasGrains) {
+                recipeTitle = `${mainIngredient} and ${secondaryIngredients.join(', ')} Breakfast Bowl`;
+                description = `A nutritious breakfast bowl combining grains and fruits`;
+                additionalIngredients = [
+                    { item: mainIngredient, amount: '2', unit: 'cups' },
+                    ...secondaryIngredients.map(ing => ({ item: ing, amount: '1', unit: 'cup' })),
+                    { item: 'honey', amount: '2', unit: 'tablespoons' },
+                    { item: 'cinnamon', amount: '1', unit: 'teaspoon' },
+                    { item: 'vanilla extract', amount: '1', unit: 'teaspoon' },
+                    { item: 'milk', amount: '1', unit: 'cup' },
+                    { item: 'nuts', amount: '1/4', unit: 'cup' }
+                ];
+                instructions = [
+                    'Cook grains according to package directions',
+                    'Meanwhile, prepare and chop fruits',
+                    'Combine cooked grains with honey, cinnamon, and vanilla',
+                    `Add ${secondaryIngredients.join(', ')} and gently fold in`,
+                    'Top with nuts and serve with milk',
+                    'Enjoy as a healthy breakfast or snack'
+                ];
+                calories = '220 calories per serving';
             } else {
                 recipeTitle = `${mainIngredient} and ${secondaryIngredients.join(', ')} Medley`;
                 description = `A flavorful dish combining all your ingredients`;
