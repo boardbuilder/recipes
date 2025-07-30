@@ -317,6 +317,11 @@
         }
 
         function generateRecipeFromIngredients(ingredients, restrictions) {
+            // For multiple ingredients, always create a multi-ingredient recipe
+            if (ingredients.length > 1) {
+                return createMultiIngredientRecipe(ingredients, restrictions);
+            }
+            
             const recipes = {
                 'chicken': {
                     title: 'Classic Chicken Cacciatore',
