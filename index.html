@@ -2674,7 +2674,7 @@
             alert(pairing);
         }
 
-        function createMultiIngredientRecipe(ingredients, restrictions) {
+                function createMultiIngredientRecipe(ingredients, restrictions) {
             // Include ALL ingredients in the recipe, not just the first one
             const allIngredients = ingredients.map(ing => ing.toLowerCase());
             
@@ -2958,144 +2958,19 @@
                         'Remove chicken, shred, and return to pot',
                         'Season to taste and serve hot'
                     ],
-                                         cookingTime: '45 minutes',
-                     servings: '6 servings',
-                     calories: '320 calories per serving'
-                 },
-                 'chicken,broccoli': {
-                    title: 'Chicken and Broccoli Stir-Fry',
-                    description: 'Classic Chinese-style chicken and broccoli',
-                    ingredients: [
-                        { item: 'chicken breast', amount: '1', unit: 'pound' },
-                        { item: 'broccoli', amount: '1', unit: 'head' },
-                        { item: 'soy sauce', amount: '3', unit: 'tablespoons' },
-                        { item: 'garlic', amount: '3', unit: 'cloves' },
-                        { item: 'ginger', amount: '1', unit: 'tablespoon' },
-                        { item: 'vegetable oil', amount: '2', unit: 'tablespoons' },
-                        { item: 'sesame oil', amount: '1', unit: 'teaspoon' }
-                    ],
-                    instructions: [
-                        'Cut chicken into bite-sized pieces',
-                        'Heat oil in a wok over high heat',
-                        'Add chicken and stir-fry for 4 minutes',
-                        'Add minced garlic and ginger',
-                        'Add broccoli and stir-fry for 3 minutes',
-                        'Add soy sauce and sesame oil',
-                        'Serve hot with steamed rice'
-                    ],
-                    cookingTime: '15 minutes',
-                    servings: '4 servings',
-                    calories: '280 calories per serving'
-                },
-                'beef,potato': {
-                    title: 'Beef and Potato Stew',
-                    description: 'Hearty beef stew with tender potatoes',
-                    ingredients: [
-                        { item: 'beef chuck', amount: '2', unit: 'pounds' },
-                        { item: 'potatoes', amount: '4', unit: 'medium' },
-                        { item: 'onion', amount: '1', unit: 'large' },
-                        { item: 'carrots', amount: '3', unit: 'medium' },
-                        { item: 'beef broth', amount: '4', unit: 'cups' },
-                        { item: 'tomato paste', amount: '2', unit: 'tablespoons' },
-                        { item: 'thyme', amount: '1', unit: 'teaspoon' },
-                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
-                    ],
-                    instructions: [
-                        'Cut beef into cubes and season with salt and pepper',
-                        'Brown beef in oil in a large pot',
-                        'Add chopped onion and cook until soft',
-                        'Add broth, tomato paste, and thyme',
-                        'Simmer covered for 1 hour',
-                        'Add cubed potatoes and carrots',
-                        'Continue cooking for 30 minutes until tender',
-                        'Serve hot with crusty bread'
-                    ],
-                    cookingTime: '1 hour 45 minutes',
+                    cookingTime: '45 minutes',
                     servings: '6 servings',
-                    calories: '380 calories per serving'
-                },
-                'salmon,spinach': {
-                    title: 'Salmon with Spinach and Lemon',
-                    description: 'Pan-seared salmon with fresh spinach',
-                    ingredients: [
-                        { item: 'salmon fillets', amount: '4', unit: 'pieces' },
-                        { item: 'spinach', amount: '1', unit: 'pound' },
-                        { item: 'lemon', amount: '1', unit: 'whole' },
-                        { item: 'garlic', amount: '3', unit: 'cloves' },
-                        { item: 'butter', amount: '3', unit: 'tablespoons' },
-                        { item: 'olive oil', amount: '2', unit: 'tablespoons' },
-                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
-                    ],
-                    instructions: [
-                        'Season salmon with salt and pepper',
-                        'Heat oil in a large skillet over medium heat',
-                        'Cook salmon skin-side down for 4 minutes',
-                        'Flip and cook for 3 more minutes, then remove',
-                        'Add butter and minced garlic to the same pan',
-                        'Add spinach and cook until wilted',
-                        'Squeeze lemon juice over spinach',
-                        'Serve salmon over spinach'
-                    ],
-                    cookingTime: '15 minutes',
-                    servings: '4 servings',
                     calories: '320 calories per serving'
-                },
-                'pasta,tomato': {
-                    title: 'Pasta with Fresh Tomato Sauce',
-                    description: 'Simple pasta with fresh tomatoes and basil',
-                    ingredients: [
-                        { item: 'spaghetti', amount: '1', unit: 'pound' },
-                        { item: 'tomatoes', amount: '4', unit: 'large' },
-                        { item: 'basil', amount: '1/2', unit: 'cup' },
-                        { item: 'garlic', amount: '4', unit: 'cloves' },
-                        { item: 'olive oil', amount: '1/4', unit: 'cup' },
-                        { item: 'parmesan cheese', amount: '1/2', unit: 'cup' },
-                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
-                    ],
-                    instructions: [
-                        'Cook pasta according to package directions',
-                        'Dice tomatoes and mince garlic',
-                        'Heat olive oil in a large skillet',
-                        'Add garlic and cook for 1 minute',
-                        'Add tomatoes and cook for 5 minutes',
-                        'Add cooked pasta and basil',
-                        'Top with parmesan cheese and serve'
-                    ],
-                    cookingTime: '20 minutes',
-                    servings: '4 servings',
-                    calories: '380 calories per serving'
-                },
-                'egg,spinach': {
-                    title: 'Spinach and Egg Breakfast',
-                    description: 'Nutritious breakfast with eggs and fresh spinach',
-                    ingredients: [
-                        { item: 'eggs', amount: '6', unit: 'large' },
-                        { item: 'spinach', amount: '2', unit: 'cups' },
-                        { item: 'onion', amount: '1', unit: 'small' },
-                        { item: 'garlic', amount: '2', unit: 'cloves' },
-                        { item: 'butter', amount: '2', unit: 'tablespoons' },
-                        { item: 'cheddar cheese', amount: '1/2', unit: 'cup' },
-                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
-                    ],
-                    instructions: [
-                        'Sauté chopped onion in butter until soft',
-                        'Add minced garlic and cook for 1 minute',
-                        'Add spinach and cook until wilted',
-                        'Whisk eggs with salt and pepper',
-                        'Pour eggs over spinach mixture',
-                        'Sprinkle cheese on top',
-                        'Cook until eggs are set, about 3 minutes',
-                        'Serve hot'
-                    ],
-                    cookingTime: '15 minutes',
-                    servings: '4 servings',
-                    calories: '220 calories per serving'
                 }
             };
             
             // Try to find a specific multi-ingredient recipe
             const ingredientKey = allIngredients.sort().join(',');
+            console.log('Looking for multi-ingredient recipe with key:', ingredientKey);
+            console.log('Available keys:', Object.keys(multiRecipes));
+            
             if (multiRecipes[ingredientKey]) {
+                console.log('Found specific multi-ingredient recipe:', multiRecipes[ingredientKey].title);
                 return multiRecipes[ingredientKey];
             }
             
