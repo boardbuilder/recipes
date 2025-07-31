@@ -1579,21 +1579,44 @@
             payButton.textContent = 'Processing...';
             payButton.disabled = true;
 
-            // Simulate payment processing (in real app, this would use Stripe)
-            setTimeout(() => {
+            // Create payment method with Stripe
+            fetch('/api/create-subscription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    plan: selectedPlan,
+                    paymentMethodId: 'pm_card_visa' // In real app, this would be created by Stripe Elements
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
                 // Payment successful
                 isPremium = true;
                 localStorage.setItem('isPremium', 'true');
+                localStorage.setItem('subscriptionId', data.subscriptionId);
+                localStorage.setItem('customerId', data.customerId);
                 
                 hidePremiumModal();
                 document.getElementById('premium-banner').classList.add('hidden');
                 addPremiumFeatures();
                 
                 alert('Payment successful! Welcome to Premium!');
-                
+            })
+            .catch(error => {
+                console.error('Payment error:', error);
+                alert('Payment failed: ' + error.message);
+            })
+            .finally(() => {
                 payButton.textContent = originalText;
                 payButton.disabled = false;
-            }, 2000);
+            });
         }
 
         function addPremiumFeatures() {

@@ -1,22 +1,32 @@
 {
-  "name": "recipe-generator-server",
+  "name": "recipe-app-server",
   "version": "1.0.0",
-  "description": "Backend server for recipe generator with Stripe payments",
+  "description": "Backend server for recipe generator app with Stripe payments",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "recipe",
+    "stripe",
+    "payments",
+    "nodejs",
+    "express"
+  ],
+  "author": "Recipe App Team",
+  "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "stripe": "^14.5.0"
+    "stripe": "^14.5.0",
+    "dotenv": "^16.3.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
   },
-  "keywords": ["recipe", "generator", "stripe", "payments"],
-  "author": "Your Name",
-  "license": "MIT"
+  "engines": {
+    "node": ">=14.0.0"
+  }
 } 
