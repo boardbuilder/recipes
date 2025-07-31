@@ -80,6 +80,16 @@
             <h1 class="text-4xl font-bold text-gray-800 mb-2">Recipe Generator</h1>
             <p class="text-gray-600">Enter your ingredients and get delicious recipes!</p>
             
+            <!-- Sign Up Section -->
+            <div class="flex justify-center gap-4 mt-4">
+                <button onclick="showSignUpModal()" class="btn-primary px-4 py-2 text-sm bg-green-500">
+                    Sign Up
+                </button>
+                <button onclick="showSignInModal()" class="btn-primary px-4 py-2 text-sm">
+                    Sign In
+                </button>
+            </div>
+            
 
             
 
@@ -174,6 +184,70 @@
         
 
         
+        <!-- Sign Up Modal -->
+        <div id="signup-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Create Account</h2>
+                    <button onclick="hideSignUpModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                </div>
+                
+                <form id="signup-form" class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Full Name</label>
+                        <input type="text" id="signup-name" class="input-field" placeholder="Your full name" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Email</label>
+                        <input type="email" id="signup-email" class="input-field" placeholder="your@email.com" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Password</label>
+                        <input type="password" id="signup-password" class="input-field" placeholder="Create a password" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Confirm Password</label>
+                        <input type="password" id="signup-confirm-password" class="input-field" placeholder="Confirm your password" required>
+                    </div>
+                    <button type="submit" class="btn-primary w-full">Create Account</button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="text-gray-600">Already have an account? 
+                        <button onclick="switchToSignIn()" class="text-pink-500 hover:text-pink-700 font-semibold">Sign in here</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sign In Modal -->
+        <div id="signin-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Sign In</h2>
+                    <button onclick="hideSignInModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                </div>
+                
+                <form id="signin-form" class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Email</label>
+                        <input type="email" id="signin-email" class="input-field" placeholder="your@email.com" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Password</label>
+                        <input type="password" id="signin-password" class="input-field" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn-primary w-full">Sign In</button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="text-gray-600">Don't have an account? 
+                        <button onclick="switchToSignUp()" class="text-pink-500 hover:text-pink-700 font-semibold">Sign up here</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+
         <!-- Premium Modal -->
         <div id="premium-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
@@ -4000,6 +4074,120 @@ Shared from Recipe Generator App
                 showSavedRecipesPage();
                 
                 alert('Recipe deleted successfully!');
+            }
+        }
+
+        // Simple Sign Up Functions
+        function showSignUpModal() {
+            document.getElementById('signup-modal').classList.remove('hidden');
+        }
+
+        function hideSignUpModal() {
+            document.getElementById('signup-modal').classList.add('hidden');
+        }
+
+        function showSignInModal() {
+            document.getElementById('signin-modal').classList.remove('hidden');
+        }
+
+        function hideSignInModal() {
+            document.getElementById('signin-modal').classList.add('hidden');
+        }
+
+        function switchToSignIn() {
+            hideSignUpModal();
+            showSignInModal();
+        }
+
+        function switchToSignUp() {
+            hideSignInModal();
+            showSignUpModal();
+        }
+
+        // Form handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sign up form
+            const signupForm = document.getElementById('signup-form');
+            if (signupForm) {
+                signupForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    handleSignUp();
+                });
+            }
+
+            // Sign in form
+            const signinForm = document.getElementById('signin-form');
+            if (signinForm) {
+                signinForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    handleSignIn();
+                });
+            }
+        });
+
+        function handleSignUp() {
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+
+            if (!name || !email || !password || !confirmPassword) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters long');
+                return;
+            }
+
+            // Save user data
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const existingUser = users.find(u => u.email === email);
+
+            if (existingUser) {
+                alert('An account with this email already exists. Please sign in instead.');
+                return;
+            }
+
+            const newUser = {
+                name: name,
+                email: email,
+                password: password,
+                joined: new Date().toISOString()
+            };
+
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+
+            hideSignUpModal();
+            alert('Account created successfully! Welcome, ' + name);
+        }
+
+        function handleSignIn() {
+            const email = document.getElementById('signin-email').value;
+            const password = document.getElementById('signin-password').value;
+
+            if (!email || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                hideSignInModal();
+                alert('Signed in successfully! Welcome back, ' + user.name);
+            } else {
+                alert('Invalid email or password. Please try again.');
             }
         }
 
