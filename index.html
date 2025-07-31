@@ -2283,91 +2283,640 @@
             // Include ALL ingredients in the recipe, not just the first one
             const allIngredients = ingredients.map(ing => ing.toLowerCase());
             
-            let recipeTitle, description, additionalIngredients, instructions, calories;
+            // Define specific multi-ingredient recipes based on common combinations
+            const multiRecipes = {
+                'chicken,rice': {
+                    title: 'Chicken and Rice Pilaf',
+                    description: 'Aromatic chicken and rice with herbs and vegetables',
+                    ingredients: [
+                        { item: 'chicken breast', amount: '1', unit: 'pound' },
+                        { item: 'rice', amount: '2', unit: 'cups' },
+                        { item: 'onion', amount: '1', unit: 'medium' },
+                        { item: 'garlic', amount: '3', unit: 'cloves' },
+                        { item: 'chicken broth', amount: '4', unit: 'cups' },
+                        { item: 'butter', amount: '2', unit: 'tablespoons' },
+                        { item: 'parsley', amount: '1/4', unit: 'cup' },
+                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                    ],
+                    instructions: [
+                        'Season chicken with salt and pepper',
+                        'Heat butter in a large pot over medium heat',
+                        'Brown chicken on both sides, then remove',
+                        'Add chopped onion and garlic, cook until soft',
+                        'Add rice and stir for 1 minute',
+                        'Add chicken broth and return chicken to pot',
+                        'Simmer covered for 20 minutes until rice is tender',
+                        'Garnish with parsley and serve'
+                    ],
+                    cookingTime: '35 minutes',
+                    servings: '4 servings',
+                    calories: '420 calories per serving'
+                },
+                'chicken,broccoli': {
+                    title: 'Chicken and Broccoli Stir-Fry',
+                    description: 'Classic Chinese-style chicken and broccoli',
+                    ingredients: [
+                        { item: 'chicken breast', amount: '1', unit: 'pound' },
+                        { item: 'broccoli', amount: '1', unit: 'head' },
+                        { item: 'soy sauce', amount: '3', unit: 'tablespoons' },
+                        { item: 'garlic', amount: '3', unit: 'cloves' },
+                        { item: 'ginger', amount: '1', unit: 'tablespoon' },
+                        { item: 'vegetable oil', amount: '2', unit: 'tablespoons' },
+                        { item: 'sesame oil', amount: '1', unit: 'teaspoon' }
+                    ],
+                    instructions: [
+                        'Cut chicken into bite-sized pieces',
+                        'Heat oil in a wok over high heat',
+                        'Add chicken and stir-fry for 4 minutes',
+                        'Add minced garlic and ginger',
+                        'Add broccoli and stir-fry for 3 minutes',
+                        'Add soy sauce and sesame oil',
+                        'Serve hot with steamed rice'
+                    ],
+                    cookingTime: '15 minutes',
+                    servings: '4 servings',
+                    calories: '280 calories per serving'
+                },
+                'beef,potato': {
+                    title: 'Beef and Potato Stew',
+                    description: 'Hearty beef stew with tender potatoes',
+                    ingredients: [
+                        { item: 'beef chuck', amount: '2', unit: 'pounds' },
+                        { item: 'potatoes', amount: '4', unit: 'medium' },
+                        { item: 'onion', amount: '1', unit: 'large' },
+                        { item: 'carrots', amount: '3', unit: 'medium' },
+                        { item: 'beef broth', amount: '4', unit: 'cups' },
+                        { item: 'tomato paste', amount: '2', unit: 'tablespoons' },
+                        { item: 'thyme', amount: '1', unit: 'teaspoon' },
+                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                    ],
+                    instructions: [
+                        'Cut beef into cubes and season with salt and pepper',
+                        'Brown beef in oil in a large pot',
+                        'Add chopped onion and cook until soft',
+                        'Add broth, tomato paste, and thyme',
+                        'Simmer covered for 1 hour',
+                        'Add cubed potatoes and carrots',
+                        'Continue cooking for 30 minutes until tender',
+                        'Serve hot with crusty bread'
+                    ],
+                    cookingTime: '1 hour 45 minutes',
+                    servings: '6 servings',
+                    calories: '380 calories per serving'
+                },
+                'salmon,spinach': {
+                    title: 'Salmon with Spinach and Lemon',
+                    description: 'Pan-seared salmon with fresh spinach',
+                    ingredients: [
+                        { item: 'salmon fillets', amount: '4', unit: 'pieces' },
+                        { item: 'spinach', amount: '1', unit: 'pound' },
+                        { item: 'lemon', amount: '1', unit: 'whole' },
+                        { item: 'garlic', amount: '3', unit: 'cloves' },
+                        { item: 'butter', amount: '3', unit: 'tablespoons' },
+                        { item: 'olive oil', amount: '2', unit: 'tablespoons' },
+                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                    ],
+                    instructions: [
+                        'Season salmon with salt and pepper',
+                        'Heat oil in a large skillet over medium heat',
+                        'Cook salmon skin-side down for 4 minutes',
+                        'Flip and cook for 3 more minutes, then remove',
+                        'Add butter and minced garlic to the same pan',
+                        'Add spinach and cook until wilted',
+                        'Squeeze lemon juice over spinach',
+                        'Serve salmon over spinach'
+                    ],
+                    cookingTime: '15 minutes',
+                    servings: '4 servings',
+                    calories: '320 calories per serving'
+                },
+                'pasta,tomato': {
+                    title: 'Pasta with Fresh Tomato Sauce',
+                    description: 'Simple pasta with fresh tomatoes and basil',
+                    ingredients: [
+                        { item: 'spaghetti', amount: '1', unit: 'pound' },
+                        { item: 'tomatoes', amount: '4', unit: 'large' },
+                        { item: 'basil', amount: '1/2', unit: 'cup' },
+                        { item: 'garlic', amount: '4', unit: 'cloves' },
+                        { item: 'olive oil', amount: '1/4', unit: 'cup' },
+                        { item: 'parmesan cheese', amount: '1/2', unit: 'cup' },
+                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                    ],
+                    instructions: [
+                        'Cook pasta according to package directions',
+                        'Dice tomatoes and mince garlic',
+                        'Heat olive oil in a large skillet',
+                        'Add garlic and cook for 1 minute',
+                        'Add tomatoes and cook for 5 minutes',
+                        'Add cooked pasta and basil',
+                        'Top with parmesan cheese and serve'
+                    ],
+                    cookingTime: '20 minutes',
+                    servings: '4 servings',
+                    calories: '380 calories per serving'
+                },
+                'egg,spinach': {
+                    title: 'Spinach and Egg Breakfast',
+                    description: 'Nutritious breakfast with eggs and fresh spinach',
+                    ingredients: [
+                        { item: 'eggs', amount: '6', unit: 'large' },
+                        { item: 'spinach', amount: '2', unit: 'cups' },
+                        { item: 'onion', amount: '1', unit: 'small' },
+                        { item: 'garlic', amount: '2', unit: 'cloves' },
+                        { item: 'butter', amount: '2', unit: 'tablespoons' },
+                        { item: 'cheddar cheese', amount: '1/2', unit: 'cup' },
+                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                    ],
+                    instructions: [
+                        'Sauté chopped onion in butter until soft',
+                        'Add minced garlic and cook for 1 minute',
+                        'Add spinach and cook until wilted',
+                        'Whisk eggs with salt and pepper',
+                        'Pour eggs over spinach mixture',
+                        'Sprinkle cheese on top',
+                        'Cook until eggs are set, about 3 minutes',
+                        'Serve hot'
+                    ],
+                    cookingTime: '15 minutes',
+                    servings: '4 servings',
+                    calories: '220 calories per serving'
+                }
+            };
             
-            // Determine recipe type based on ingredients
-            const hasProtein = allIngredients.some(i => ['chicken', 'beef', 'pork', 'fish', 'salmon', 'tuna', 'shrimp', 'tofu', 'lamb', 'turkey'].includes(i));
-            const hasVegetables = allIngredients.some(i => ['carrot', 'broccoli', 'spinach', 'tomato', 'onion', 'pepper', 'mushroom', 'zucchini', 'cucumber', 'lettuce', 'celery', 'potato', 'sweet potato'].includes(i));
-            const hasGrains = allIngredients.some(i => ['rice', 'pasta', 'quinoa', 'bread', 'noodles', 'couscous'].includes(i));
-            const hasFruits = allIngredients.some(i => ['apple', 'banana', 'orange', 'strawberry', 'blueberry', 'mango', 'pineapple'].includes(i));
+            // Try to find a specific multi-ingredient recipe
+            const ingredientKey = allIngredients.sort().join(',');
+            if (multiRecipes[ingredientKey]) {
+                return multiRecipes[ingredientKey];
+            }
             
-            if (hasProtein && hasVegetables) {
-                recipeTitle = `${ingredients[0]} Stir-Fry with ${ingredients.slice(1).join(', ')}`;
-                description = `A delicious stir-fry combining all your ingredients with Asian flavors`;
-                additionalIngredients = [
-                    // Include ALL user ingredients
-                    ...ingredients.map(ing => ({ item: ing, amount: '1', unit: hasProtein && allIngredients.includes(ing.toLowerCase()) ? 'pound' : 'cup' })),
-                    { item: 'soy sauce', amount: '3', unit: 'tablespoons' },
-                    { item: 'sesame oil', amount: '1', unit: 'tablespoon' },
-                    { item: 'garlic', amount: '3', unit: 'cloves' },
-                    { item: 'ginger', amount: '1', unit: 'tablespoon' },
-                    { item: 'vegetable oil', amount: '2', unit: 'tablespoons' }
-                ];
-                instructions = [
-                    'Heat vegetable oil in a large wok or skillet over high heat',
-                    'Add minced garlic and ginger, cook for 30 seconds',
-                    `Add ${ingredients[0]} and stir-fry for 3-4 minutes`,
-                    `Add ${ingredients.slice(1).join(', ')} and continue cooking for 2-3 minutes`,
-                    'Add soy sauce and sesame oil, cook for 1 minute',
-                    'Serve hot with steamed rice'
-                ];
-                calories = '320 calories per serving';
-            } else if (hasGrains && hasVegetables) {
-                recipeTitle = `${ingredients[0]} Bowl with ${ingredients.slice(1).join(', ')}`;
-                description = `A healthy grain bowl featuring all your ingredients`;
-                additionalIngredients = [
-                    // Include ALL user ingredients
-                    ...ingredients.map(ing => ({ item: ing, amount: '1', unit: 'cup' })),
-                    { item: 'olive oil', amount: '2', unit: 'tablespoons' },
-                    { item: 'lemon', amount: '1', unit: 'whole' },
-                    { item: 'garlic', amount: '2', unit: 'cloves' },
-                    { item: 'fresh herbs', amount: '2', unit: 'tablespoons' },
-                    { item: 'salt and pepper', amount: 'to taste', unit: '' }
-                ];
-                instructions = [
-                    'Cook grains according to package directions',
-                    'Meanwhile, prepare vegetables and chop herbs',
-                    'Heat olive oil in a large skillet over medium heat',
-                    'Add garlic and cook for 1 minute until fragrant',
-                    `Add ${ingredients.slice(1).join(', ')} and cook for 3-4 minutes`,
-                    'Combine with cooked grains and fresh herbs',
-                    'Squeeze lemon juice over and season to taste'
-                ];
-                calories = '280 calories per serving';
-            } else if (hasFruits && hasGrains) {
-                recipeTitle = `${ingredients[0]} and ${ingredients.slice(1).join(', ')} Breakfast Bowl`;
-                description = `A nutritious breakfast bowl combining all your ingredients`;
-                additionalIngredients = [
-                    // Include ALL user ingredients
-                    ...ingredients.map(ing => ({ item: ing, amount: '1', unit: 'cup' })),
-                    { item: 'honey', amount: '2', unit: 'tablespoons' },
-                    { item: 'cinnamon', amount: '1', unit: 'teaspoon' },
-                    { item: 'vanilla extract', amount: '1', unit: 'teaspoon' },
-                    { item: 'milk', amount: '1', unit: 'cup' },
-                    { item: 'nuts', amount: '1/4', unit: 'cup' }
-                ];
-                instructions = [
-                    'Cook grains according to package directions',
-                    'Meanwhile, prepare and chop fruits',
-                    'Combine cooked grains with honey, cinnamon, and vanilla',
-                    `Add ${ingredients.slice(1).join(', ')} and gently fold in`,
-                    'Top with nuts and serve with milk',
-                    'Enjoy as a healthy breakfast or snack'
-                ];
-                calories = '220 calories per serving';
-            } else {
-                recipeTitle = `${ingredients[0]} and ${ingredients.slice(1).join(', ')} Medley`;
-                description = `A flavorful dish combining all your ingredients`;
-                additionalIngredients = [
-                    // Include ALL user ingredients
+            // If no specific recipe found, create a custom one using the existing single recipes
+            const availableRecipes = {
+                'chicken': {
+                    title: 'Classic Chicken Cacciatore',
+                    description: 'Traditional Italian hunter-style chicken with tomatoes and herbs',
+                    ingredients: [
+                        { item: 'chicken pieces (legs and thighs)', amount: '3', unit: 'pounds' },
+                        { item: 'tomatoes', amount: '4', unit: 'medium' },
+                        { item: 'onion', amount: '1', unit: 'large' },
+                        { item: 'garlic', amount: '4', unit: 'cloves' },
+                        { item: 'bell peppers', amount: '2', unit: 'medium' },
+                        { item: 'olive oil', amount: '3', unit: 'tablespoons' },
+                        { item: 'dried oregano', amount: '1', unit: 'teaspoon' },
+                        { item: 'dried basil', amount: '1', unit: 'teaspoon' },
+                        { item: 'red wine', amount: '1/2', unit: 'cup' },
+                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                    ],
+                    instructions: [
+                        'Season chicken with salt and pepper',
+                        'Heat olive oil in a large Dutch oven over medium heat',
+                        'Brown chicken pieces on all sides, about 8 minutes',
+                        'Remove chicken and set aside',
+                        'Add chopped onion and garlic, cook until softened',
+                        'Add chopped tomatoes and bell peppers',
+                        'Add oregano, basil, and red wine',
+                        'Return chicken to pot and simmer covered for 45 minutes',
+                        'Serve hot with crusty bread or pasta'
+                    ],
+                    cookingTime: '1 hour 15 minutes',
+                    servings: '6 servings',
+                    calories: '380 calories per serving'
+                },
+                'beef': {
+                    title: 'Traditional Beef Bourguignon',
+                    description: 'Classic French beef stew with red wine and mushrooms',
+                    ingredients: [
+                        { item: 'beef chuck roast', amount: '2', unit: 'pounds' },
+                        { item: 'red wine', amount: '2', unit: 'cups' },
+                        { item: 'beef broth', amount: '2', unit: 'cups' },
+                        { item: 'mushrooms', amount: '1', unit: 'pound' },
+                        { item: 'pearl onions', amount: '1', unit: 'cup' },
+                        { item: 'carrots', amount: '4', unit: 'medium' },
+                        { item: 'garlic', amount: '6', unit: 'cloves' },
+                        { item: 'tomato paste', amount: '2', unit: 'tablespoons' },
+                        { item: 'thyme', amount: '2', unit: 'sprigs' },
+                        { item: 'bay leaves', amount: '2', unit: 'pieces' }
+                    ],
+                    instructions: [
+                        'Cut beef into 2-inch cubes and season with salt and pepper',
+                        'Heat oil in a large Dutch oven and brown beef in batches',
+                        'Remove beef and add chopped onions and garlic',
+                        'Add wine and scrape up browned bits from bottom',
+                        'Add beef broth, tomato paste, thyme, and bay leaves',
+                        'Return beef to pot and simmer covered for 2 hours',
+                        'Add carrots, mushrooms, and pearl onions',
+                        'Continue cooking for 30 minutes until vegetables are tender',
+                        'Serve with mashed potatoes or crusty bread'
+                    ],
+                    cookingTime: '2 hours 30 minutes',
+                    servings: '6 servings',
+                    calories: '450 calories per serving'
+                },
+                'salmon': {
+                    title: 'Traditional Scottish Salmon with Whisky Sauce',
+                    description: 'Classic Scottish salmon with a rich whisky cream sauce',
+                    ingredients: [
+                        { item: 'salmon fillets', amount: '4', unit: 'pieces' },
+                        { item: 'scottish whisky', amount: '1/4', unit: 'cup' },
+                        { item: 'heavy cream', amount: '1', unit: 'cup' },
+                        { item: 'butter', amount: '4', unit: 'tablespoons' },
+                        { item: 'shallots', amount: '2', unit: 'medium' },
+                        { item: 'dill', amount: '2', unit: 'tablespoons' },
+                        { item: 'lemon', amount: '1', unit: 'whole' },
+                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                    ],
+                    instructions: [
+                        'Season salmon with salt and pepper',
+                        'Heat butter in a large skillet over medium heat',
+                        'Cook salmon skin-side down for 4 minutes',
+                        'Flip and cook for 3 more minutes, then remove',
+                        'Add chopped shallots to the same pan',
+                        'Add whisky and let it reduce for 1 minute',
+                        'Add cream and simmer until thickened',
+                        'Stir in chopped dill and lemon juice',
+                        'Pour sauce over salmon and serve'
+                    ],
+                    cookingTime: '20 minutes',
+                    servings: '4 servings',
+                    calories: '420 calories per serving'
+                },
+                'pasta': {
+                    title: 'Authentic Carbonara',
+                    description: 'Traditional Roman pasta with eggs, cheese, and pancetta',
+                    ingredients: [
+                        { item: 'spaghetti', amount: '1', unit: 'pound' },
+                        { item: 'pancetta', amount: '8', unit: 'ounces' },
+                        { item: 'eggs', amount: '4', unit: 'large' },
+                        { item: 'pecorino romano', amount: '1', unit: 'cup' },
+                        { item: 'black pepper', amount: '2', unit: 'teaspoons' },
+                        { item: 'garlic', amount: '3', unit: 'cloves' },
+                        { item: 'salt', amount: 'to taste', unit: '' }
+                    ],
+                    instructions: [
+                        'Bring a large pot of salted water to boil',
+                        'Cook pasta according to package directions (8-10 minutes)',
+                        'Meanwhile, melt butter in a large skillet over medium heat',
+                        'Add minced garlic and cook for 1 minute until fragrant',
+                        'Add cream and simmer for 3 minutes until slightly thickened',
+                        'Stir in parmesan cheese until melted and smooth',
+                        'Add cooked pasta and toss to coat evenly',
+                        'Season with salt and pepper, serve immediately'
+                    ],
+                    cookingTime: '20 minutes',
+                    servings: '4 servings',
+                    calories: '580 calories per serving'
+                },
+                'tomato': {
+                    title: 'Fresh Tomato Pasta',
+                    description: 'Simple and delicious pasta with fresh tomatoes and basil',
+                    ingredients: [
+                        { item: 'spaghetti', amount: '1', unit: 'pound' },
+                        { item: 'fresh tomatoes', amount: '4', unit: 'large' },
+                        { item: 'fresh basil', amount: '1/2', unit: 'cup' },
+                        { item: 'garlic', amount: '4', unit: 'cloves' },
+                        { item: 'olive oil', amount: '1/4', unit: 'cup' },
+                        { item: 'parmesan cheese', amount: '1/2', unit: 'cup' },
+                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                    ],
+                    instructions: [
+                        'Bring a large pot of salted water to boil',
+                        'Cook spaghetti according to package directions',
+                        'Meanwhile, dice tomatoes and mince garlic',
+                        'Heat olive oil in a large skillet over medium heat',
+                        'Add garlic and cook for 1 minute until fragrant',
+                        'Add tomatoes and cook for 5 minutes until softened',
+                        'Add cooked pasta and toss with basil',
+                        'Top with parmesan cheese and serve'
+                    ],
+                    cookingTime: '20 minutes',
+                    servings: '4 servings',
+                    calories: '380 calories per serving'
+                },
+                'potato': {
+                    title: 'Garlic Mashed Potatoes',
+                    description: 'Creamy mashed potatoes with roasted garlic',
+                    ingredients: [
+                        { item: 'potatoes', amount: '3', unit: 'pounds' },
+                        { item: 'butter', amount: '1/2', unit: 'cup' },
+                        { item: 'milk', amount: '1/2', unit: 'cup' },
+                        { item: 'garlic', amount: '6', unit: 'cloves' },
+                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                    ],
+                    instructions: [
+                        'Peel and cube potatoes, place in large pot',
+                        'Cover with cold water and bring to boil',
+                        'Cook for 15-20 minutes until tender',
+                        'Meanwhile, roast garlic cloves in foil for 20 minutes',
+                        'Drain potatoes and return to pot',
+                        'Mash with butter, milk, and roasted garlic',
+                        'Season with salt and pepper to taste'
+                    ],
+                    cookingTime: '30 minutes',
+                    servings: '6 servings',
+                    calories: '220 calories per serving'
+                },
+                'egg': {
+                    title: 'Scrambled Eggs with Herbs',
+                    description: 'Fluffy scrambled eggs with fresh herbs and cheese',
+                    ingredients: [
+                        { item: 'eggs', amount: '8', unit: 'large' },
+                        { item: 'butter', amount: '2', unit: 'tablespoons' },
+                        { item: 'milk', amount: '1/4', unit: 'cup' },
+                        { item: 'fresh herbs', amount: '2', unit: 'tablespoons' },
+                        { item: 'cheddar cheese', amount: '1/2', unit: 'cup' },
+                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                    ],
+                    instructions: [
+                        'Crack eggs into a bowl and whisk with milk',
+                        'Melt butter in a large skillet over medium-low heat',
+                        'Pour in egg mixture and let sit for 30 seconds',
+                        'Gently stir with a spatula, folding eggs',
+                        'Add herbs and cheese, continue cooking',
+                        'Cook until just set but still moist',
+                        'Season with salt and pepper, serve immediately'
+                    ],
+                    cookingTime: '10 minutes',
+                    servings: '4 servings',
+                    calories: '180 calories per serving'
+                },
+                'rice': {
+                    title: 'Fried Rice',
+                    description: 'Classic fried rice with vegetables and soy sauce',
+                    ingredients: [
+                        { item: 'cooked rice', amount: '4', unit: 'cups' },
+                        { item: 'eggs', amount: '3', unit: 'large' },
+                        { item: 'mixed vegetables', amount: '2', unit: 'cups' },
+                        { item: 'soy sauce', amount: '3', unit: 'tablespoons' },
+                        { item: 'sesame oil', amount: '1', unit: 'tablespoon' },
+                        { item: 'garlic', amount: '3', unit: 'cloves' },
+                        { item: 'green onions', amount: '4', unit: 'pieces' }
+                    ],
+                    instructions: [
+                        'Heat oil in a large wok or skillet over high heat',
+                        'Scramble eggs and remove from pan',
+                        'Add garlic and vegetables, stir-fry for 2 minutes',
+                        'Add rice and break up any clumps',
+                        'Add soy sauce and sesame oil',
+                        'Return eggs to pan and add green onions',
+                        'Stir-fry for 2 more minutes and serve'
+                    ],
+                    cookingTime: '15 minutes',
+                    servings: '4 servings',
+                    calories: '320 calories per serving'
+                },
+                'onion': {
+                    title: 'French Onion Soup',
+                    description: 'Classic French onion soup with caramelized onions',
+                    ingredients: [
+                        { item: 'onions', amount: '4', unit: 'large' },
+                        { item: 'beef broth', amount: '6', unit: 'cups' },
+                        { item: 'butter', amount: '3', unit: 'tablespoons' },
+                        { item: 'white wine', amount: '1/2', unit: 'cup' },
+                        { item: 'baguette', amount: '1', unit: 'loaf' },
+                        { item: 'gruyere cheese', amount: '2', unit: 'cups' },
+                        { item: 'thyme', amount: '1', unit: 'teaspoon' }
+                    ],
+                    instructions: [
+                        'Slice onions thinly and melt butter in large pot',
+                        'Cook onions over low heat for 45 minutes until caramelized',
+                        'Add wine and cook for 2 minutes',
+                        'Add broth and thyme, simmer for 30 minutes',
+                        'Toast baguette slices under broiler',
+                        'Top soup with bread and cheese',
+                        'Broil until cheese is melted and bubbly'
+                    ],
+                    cookingTime: '90 minutes',
+                    servings: '4 servings',
+                    calories: '420 calories per serving'
+                },
+                'carrot': {
+                    title: 'Honey Glazed Carrots',
+                    description: 'Sweet and tender glazed carrots with herbs',
+                    ingredients: [
+                        { item: 'carrots', amount: '2', unit: 'pounds' },
+                        { item: 'honey', amount: '3', unit: 'tablespoons' },
+                        { item: 'butter', amount: '2', unit: 'tablespoons' },
+                        { item: 'thyme', amount: '1', unit: 'teaspoon' },
+                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                    ],
+                    instructions: [
+                        'Peel and slice carrots into uniform pieces',
+                        'Melt butter in a large skillet over medium heat',
+                        'Add carrots and cook for 5 minutes',
+                        'Add honey and thyme, stir to coat',
+                        'Cover and cook for 10 minutes until tender',
+                        'Season with salt and pepper, serve hot'
+                    ],
+                    cookingTime: '20 minutes',
+                    servings: '4 servings',
+                    calories: '140 calories per serving'
+                },
+                'broccoli': {
+                    title: 'Traditional Chinese Stir-Fried Broccoli',
+                    description: 'Classic Chinese broccoli with oyster sauce and garlic',
+                    ingredients: [
+                        { item: 'broccoli', amount: '2', unit: 'heads' },
+                        { item: 'oyster sauce', amount: '3', unit: 'tablespoons' },
+                        { item: 'garlic', amount: '4', unit: 'cloves' },
+                        { item: 'ginger', amount: '1', unit: 'tablespoon' },
+                        { item: 'vegetable oil', amount: '2', unit: 'tablespoons' },
+                        { item: 'sesame oil', amount: '1', unit: 'teaspoon' },
+                        { item: 'soy sauce', amount: '1', unit: 'tablespoon' }
+                    ],
+                    instructions: [
+                        'Cut broccoli into florets and mince garlic and ginger',
+                        'Heat vegetable oil in a wok over high heat',
+                        'Add garlic and ginger, stir-fry for 30 seconds',
+                        'Add broccoli and stir-fry for 2 minutes',
+                        'Add oyster sauce, soy sauce, and sesame oil',
+                        'Continue cooking for 2 more minutes until tender',
+                        'Serve hot with steamed rice'
+                    ],
+                    cookingTime: '10 minutes',
+                    servings: '4 servings',
+                    calories: '120 calories per serving'
+                },
+                'spinach': {
+                    title: 'Traditional Greek Spanakopita',
+                    description: 'Classic Greek spinach pie with feta and phyllo dough',
+                    ingredients: [
+                        { item: 'spinach', amount: '2', unit: 'pounds' },
+                        { item: 'feta cheese', amount: '1', unit: 'pound' },
+                        { item: 'phyllo dough', amount: '1', unit: 'package' },
+                        { item: 'onion', amount: '1', unit: 'large' },
+                        { item: 'dill', amount: '1/2', unit: 'cup' },
+                        { item: 'eggs', amount: '3', unit: 'large' },
+                        { item: 'butter', amount: '1/2', unit: 'cup' },
+                        { item: 'olive oil', amount: '1/4', unit: 'cup' }
+                    ],
+                    instructions: [
+                        'Wash and chop spinach, removing excess water',
+                        'Sauté chopped onion in olive oil until soft',
+                        'Mix spinach with crumbled feta, dill, and beaten eggs',
+                        'Layer phyllo sheets with melted butter between each',
+                        'Spread spinach mixture over half the phyllo layers',
+                        'Fold over remaining layers and brush with butter',
+                        'Bake at 375°F for 45 minutes until golden brown',
+                        'Let cool for 10 minutes before cutting'
+                    ],
+                    cookingTime: '1 hour 15 minutes',
+                    servings: '8 servings',
+                    calories: '320 calories per serving'
+                },
+                'apple': {
+                    title: 'Traditional German Apple Strudel',
+                    description: 'Classic German apple strudel with flaky pastry and warm spices',
+                    ingredients: [
+                        { item: 'apples', amount: '6', unit: 'medium' },
+                        { item: 'phyllo dough', amount: '1', unit: 'package' },
+                        { item: 'breadcrumbs', amount: '1', unit: 'cup' },
+                        { item: 'raisins', amount: '1/2', unit: 'cup' },
+                        { item: 'cinnamon', amount: '2', unit: 'teaspoons' },
+                        { item: 'sugar', amount: '1/2', unit: 'cup' },
+                        { item: 'butter', amount: '1/2', unit: 'cup' },
+                        { item: 'lemon', amount: '1', unit: 'whole' },
+                        { item: 'vanilla', amount: '1', unit: 'teaspoon' }
+                    ],
+                    instructions: [
+                        'Peel, core, and thinly slice apples',
+                        'Mix apples with sugar, cinnamon, raisins, and lemon juice',
+                        'Melt butter and brush over phyllo sheets',
+                        'Sprinkle breadcrumbs over buttered phyllo',
+                        'Spread apple mixture over half the phyllo',
+                        'Roll up tightly, tucking in edges',
+                        'Brush with remaining butter and bake at 375°F for 45 minutes',
+                        'Serve warm with vanilla ice cream'
+                    ],
+                    cookingTime: '1 hour',
+                    servings: '8 servings',
+                    calories: '280 calories per serving'
+                },
+                'banana': {
+                    title: 'Banana Bread',
+                    description: 'Moist and delicious banana bread with walnuts',
+                    ingredients: [
+                        { item: 'bananas', amount: '3', unit: 'ripe' },
+                        { item: 'flour', amount: '2', unit: 'cups' },
+                        { item: 'sugar', amount: '1', unit: 'cup' },
+                        { item: 'eggs', amount: '2', unit: 'large' },
+                        { item: 'butter', amount: '1/2', unit: 'cup' },
+                        { item: 'walnuts', amount: '1/2', unit: 'cup' },
+                        { item: 'vanilla', amount: '1', unit: 'teaspoon' }
+                    ],
+                    instructions: [
+                        'Preheat oven to 350°F (175°C)',
+                        'Mash bananas in a large bowl',
+                        'Cream butter and sugar until fluffy',
+                        'Add eggs and vanilla, mix well',
+                        'Stir in mashed bananas',
+                        'Fold in flour and chopped walnuts',
+                        'Pour into greased loaf pan and bake for 60 minutes'
+                    ],
+                    cookingTime: '60 minutes',
+                    servings: '8 servings',
+                    calories: '280 calories per serving'
+                },
+                'mushroom': {
+                    title: 'Garlic Mushroom Pasta',
+                    description: 'Creamy pasta with sautéed mushrooms and garlic',
+                    ingredients: [
+                        { item: 'mushroom', amount: '1', unit: 'pound' },
+                        { item: 'linguine', amount: '1', unit: 'pound' },
+                        { item: 'garlic', amount: '4', unit: 'cloves' },
+                        { item: 'butter', amount: '3', unit: 'tablespoons' },
+                        { item: 'parmesan cheese', amount: '1', unit: 'cup' },
+                        { item: 'parsley', amount: '1/4', unit: 'cup' },
+                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                    ],
+                    instructions: [
+                        'Cook pasta according to package directions',
+                        'Slice mushrooms and mince garlic',
+                        'Melt butter in large skillet over medium heat',
+                        'Add mushrooms and cook for 5 minutes',
+                        'Add garlic and cook for 1 minute',
+                        'Add cooked pasta and parmesan',
+                        'Toss with parsley and season to taste'
+                    ],
+                    cookingTime: '20 minutes',
+                    servings: '4 servings',
+                    calories: '420 calories per serving'
+                },
+                'cheese': {
+                    title: 'Grilled Cheese with Tomato Soup',
+                    description: 'Classic grilled cheese with homemade tomato soup',
+                    ingredients: [
+                        { item: 'bread', amount: '8', unit: 'slices' },
+                        { item: 'cheddar cheese', amount: '1', unit: 'pound' },
+                        { item: 'butter', amount: '4', unit: 'tablespoons' },
+                        { item: 'tomatoes', amount: '4', unit: 'large' },
+                        { item: 'onion', amount: '1', unit: 'medium' },
+                        { item: 'garlic', amount: '2', unit: 'cloves' },
+                        { item: 'cream', amount: '1/2', unit: 'cup' }
+                    ],
+                    instructions: [
+                        'Make soup: sauté onion and garlic in oil',
+                        'Add chopped tomatoes and simmer for 20 minutes',
+                        'Blend until smooth and add cream',
+                        'For sandwiches: butter bread and add cheese',
+                        'Grill in skillet until golden and cheese melts',
+                        'Serve hot sandwiches with warm soup'
+                    ],
+                    cookingTime: '30 minutes',
+                    servings: '4 servings',
+                    calories: '450 calories per serving'
+                }
+            };
+            
+            // Find the best matching recipe for the primary ingredient
+            let primaryRecipe = null;
+            let primaryIngredient = null;
+            
+            for (const ingredient of allIngredients) {
+                if (availableRecipes[ingredient]) {
+                    primaryRecipe = availableRecipes[ingredient];
+                    primaryIngredient = ingredient;
+                    break;
+                }
+            }
+            
+            if (primaryRecipe) {
+                // Create a custom multi-ingredient recipe based on the primary recipe
+                const additionalIngredients = allIngredients.filter(ing => ing !== primaryIngredient);
+                
+                return {
+                    title: `${primaryRecipe.title} with ${additionalIngredients.join(', ')}`,
+                    description: `${primaryRecipe.description} enhanced with ${additionalIngredients.join(', ')}`,
+                    ingredients: [
+                        ...primaryRecipe.ingredients,
+                        ...additionalIngredients.map(ing => ({ 
+                            item: ing, 
+                            amount: '1', 
+                            unit: 'cup' 
+                        }))
+                    ],
+                    instructions: [
+                        ...primaryRecipe.instructions.slice(0, -1), // Remove the last instruction
+                        `Add ${additionalIngredients.join(', ')} and continue cooking for 5 minutes`,
+                        primaryRecipe.instructions[primaryRecipe.instructions.length - 1] // Add back the last instruction
+                    ],
+                    cookingTime: primaryRecipe.cookingTime,
+                    servings: primaryRecipe.servings,
+                    calories: primaryRecipe.calories
+                };
+            }
+            
+            // Fallback: Create a simple medley recipe
+            return {
+                title: `${ingredients[0]} and ${ingredients.slice(1).join(', ')} Medley`,
+                description: `A flavorful dish combining all your ingredients`,
+                ingredients: [
                     ...ingredients.map(ing => ({ item: ing, amount: '1', unit: 'cup' })),
                     { item: 'olive oil', amount: '3', unit: 'tablespoons' },
                     { item: 'garlic', amount: '3', unit: 'cloves' },
                     { item: 'fresh herbs', amount: '2', unit: 'tablespoons' },
                     { item: 'lemon', amount: '1', unit: 'whole' },
                     { item: 'salt and pepper', amount: 'to taste', unit: '' }
-                ];
-                instructions = [
+                ],
+                instructions: [
                     'Heat olive oil in a large skillet over medium heat',
                     'Add minced garlic and cook for 1 minute until fragrant',
                     `Add ${ingredients[0]} and cook for 3-4 minutes`,
@@ -2375,18 +2924,10 @@
                     'Add fresh herbs and squeeze lemon juice over',
                     'Season with salt and pepper to taste',
                     'Serve hot as a side dish or over rice'
-                ];
-                calories = '250 calories per serving';
-            }
-            
-            return {
-                title: recipeTitle,
-                description: description,
-                ingredients: additionalIngredients,
-                instructions: instructions,
+                ],
                 cookingTime: '25 minutes',
                 servings: '4 servings',
-                calories: calories
+                calories: '250 calories per serving'
             };
         }
 
