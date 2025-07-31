@@ -93,6 +93,66 @@ function App() {
     }
   };
 
+  const processPayment = async () => {
+    const cardNumber = document.querySelector('input[placeholder="1234 5678 9012 3456"]')?.value;
+    const cardExpiry = document.querySelector('input[placeholder="MM/YY"]')?.value;
+    const cardCvv = document.querySelector('input[placeholder="123"]')?.value;
+    const email = 'customer@example.com'; // You can add an email input field
+
+    if (!cardNumber || !cardExpiry || !cardCvv) {
+      alert('Please fill in all payment fields');
+      return;
+    }
+
+    // Show loading state
+    const payButton = document.querySelector('button[onclick="processPayment"]');
+    const originalText = payButton?.textContent;
+    if (payButton) {
+      payButton.textContent = 'Processing...';
+      payButton.disabled = true;
+    }
+
+    try {
+      // Create payment method with Stripe
+      const response = await axios.post('/api/create-subscription', {
+        email: email,
+        plan: selectedPlan,
+        paymentMethodId: 'pm_card_visa' // In real app, this would be created by Stripe Elements
+      });
+
+      if (response.data.error) {
+        throw new Error(response.data.error);
+      }
+      
+      // Payment successful
+      setIsPremium(true);
+      setPremiumFeatures({
+        unlimitedRecipes: true,
+        advancedScaling: true,
+        mealPlanning: true,
+        nutritionalInfo: true,
+        recipeCollections: true,
+        adFree: true
+      });
+      setShowPaymentModal(false);
+      
+      // Save to localStorage
+      localStorage.setItem('isPremium', 'true');
+      localStorage.setItem('subscriptionId', response.data.subscriptionId);
+      localStorage.setItem('customerId', response.data.customerId);
+      
+      alert('Payment successful! Welcome to Premium!');
+    } catch (error) {
+      console.error('Payment error:', error);
+      alert('Payment failed: ' + error.message);
+    } finally {
+      if (payButton) {
+        payButton.textContent = originalText;
+        payButton.disabled = false;
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen gradient-bg relative overflow-hidden">
       {/* Background decoration */}
@@ -593,18 +653,7 @@ function App() {
 
                 {/* Payment Button */}
                 <button 
-                  onClick={() => {
-                    setIsPremium(true);
-                    setPremiumFeatures({
-                      unlimitedRecipes: true,
-                      advancedScaling: true,
-                      mealPlanning: true,
-                      nutritionalInfo: true,
-                      recipeCollections: true,
-                      adFree: true
-                    });
-                    setShowPaymentModal(false);
-                  }}
+                  onClick={processPayment}
                   className="btn-primary w-full py-3"
                 >
                   Pay Now
