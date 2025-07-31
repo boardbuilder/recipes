@@ -387,6 +387,9 @@
 
         // Check if user is premium on page load
         window.addEventListener('load', function() {
+            console.log('Page loaded - Authentication system active');
+            
+            // Check if premium status is stored
             // Check if premium status is stored
             const premiumStatus = localStorage.getItem('isPremium');
             if (premiumStatus === 'true') {
@@ -426,7 +429,14 @@
         }
 
         function showLoginModal() {
-            document.getElementById('login-modal').classList.remove('hidden');
+            console.log('showLoginModal called');
+            const modal = document.getElementById('login-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                console.log('Login modal shown');
+            } else {
+                console.error('Login modal not found');
+            }
         }
 
         function hideLoginModal() {
@@ -434,7 +444,14 @@
         }
 
         function showSignupModal() {
-            document.getElementById('signup-modal').classList.remove('hidden');
+            console.log('showSignupModal called');
+            const modal = document.getElementById('signup-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                console.log('Signup modal shown');
+            } else {
+                console.error('Signup modal not found');
+            }
         }
 
         function hideSignupModal() {
