@@ -80,25 +80,7 @@
             <h1 class="text-4xl font-bold text-gray-800 mb-2">Recipe Generator</h1>
             <p class="text-gray-600">Enter your ingredients and get delicious recipes!</p>
             
-            <!-- User Account Section -->
-            <div class="flex justify-center gap-4 mt-4">
-                <div id="guest-actions" class="flex gap-2">
-                    <button onclick="showLoginModal()" class="btn-primary px-4 py-2 text-sm">
-                        Login
-                    </button>
-                    <button onclick="showSignupModal()" class="btn-primary px-4 py-2 text-sm bg-green-500">
-                        Sign Up
-                    </button>
-                </div>
-                <div id="user-actions" class="hidden flex gap-2">
-                    <button onclick="showAccountModal()" class="btn-primary px-4 py-2 text-sm bg-blue-500">
-                        My Account
-                    </button>
-                    <button onclick="logout()" class="btn-primary px-4 py-2 text-sm bg-red-500">
-                        Logout
-                    </button>
-                </div>
-            </div>
+
             
             <!-- Premium Banner -->
             <div id="premium-banner" class="card p-4 mt-4 bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-200">
@@ -186,112 +168,8 @@
             </div>
         </div>
         
-        <!-- Login Modal -->
-        <div id="login-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800">Login</h2>
-                    <button onclick="hideLoginModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-                </div>
-                
-                <form id="login-form" class="space-y-4">
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Email</label>
-                        <input type="email" id="login-email" class="input-field" placeholder="your@email.com" required>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Password</label>
-                        <input type="password" id="login-password" class="input-field" placeholder="Enter your password" required>
-                    </div>
-                    <button type="submit" class="btn-primary w-full">Login</button>
-                </form>
-                
-                <div class="text-center mt-4">
-                    <p class="text-gray-600">Don't have an account? 
-                        <button onclick="switchToSignup()" class="text-pink-500 hover:text-pink-700 font-semibold">Sign up here</button>
-                    </p>
-                </div>
-            </div>
-        </div>
 
-        <!-- Signup Modal -->
-        <div id="signup-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800">Create Account</h2>
-                    <button onclick="hideSignupModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-                </div>
-                
-                <form id="signup-form" class="space-y-4">
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Full Name</label>
-                        <input type="text" id="signup-name" class="input-field" placeholder="Your full name" required>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Email</label>
-                        <input type="email" id="signup-email" class="input-field" placeholder="your@email.com" required>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Password</label>
-                        <input type="password" id="signup-password" class="input-field" placeholder="Create a password" required>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-semibold mb-2">Confirm Password</label>
-                        <input type="password" id="signup-confirm-password" class="input-field" placeholder="Confirm your password" required>
-                    </div>
-                    <button type="submit" class="btn-primary w-full">Create Account</button>
-                </form>
-                
-                <div class="text-center mt-4">
-                    <p class="text-gray-600">Already have an account? 
-                        <button onclick="switchToLogin()" class="text-pink-500 hover:text-pink-700 font-semibold">Login here</button>
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Account Modal -->
-        <div id="account-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-gray-800">My Account</h2>
-                    <button onclick="hideAccountModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-                </div>
-                
-                <div class="grid md:grid-cols-2 gap-6">
-                    <!-- Profile Section -->
-                    <div class="space-y-4">
-                        <h3 class="text-xl font-semibold text-gray-800">Profile</h3>
-                        <div class="space-y-2">
-                            <p><strong>Name:</strong> <span id="account-name"></span></p>
-                            <p><strong>Email:</strong> <span id="account-email"></span></p>
-                            <p><strong>Member since:</strong> <span id="account-joined"></span></p>
-                        </div>
-                        <button onclick="editProfile()" class="btn-primary">Edit Profile</button>
-                    </div>
-                    
-                    <!-- Subscription Section -->
-                    <div class="space-y-4">
-                        <h3 class="text-xl font-semibold text-gray-800">Subscription</h3>
-                        <div class="space-y-2">
-                            <p><strong>Plan:</strong> <span id="account-plan"></span></p>
-                            <p><strong>Status:</strong> <span id="account-status"></span></p>
-                            <p><strong>Next billing:</strong> <span id="account-billing"></span></p>
-                        </div>
-                        <button onclick="manageSubscription()" class="btn-primary">Manage Subscription</button>
-                    </div>
-                </div>
-                
-                <!-- Saved Recipes Section -->
-                <div class="mt-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Saved Recipes</h3>
-                    <div id="account-saved-recipes" class="space-y-2">
-                        <!-- Saved recipes will be loaded here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        
         <!-- Premium Modal -->
         <div id="premium-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
@@ -383,7 +261,7 @@
         let isPremium = false;
         let selectedPlan = '';
         let servings = 4;
-        let currentUser = null;
+
 
         // Check if user is premium on page load
         window.addEventListener('load', function() {
@@ -403,229 +281,7 @@
                 addPremiumFeatures();
             }
             
-            // Check if user is logged in
-            checkAuthStatus();
-        });
 
-        // Authentication Functions
-        function checkAuthStatus() {
-            const user = localStorage.getItem('currentUser');
-            if (user) {
-                currentUser = JSON.parse(user);
-                showUserActions();
-            } else {
-                showGuestActions();
-            }
-        }
-
-        function showUserActions() {
-            document.getElementById('guest-actions').classList.add('hidden');
-            document.getElementById('user-actions').classList.remove('hidden');
-        }
-
-        function showGuestActions() {
-            document.getElementById('guest-actions').classList.remove('hidden');
-            document.getElementById('user-actions').classList.add('hidden');
-        }
-
-        function showLoginModal() {
-            console.log('showLoginModal called');
-            const modal = document.getElementById('login-modal');
-            if (modal) {
-                modal.classList.remove('hidden');
-                console.log('Login modal shown');
-            } else {
-                console.error('Login modal not found');
-            }
-        }
-
-        function hideLoginModal() {
-            document.getElementById('login-modal').classList.add('hidden');
-        }
-
-        function showSignupModal() {
-            console.log('showSignupModal called');
-            const modal = document.getElementById('signup-modal');
-            if (modal) {
-                modal.classList.remove('hidden');
-                console.log('Signup modal shown');
-            } else {
-                console.error('Signup modal not found');
-            }
-        }
-
-        function hideSignupModal() {
-            document.getElementById('signup-modal').classList.add('hidden');
-        }
-
-        function showAccountModal() {
-            loadAccountData();
-            document.getElementById('account-modal').classList.remove('hidden');
-        }
-
-        function hideAccountModal() {
-            document.getElementById('account-modal').classList.add('hidden');
-        }
-
-        function switchToSignup() {
-            hideLoginModal();
-            showSignupModal();
-        }
-
-        function switchToLogin() {
-            hideSignupModal();
-            showLoginModal();
-        }
-
-        function loadAccountData() {
-            if (!currentUser) return;
-            
-            document.getElementById('account-name').textContent = currentUser.name;
-            document.getElementById('account-email').textContent = currentUser.email;
-            document.getElementById('account-joined').textContent = new Date(currentUser.joined).toLocaleDateString();
-            
-            // Load subscription info
-            const subscription = localStorage.getItem(`subscription_${currentUser.email}`);
-            if (subscription) {
-                const sub = JSON.parse(subscription);
-                document.getElementById('account-plan').textContent = sub.plan;
-                document.getElementById('account-status').textContent = sub.status;
-                document.getElementById('account-billing').textContent = sub.nextBilling;
-            } else {
-                document.getElementById('account-plan').textContent = 'Free';
-                document.getElementById('account-status').textContent = 'Active';
-                document.getElementById('account-billing').textContent = 'N/A';
-            }
-            
-            // Load saved recipes
-            loadSavedRecipesForAccount();
-        }
-
-        function loadSavedRecipesForAccount() {
-            const savedRecipes = localStorage.getItem(`savedRecipes_${currentUser.email}`);
-            const container = document.getElementById('account-saved-recipes');
-            
-            if (savedRecipes) {
-                const recipes = JSON.parse(savedRecipes);
-                container.innerHTML = '';
-                recipes.forEach(recipe => {
-                    const div = document.createElement('div');
-                    div.className = 'p-3 border rounded-lg';
-                    div.innerHTML = `
-                        <h4 class="font-semibold">${recipe.title}</h4>
-                        <p class="text-sm text-gray-600">${recipe.description}</p>
-                    `;
-                    container.appendChild(div);
-                });
-            } else {
-                container.innerHTML = '<p class="text-gray-500">No saved recipes yet.</p>';
-            }
-        }
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                currentUser = null;
-                localStorage.removeItem('currentUser');
-                showGuestActions();
-                alert('Logged out successfully!');
-            }
-        }
-
-        function editProfile() {
-            alert('Profile editing feature coming soon!');
-        }
-
-        function manageSubscription() {
-            showPremiumModal();
-        }
-
-        // Form submission handlers
-        document.addEventListener('DOMContentLoaded', function() {
-            // Login form handler
-            document.getElementById('login-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                handleLogin();
-            });
-
-            // Signup form handler
-            document.getElementById('signup-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                handleSignup();
-            });
-        });
-
-        function handleLogin() {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-
-            if (!email || !password) {
-                alert('Please fill in all fields');
-                return;
-            }
-
-            // Check if user exists
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const user = users.find(u => u.email === email && u.password === password);
-
-            if (user) {
-                currentUser = user;
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                hideLoginModal();
-                showUserActions();
-                alert('Login successful! Welcome back, ' + user.name);
-            } else {
-                alert('Invalid email or password. Please try again.');
-            }
-        }
-
-        function handleSignup() {
-            const name = document.getElementById('signup-name').value;
-            const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('signup-password').value;
-            const confirmPassword = document.getElementById('signup-confirm-password').value;
-
-            if (!name || !email || !password || !confirmPassword) {
-                alert('Please fill in all fields');
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                alert('Passwords do not match');
-                return;
-            }
-
-            if (password.length < 6) {
-                alert('Password must be at least 6 characters long');
-                return;
-            }
-
-            // Check if user already exists
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const existingUser = users.find(u => u.email === email);
-
-            if (existingUser) {
-                alert('An account with this email already exists. Please login instead.');
-                return;
-            }
-
-            // Create new user
-            const newUser = {
-                name: name,
-                email: email,
-                password: password,
-                joined: new Date().toISOString()
-            };
-
-            users.push(newUser);
-            localStorage.setItem('users', JSON.stringify(users));
-
-            // Auto-login the new user
-            currentUser = newUser;
-            localStorage.setItem('currentUser', JSON.stringify(newUser));
-            hideSignupModal();
-            showUserActions();
-            alert('Account created successfully! Welcome, ' + name);
-        }
 
         function addIngredient() {
             const container = document.getElementById('ingredients-container');
@@ -1828,20 +1484,14 @@
         }
 
         function processPayment() {
-            if (!currentUser) {
-                alert('Please login to purchase premium!');
-                showLoginModal();
-                return;
-            }
-
             const cardNumber = document.getElementById('card-number').value;
             const cardExpiry = document.getElementById('card-expiry').value;
             const cardCvv = document.getElementById('card-cvv').value;
             const cardName = document.getElementById('card-name').value;
-            const email = currentUser.email; // Use logged in user's email
+            const email = document.getElementById('customer-email').value;
 
-            if (!cardNumber || !cardExpiry || !cardCvv || !cardName) {
-                alert('Please fill in all payment fields');
+            if (!cardNumber || !cardExpiry || !cardCvv || !cardName || !email) {
+                alert('Please fill in all payment fields including email');
                 return;
             }
 
@@ -1857,22 +1507,11 @@
                 isPremium = true;
                 localStorage.setItem('isPremium', 'true');
                 
-                // Save subscription info for the user
-                const subscription = {
-                    plan: selectedPlan === 'monthly' ? 'Monthly Premium' : 'Yearly Premium',
-                    status: 'Active',
-                    nextBilling: new Date(Date.now() + (selectedPlan === 'monthly' ? 30 : 365) * 24 * 60 * 60 * 1000).toLocaleDateString(),
-                    customerId: 'cust_' + Math.random().toString(36).substr(2, 9),
-                    subscriptionId: 'sub_' + Math.random().toString(36).substr(2, 9)
-                };
-                
-                localStorage.setItem(`subscription_${currentUser.email}`, JSON.stringify(subscription));
-                
                 hidePremiumModal();
                 document.getElementById('premium-banner').classList.add('hidden');
                 addPremiumFeatures();
                 
-                alert('Payment successful! Welcome to Premium, ' + currentUser.name + '!');
+                alert('Payment successful! Welcome to Premium!');
                 
                 payButton.textContent = originalText;
                 payButton.disabled = false;
@@ -3078,9 +2717,9 @@
                     ingredients: [
                         { item: 'chicken breast', amount: '1', unit: 'pound' },
                         { item: 'broccoli', amount: '1', unit: 'head' },
-                        { item: 'soy sauce', amount: '3', unit: 'tablespoons' },
-                        { item: 'garlic', amount: '3', unit: 'cloves' },
-                        { item: 'ginger', amount: '1', unit: 'tablespoon' },
+                    { item: 'soy sauce', amount: '3', unit: 'tablespoons' },
+                    { item: 'garlic', amount: '3', unit: 'cloves' },
+                    { item: 'ginger', amount: '1', unit: 'tablespoon' },
                         { item: 'vegetable oil', amount: '2', unit: 'tablespoons' },
                         { item: 'sesame oil', amount: '1', unit: 'teaspoon' }
                     ],
@@ -3091,7 +2730,7 @@
                         'Add minced garlic and ginger',
                         'Add broccoli and stir-fry for 3 minutes',
                         'Add soy sauce and sesame oil',
-                        'Serve hot with steamed rice'
+                    'Serve hot with steamed rice'
                     ],
                     cookingTime: '15 minutes',
                     servings: '4 servings',
@@ -3130,7 +2769,7 @@
                     ingredients: [
                         { item: 'salmon fillets', amount: '4', unit: 'pieces' },
                         { item: 'spinach', amount: '1', unit: 'pound' },
-                        { item: 'lemon', amount: '1', unit: 'whole' },
+                    { item: 'lemon', amount: '1', unit: 'whole' },
                         { item: 'garlic', amount: '3', unit: 'cloves' },
                         { item: 'butter', amount: '3', unit: 'tablespoons' },
                         { item: 'olive oil', amount: '2', unit: 'tablespoons' },
@@ -3182,10 +2821,10 @@
                         { item: 'eggs', amount: '6', unit: 'large' },
                         { item: 'spinach', amount: '2', unit: 'cups' },
                         { item: 'onion', amount: '1', unit: 'small' },
-                        { item: 'garlic', amount: '2', unit: 'cloves' },
+                    { item: 'garlic', amount: '2', unit: 'cloves' },
                         { item: 'butter', amount: '2', unit: 'tablespoons' },
                         { item: 'cheddar cheese', amount: '1/2', unit: 'cup' },
-                        { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                    { item: 'salt and pepper', amount: 'to taste', unit: '' }
                     ],
                     instructions: [
                         'Sauté chopped onion in butter until soft',
@@ -3479,8 +3118,8 @@
                         'Bring a large pot of salted water to boil',
                         'Cook spaghetti according to package directions',
                         'Meanwhile, dice tomatoes and mince garlic',
-                        'Heat olive oil in a large skillet over medium heat',
-                        'Add garlic and cook for 1 minute until fragrant',
+                    'Heat olive oil in a large skillet over medium heat',
+                    'Add garlic and cook for 1 minute until fragrant',
                         'Add tomatoes and cook for 5 minutes until softened',
                         'Add cooked pasta and toss with basil',
                         'Top with parmesan cheese and serve'
@@ -4135,13 +3774,7 @@
         }
 
         function saveRecipe(recipe) {
-            if (!currentUser) {
-                alert('Please login to save recipes!');
-                showLoginModal();
-                return;
-            }
-
-            const savedRecipes = JSON.parse(localStorage.getItem(`savedRecipes_${currentUser.email}`) || '[]');
+            const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
             
             // Check if recipe is already saved
             const existingIndex = savedRecipes.findIndex(saved => saved.title === recipe.title);
@@ -4151,8 +3784,7 @@
                     savedRecipes[existingIndex] = {
                         ...recipe,
                         savedAt: new Date().toISOString(),
-                        lastModified: new Date().toISOString(),
-                        savedBy: currentUser.email
+                        lastModified: new Date().toISOString()
                     };
                 } else {
                     return;
@@ -4162,13 +3794,12 @@
                 savedRecipes.push({
                     ...recipe,
                     savedAt: new Date().toISOString(),
-                    lastModified: new Date().toISOString(),
-                    savedBy: currentUser.email
+                    lastModified: new Date().toISOString()
                 });
             }
             
-            localStorage.setItem(`savedRecipes_${currentUser.email}`, JSON.stringify(savedRecipes));
-            alert('Recipe saved successfully to your account!');
+            localStorage.setItem('savedRecipes', JSON.stringify(savedRecipes));
+            alert('Recipe saved successfully!');
             
             // Update button text
             const saveBtn = document.querySelector('.save-recipe-btn');
