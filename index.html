@@ -127,6 +127,9 @@
             <button onclick="generateRecipe()" class="btn-primary w-full py-3">
                 Generate Recipe
             </button>
+            <button onclick="testRecipeGeneration()" class="btn-primary w-full mt-2 bg-blue-500">
+                Test Recipe Generation
+            </button>
         </div>
 
         <!-- Recipe Display -->
@@ -291,12 +294,15 @@
         }
 
         function generateRecipe() {
+            console.log('generateRecipe called');
             const ingredients = [];
             // Get all ingredient inputs that actually exist and have values
             const ingredientInputs = document.querySelectorAll('input[id^="ingredient-"]');
+            console.log('Found ingredient inputs:', ingredientInputs.length);
             ingredientInputs.forEach(input => {
                 if (input.value.trim()) {
                     ingredients.push(input.value.trim());
+                    console.log('Added ingredient:', input.value.trim());
                 }
             });
 
@@ -310,9 +316,12 @@
             document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
                 restrictions.push(cb.value);
             });
+            console.log('Dietary restrictions:', restrictions);
 
             // Generate recipe based on ingredients
+            console.log('Generating recipe for ingredients:', ingredients);
             const recipe = generateRecipeFromIngredients(ingredients, restrictions);
+            console.log('Generated recipe:', recipe);
             displayRecipe(recipe);
         }
 
@@ -2682,8 +2691,10 @@
         }
 
         function createMultiIngredientRecipe(ingredients, restrictions) {
+            console.log('createMultiIngredientRecipe called with:', ingredients, restrictions);
             // Include ALL ingredients in the recipe, not just the first one
             const allIngredients = ingredients.map(ing => ing.toLowerCase());
+            console.log('All ingredients (lowercase):', allIngredients);
             
             // Define specific multi-ingredient recipes based on common combinations
             const multiRecipes = {
@@ -3469,6 +3480,27 @@
                 servings: '4 servings',
                 calories: '250 calories per serving'
             };
+        }
+
+        function testRecipeGeneration() {
+            console.log('=== TESTING RECIPE GENERATION ===');
+            
+            // Test single ingredient
+            console.log('Testing single ingredient: chicken');
+            const singleRecipe = generateRecipeFromIngredients(['chicken'], []);
+            console.log('Single ingredient result:', singleRecipe);
+            
+            // Test multiple ingredients
+            console.log('Testing multiple ingredients: chicken, rice');
+            const multiRecipe = generateRecipeFromIngredients(['chicken', 'rice'], []);
+            console.log('Multiple ingredients result:', multiRecipe);
+            
+            // Test with restrictions
+            console.log('Testing with vegetarian restriction: chicken');
+            const restrictedRecipe = generateRecipeFromIngredients(['chicken'], ['Vegetarian']);
+            console.log('Restricted recipe result:', restrictedRecipe);
+            
+            alert('Check browser console (F12) for test results!');
         }
 
         function applyDietaryRestrictions(recipe, restrictions) {
