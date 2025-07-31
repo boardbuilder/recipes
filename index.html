@@ -1139,7 +1139,14 @@
                 
                 // Check for exact matches first
                 if (recipes[lowerIngredient]) {
-                    return recipes[lowerIngredient];
+                    let recipe = recipes[lowerIngredient];
+                    
+                    // Apply dietary restrictions
+                    if (restrictions && restrictions.length > 0) {
+                        recipe = applyDietaryRestrictions(recipe, restrictions);
+                    }
+                    
+                    return recipe;
                 }
                 
                 // Check for partial matches with more specific logic
@@ -2674,7 +2681,7 @@
             alert(pairing);
         }
 
-                function createMultiIngredientRecipe(ingredients, restrictions) {
+        function createMultiIngredientRecipe(ingredients, restrictions) {
             // Include ALL ingredients in the recipe, not just the first one
             const allIngredients = ingredients.map(ing => ing.toLowerCase());
             
@@ -2968,10 +2975,18 @@
             const ingredientKey = allIngredients.sort().join(',');
             console.log('Looking for multi-ingredient recipe with key:', ingredientKey);
             console.log('Available keys:', Object.keys(multiRecipes));
+            console.log('Dietary restrictions:', restrictions);
             
             if (multiRecipes[ingredientKey]) {
                 console.log('Found specific multi-ingredient recipe:', multiRecipes[ingredientKey].title);
-                return multiRecipes[ingredientKey];
+                let recipe = multiRecipes[ingredientKey];
+                
+                // Apply dietary restrictions
+                if (restrictions && restrictions.length > 0) {
+                    recipe = applyDietaryRestrictions(recipe, restrictions);
+                }
+                
+                return recipe;
             }
             
             // If no specific recipe found, create a custom one using the existing single recipes
@@ -3454,6 +3469,84 @@
                 servings: '4 servings',
                 calories: '250 calories per serving'
             };
+        }
+
+        function applyDietaryRestrictions(recipe, restrictions) {
+            console.log('Applying dietary restrictions:', restrictions);
+            
+            let modifiedRecipe = { ...recipe };
+            
+            // Vegetarian restrictions
+            if (restrictions.includes('Vegetarian') || restrictions.includes('Vegan')) {
+                // Replace meat ingredients with vegetarian alternatives
+                modifiedRecipe.ingredients = modifiedRecipe.ingredients.map(ingredient => {
+                    if (ingredient.item.includes('chicken') || ingredient.item.includes('beef') || 
+                        ingredient.item.includes('pork') || ingredient.item.includes('lamb') || 
+                        ingredient.item.includes('turkey') || ingredient.item.includes('salmon') ||
+                        ingredient.item.includes('shrimp')) {
+                        return { ...ingredient, item: 'tofu', amount: '1', unit: 'pound' };
+                    }
+                    return ingredient;
+                });
+                
+                // Update title and description
+                modifiedRecipe.title = modifiedRecipe.title.replace(/Chicken|Beef|Pork|Lamb|Turkey|Salmon|Shrimp/gi, 'Tofu');
+                modifiedRecipe.description = modifiedRecipe.description.replace(/chicken|beef|pork|lamb|turkey|salmon|shrimp/gi, 'tofu');
+                
+                // Update instructions
+                modifiedRecipe.instructions = modifiedRecipe.instructions.map(instruction => 
+                    instruction.replace(/chicken|beef|pork|lamb|turkey|salmon|shrimp/gi, 'tofu')
+                );
+            }
+            
+            // Vegan restrictions
+            if (restrictions.includes('Vegan')) {
+                // Replace dairy and eggs
+                modifiedRecipe.ingredients = modifiedRecipe.ingredients.map(ingredient => {
+                    if (ingredient.item.includes('butter') || ingredient.item.includes('cheese') || 
+                        ingredient.item.includes('cream') || ingredient.item.includes('milk') ||
+                        ingredient.item.includes('eggs')) {
+                        return { ...ingredient, item: 'olive oil', amount: '2', unit: 'tablespoons' };
+                    }
+                    return ingredient;
+                });
+                
+                modifiedRecipe.title = modifiedRecipe.title.replace(/Cheese|Cream|Butter/gi, 'Vegan');
+                modifiedRecipe.description = modifiedRecipe.description + ' (Vegan)';
+            }
+            
+            // Gluten-free restrictions
+            if (restrictions.includes('Gluten-Free')) {
+                // Replace wheat-based ingredients
+                modifiedRecipe.ingredients = modifiedRecipe.ingredients.map(ingredient => {
+                    if (ingredient.item.includes('pasta') || ingredient.item.includes('bread') || 
+                        ingredient.item.includes('flour') || ingredient.item.includes('soy sauce')) {
+                        return { ...ingredient, item: 'gluten-free ' + ingredient.item, amount: ingredient.amount, unit: ingredient.unit };
+                    }
+                    return ingredient;
+                });
+                
+                modifiedRecipe.title = modifiedRecipe.title + ' (Gluten-Free)';
+                modifiedRecipe.description = modifiedRecipe.description + ' (Gluten-Free)';
+            }
+            
+            // Low-carb restrictions
+            if (restrictions.includes('Low-Carb')) {
+                // Replace high-carb ingredients
+                modifiedRecipe.ingredients = modifiedRecipe.ingredients.map(ingredient => {
+                    if (ingredient.item.includes('rice') || ingredient.item.includes('pasta') || 
+                        ingredient.item.includes('potato') || ingredient.item.includes('bread')) {
+                        return { ...ingredient, item: 'cauliflower rice', amount: '2', unit: 'cups' };
+                    }
+                    return ingredient;
+                });
+                
+                modifiedRecipe.title = modifiedRecipe.title + ' (Low-Carb)';
+                modifiedRecipe.description = modifiedRecipe.description + ' (Low-Carb)';
+            }
+            
+            console.log('Modified recipe:', modifiedRecipe.title);
+            return modifiedRecipe;
         }
 
         function rateRecipe(rating) {
