@@ -4081,6 +4081,157 @@ Shared from Recipe Generator App
                 alert('Recipe deleted successfully!');
             }
         }
+
+        // Sign In Functions
+        function checkSignInStatus() {
+            const user = localStorage.getItem('currentUser');
+            if (user) {
+                currentUser = JSON.parse(user);
+                showUserActions();
+            } else {
+                showGuestActions();
+            }
+        }
+
+        function showUserActions() {
+            document.getElementById('guest-actions').classList.add('hidden');
+            document.getElementById('user-actions').classList.remove('hidden');
+            document.getElementById('user-name').textContent = currentUser.name;
+        }
+
+        function showGuestActions() {
+            document.getElementById('guest-actions').classList.remove('hidden');
+            document.getElementById('user-actions').classList.add('hidden');
+        }
+
+        function showSignInModal() {
+            document.getElementById('signin-modal').classList.remove('hidden');
+        }
+
+        function hideSignInModal() {
+            document.getElementById('signin-modal').classList.add('hidden');
+        }
+
+        function showSignUpModal() {
+            document.getElementById('signup-modal').classList.remove('hidden');
+        }
+
+        function hideSignUpModal() {
+            document.getElementById('signup-modal').classList.add('hidden');
+        }
+
+        function switchToSignUp() {
+            hideSignInModal();
+            showSignUpModal();
+        }
+
+        function switchToSignIn() {
+            hideSignUpModal();
+            showSignInModal();
+        }
+
+        function signOut() {
+            if (confirm('Are you sure you want to sign out?')) {
+                currentUser = null;
+                localStorage.removeItem('currentUser');
+                showGuestActions();
+                alert('Signed out successfully!');
+            }
+        }
+
+        function handleSignIn() {
+            const email = document.getElementById('signin-email').value;
+            const password = document.getElementById('signin-password').value;
+
+            if (!email || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            // Check if user exists
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                hideSignInModal();
+                showUserActions();
+                alert('Signed in successfully! Welcome back, ' + user.name);
+            } else {
+                alert('Invalid email or password. Please try again.');
+            }
+        }
+
+        function handleSignUp() {
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+
+            if (!name || !email || !password || !confirmPassword) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters long');
+                return;
+            }
+
+            // Check if user already exists
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const existingUser = users.find(u => u.email === email);
+
+            if (existingUser) {
+                alert('An account with this email already exists. Please sign in instead.');
+                return;
+            }
+
+            // Create new user
+            const newUser = {
+                name: name,
+                email: email,
+                password: password,
+                joined: new Date().toISOString()
+            };
+
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // Auto-sign in the new user
+            currentUser = newUser;
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            hideSignUpModal();
+            showUserActions();
+            alert('Account created successfully! Welcome, ' + name);
+        }
+
+        // Add form event listeners when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sign in form handler
+            const signinForm = document.getElementById('signin-form');
+            if (signinForm) {
+                signinForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    handleSignIn();
+                });
+            }
+
+            // Sign up form handler
+            const signupForm = document.getElementById('signup-form');
+            if (signupForm) {
+                signupForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    handleSignUp();
+                });
+            }
+        });
     </script>
 </body>
 </html> 
