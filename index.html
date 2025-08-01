@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://js.stripe.com/v3/"></script>
     
     <!-- Facebook Pixel Code -->
     <script>
@@ -315,27 +316,14 @@
                 <!-- Payment Form -->
                 <div id="payment-form" class="hidden">
                     <h3 class="text-xl font-bold text-gray-800 mb-4">Payment Information</h3>
-                    <div class="grid md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Email Address</label>
-                            <input type="email" id="customer-email" class="input-field" placeholder="your@email.com" required>
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Card Number</label>
-                            <input type="text" id="card-number" class="input-field" placeholder="1234 5678 9012 3456">
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Expiry Date</label>
-                            <input type="text" id="card-expiry" class="input-field" placeholder="MM/YY">
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">CVV</label>
-                            <input type="text" id="card-cvv" class="input-field" placeholder="123">
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Name on Card</label>
-                            <input type="text" id="card-name" class="input-field" placeholder="John Doe">
-                        </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2">Email Address</label>
+                        <input type="email" id="customer-email" class="input-field" placeholder="your@email.com" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2">Card Information</label>
+                        <div id="card-element" class="input-field" style="padding: 12px 16px; min-height: 20px;"></div>
+                        <div id="card-errors" class="text-red-500 text-sm mt-2" role="alert"></div>
                     </div>
                     <div class="flex justify-between items-center">
                         <div class="text-lg font-bold text-gray-800">
@@ -1507,22 +1495,64 @@
             alert(`Added ${recipe.ingredients.length} ingredients from "${recipe.title}" to your shopping list!`);
         }
 
+        // Initialize Stripe
+        let stripe;
+        let cardElement;
+        
+        function initializeStripe() {
+            // Initialize Stripe with your publishable key
+            stripe = Stripe('pk_test_51RqhD7DYRm11DoRi6vpMxnMn'); // Replace with your actual publishable key
+            
+            // Create card element
+            const elements = stripe.elements();
+            cardElement = elements.create('card', {
+                style: {
+                    base: {
+                        fontSize: '16px',
+                        color: '#424770',
+                        '::placeholder': {
+                            color: '#aab7c4',
+                        },
+                    },
+                },
+            });
+            
+            // Mount the card element
+            cardElement.mount('#card-element');
+            
+            // Handle real-time validation errors
+            cardElement.on('change', function(event) {
+                const displayError = document.getElementById('card-errors');
+                if (event.error) {
+                    displayError.textContent = event.error.message;
+                } else {
+                    displayError.textContent = '';
+                }
+            });
+        }
+        
         function selectPlan(plan) {
             selectedPlan = plan;
             const price = plan === 'monthly' ? '$9.99' : '$79.99';
             document.getElementById('plan-price').textContent = price;
             document.getElementById('payment-form').classList.remove('hidden');
+            
+            // Initialize Stripe when payment form is shown
+            if (!stripe) {
+                initializeStripe();
+            }
         }
 
         function processPayment() {
-            const cardNumber = document.getElementById('card-number').value;
-            const cardExpiry = document.getElementById('card-expiry').value;
-            const cardCvv = document.getElementById('card-cvv').value;
-            const cardName = document.getElementById('card-name').value;
             const email = document.getElementById('customer-email').value;
 
-            if (!cardNumber || !cardExpiry || !cardCvv || !cardName || !email) {
-                alert('Please fill in all payment fields including email');
+            if (!email) {
+                alert('Please enter your email address');
+                return;
+            }
+
+            if (!stripe || !cardElement) {
+                alert('Payment system not initialized. Please try again.');
                 return;
             }
 
@@ -1532,19 +1562,31 @@
             payButton.textContent = 'Processing...';
             payButton.disabled = true;
 
-            // Create payment method with Stripe
-            fetch('/api/create-subscription', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
+            // Create payment method with Stripe Elements
+            stripe.createPaymentMethod({
+                type: 'card',
+                card: cardElement,
+                billing_details: {
                     email: email,
-                    plan: selectedPlan,
-                    paymentMethodId: 'pm_card_visa' // In real app, this would be created by Stripe Elements
-                })
-            })
-            .then(response => response.json())
+                },
+            }).then(function(result) {
+                if (result.error) {
+                    throw new Error(result.error.message);
+                }
+                
+                // Send payment method to server
+                return fetch('/api/create-subscription', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        plan: selectedPlan,
+                        paymentMethodId: result.paymentMethod.id
+                    })
+                });
+            }).then(response => response.json())
             .then(data => {
                 if (data.error) {
                     throw new Error(data.error);
