@@ -79,6 +79,19 @@
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-gray-800 mb-2">🍳 Recipe Generator</h1>
             <p class="text-gray-600">Enter your ingredients and get delicious recipes!</p>
+            
+            <!-- Premium Banner -->
+            <div id="premium-banner" class="card p-4 mt-4 bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-200">
+                <div class="flex items-center justify-center gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Upgrade to Premium</h3>
+                        <p class="text-sm text-gray-600">Unlock advanced features and unlimited recipes!</p>
+                    </div>
+                    <button onclick="showPremiumModal()" class="btn-primary px-4 py-2 text-sm">
+                        Upgrade Now
+                    </button>
+                </div>
+            </div>
         </div>
 
         <!-- Input Form -->
@@ -363,6 +376,210 @@
             document.getElementById('recipe-display').classList.remove('hidden');
             document.getElementById('recipe-display').scrollIntoView({ behavior: 'smooth' });
         }
+
+        // Premium functionality
+        let isPremium = false;
+        let selectedPlan = 'monthly';
+
+        function showPremiumModal() {
+            document.getElementById('premium-modal').classList.remove('hidden');
+        }
+
+        function hidePremiumModal() {
+            document.getElementById('premium-modal').classList.add('hidden');
+        }
+
+        function selectPlan(plan) {
+            selectedPlan = plan;
+            const price = plan === 'monthly' ? '$9.99' : '$59.99';
+            document.getElementById('plan-price').textContent = price;
+            document.getElementById('payment-form').classList.remove('hidden');
+        }
+
+        function processPayment() {
+            const cardNumber = document.getElementById('card-number').value;
+            const cardExpiry = document.getElementById('card-expiry').value;
+            const cardCvv = document.getElementById('card-cvv').value;
+            const cardName = document.getElementById('card-name').value;
+            const email = document.getElementById('customer-email').value;
+
+            if (!cardNumber || !cardExpiry || !cardCvv || !cardName || !email) {
+                alert('Please fill in all payment fields including email');
+                return;
+            }
+
+            // Show loading state
+            const payButton = document.querySelector('button[onclick="processPayment()"]');
+            const originalText = payButton.textContent;
+            payButton.textContent = 'Processing...';
+            payButton.disabled = true;
+
+            // Create payment method with Stripe
+            fetch('/api/create-subscription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    plan: selectedPlan,
+                    paymentMethodId: 'pm_card_visa' // In real app, this would be created by Stripe Elements
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                // Payment successful
+                isPremium = true;
+                localStorage.setItem('isPremium', 'true');
+                localStorage.setItem('subscriptionId', data.subscriptionId);
+                localStorage.setItem('customerId', data.customerId);
+                
+                hidePremiumModal();
+                document.getElementById('premium-banner').classList.add('hidden');
+                
+                alert('Payment successful! Welcome to Premium!');
+            })
+            .catch(error => {
+                console.error('Payment error:', error);
+                alert('Payment failed: ' + error.message);
+            })
+            .finally(() => {
+                payButton.textContent = originalText;
+                payButton.disabled = false;
+            });
+        }
     </script>
+
+    <!-- Premium Modal -->
+    <div id="premium-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-gray-800">Upgrade to Premium</h2>
+                <button onclick="hidePremiumModal()" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-4">Choose Your Plan</h3>
+                
+                <div class="space-y-4">
+                    <div 
+                        class="p-4 border-2 rounded-lg cursor-pointer transition-all border-pink-500 bg-pink-50"
+                        onclick="selectPlan('monthly')"
+                    >
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="font-bold text-lg">Monthly Plan</h3>
+                                <p class="text-gray-600">Perfect for trying out premium features</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-2xl font-bold text-pink-600">$9.99</div>
+                                <div class="text-sm text-gray-500">per month</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div 
+                        class="p-4 border-2 rounded-lg cursor-pointer transition-all border-gray-200 hover:border-pink-300"
+                        onclick="selectPlan('yearly')"
+                    >
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="font-bold text-lg">Yearly Plan</h3>
+                                <p class="text-gray-600">Best value - save 40%</p>
+                                <span class="inline-block bg-pink-100 text-pink-800 text-xs px-2 py-1 rounded mt-1">
+                                    POPULAR
+                                </span>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-2xl font-bold text-pink-600">$59.99</div>
+                                <div class="text-sm text-gray-500">per year</div>
+                                <div class="text-xs text-green-600">Save $59.89</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="payment-form" class="hidden mt-6">
+                    <h3 class="text-lg font-semibold mb-4">Payment Details</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Card Number</label>
+                            <input 
+                                type="text" 
+                                id="card-number"
+                                placeholder="1234 5678 9012 3456"
+                                class="input-field"
+                            />
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
+                                <input 
+                                    type="text" 
+                                    id="card-expiry"
+                                    placeholder="MM/YY"
+                                    class="input-field"
+                                />
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">CVV</label>
+                                <input 
+                                    type="text" 
+                                    id="card-cvv"
+                                    placeholder="123"
+                                    class="input-field"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Cardholder Name</label>
+                            <input 
+                                type="text" 
+                                id="card-name"
+                                placeholder="John Doe"
+                                class="input-field"
+                            />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input 
+                                type="email" 
+                                id="customer-email"
+                                placeholder="john@example.com"
+                                class="input-field"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-4 mt-6">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold">Total:</span>
+                            <span class="text-xl font-bold text-pink-600" id="plan-price">$9.99</span>
+                        </div>
+                    </div>
+
+                    <button 
+                        onclick="processPayment()"
+                        class="btn-primary w-full py-3 mt-6"
+                    >
+                        Pay Now
+                    </button>
+
+                    <p class="text-xs text-gray-500 text-center mt-4">
+                        Secure payment powered by Stripe. Cancel anytime.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html> 
