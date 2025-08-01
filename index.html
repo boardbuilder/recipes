@@ -5,6 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Facebook Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'YOUR_PIXEL_ID_HERE'); // Replace with your actual Pixel ID
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID_HERE&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Facebook Pixel Code -->
     <style>
         .gradient-bg {
             background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fbbf24 100%);
@@ -1538,6 +1555,16 @@
                 localStorage.setItem('isPremium', 'true');
                 localStorage.setItem('subscriptionId', data.subscriptionId);
                 localStorage.setItem('customerId', data.customerId);
+                
+                // Track purchase with Facebook Pixel
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'Purchase', {
+                        value: selectedPlan === 'monthly' ? 9.99 : 99.99,
+                        currency: 'USD',
+                        content_name: selectedPlan === 'monthly' ? 'Monthly Premium Plan' : 'Yearly Premium Plan',
+                        content_category: 'Recipe Generator Premium'
+                    });
+                }
                 
                 hidePremiumModal();
                 document.getElementById('premium-banner').classList.add('hidden');
