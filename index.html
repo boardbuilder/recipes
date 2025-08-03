@@ -225,52 +225,56 @@
                     </button>
                 </div>
                 
-                <!-- Premium Features (shown after recipe creation) -->
+                <!-- Premium Features AFTER Recipe Creation -->
                 <div id="premium-features-after-recipe" class="hidden">
                     <div class="border-t pt-6 mt-6">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Premium Features</h3>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Additional Premium Features</h3>
                         <div class="grid md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-gray-700 font-semibold mb-2">Servings (Premium):</label>
-                                <select id="servings-select" onchange="updateServings(this.value)" class="input-field">
-                                    <option value="2">2 servings</option>
-                                    <option value="4" selected>4 servings</option>
-                                    <option value="6">6 servings</option>
-                                    <option value="8">8 servings</option>
-                                    <option value="10">10 servings</option>
-                                    <option value="12">12 servings</option>
+                                <label class="block text-gray-700 font-semibold mb-2">Recipe Style:</label>
+                                <select id="style-select" onchange="updateRecipeStyle(this.value)" class="input-field">
+                                    <option value="classic">Classic</option>
+                                    <option value="modern">Modern</option>
+                                    <option value="fusion">Fusion</option>
+                                    <option value="traditional">Traditional</option>
+                                    <option value="gourmet">Gourmet</option>
                                 </select>
-                    </div>
-                        <div>
-                                <label class="block text-gray-700 font-semibold mb-2">Cooking Time (Premium):</label>
-                                <select id="time-select" onchange="updateCookingTime(this.value)" class="input-field">
-                                    <option value="any">Any time</option>
-                                    <option value="quick">Quick (15 min or less)</option>
-                                    <option value="medium">Medium (15-30 min)</option>
-                                    <option value="slow">Slow (30+ min)</option>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Cooking Method:</label>
+                                <select id="method-select" onchange="updateCookingMethod(this.value)" class="input-field">
+                                    <option value="any">Any method</option>
+                                    <option value="stovetop">Stovetop</option>
+                                    <option value="oven">Oven</option>
+                                    <option value="grill">Grill</option>
+                                    <option value="slow-cooker">Slow Cooker</option>
+                                    <option value="air-fryer">Air Fryer</option>
                                 </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Spice Level:</label>
+                                <select id="spice-select" onchange="updateSpiceLevel(this.value)" class="input-field">
+                                    <option value="mild">Mild</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="hot">Hot</option>
+                                    <option value="extra-hot">Extra Hot</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Dietary Focus:</label>
+                                <select id="diet-select" onchange="updateDietaryFocus(this.value)" class="input-field">
+                                    <option value="balanced">Balanced</option>
+                                    <option value="protein-rich">Protein Rich</option>
+                                    <option value="low-carb">Low Carb</option>
+                                    <option value="vegetarian-friendly">Vegetarian Friendly</option>
+                                    <option value="gluten-free">Gluten Free</option>
+                                </select>
+                            </div>
                         </div>
-                        <div>
-                                <label class="block text-gray-700 font-semibold mb-2">Cuisine Style (Premium):</label>
-                                <select id="cuisine-select" onchange="updateCuisine(this.value)" class="input-field">
-                                    <option value="any">Any cuisine</option>
-                                    <option value="italian">Italian</option>
-                                    <option value="asian">Asian</option>
-                                    <option value="mexican">Mexican</option>
-                                    <option value="mediterranean">Mediterranean</option>
-                                    <option value="indian">Indian</option>
-                                    <option value="american">American</option>
-                                </select>
-                        </div>
-                        <div>
-                                <label class="block text-gray-700 font-semibold mb-2">Difficulty Level (Premium):</label>
-                                <select id="difficulty-select" onchange="updateDifficulty(this.value)" class="input-field">
-                                    <option value="any">Any difficulty</option>
-                                    <option value="easy">Easy (Beginner)</option>
-                                    <option value="medium">Medium (Intermediate)</option>
-                                    <option value="hard">Hard (Advanced)</option>
-                                </select>
-                        </div>
+                        <div class="mt-4">
+                            <button onclick="regenerateWithNewSettings()" class="btn-primary w-full">
+                                Regenerate Recipe with New Settings
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1024,6 +1028,46 @@ function estimateCalories(ingredients) {
         function updateDifficulty(value) {
             // This would filter recipes by difficulty
             console.log('Difficulty filter:', value);
+        }
+
+        // New premium feature functions for AFTER recipe generation
+        function updateRecipeStyle(value) {
+            console.log('Recipe style:', value);
+            // Store the style preference for regeneration
+            window.currentRecipeStyle = value;
+        }
+
+        function updateCookingMethod(value) {
+            console.log('Cooking method:', value);
+            window.currentCookingMethod = value;
+        }
+
+        function updateSpiceLevel(value) {
+            console.log('Spice level:', value);
+            window.currentSpiceLevel = value;
+        }
+
+        function updateDietaryFocus(value) {
+            console.log('Dietary focus:', value);
+            window.currentDietaryFocus = value;
+        }
+
+        function regenerateWithNewSettings() {
+            if (window.currentIngredients && window.currentRestrictions && window.currentPremiumSettings) {
+                // Combine original settings with new after-recipe settings
+                const combinedSettings = {
+                    ...window.currentPremiumSettings,
+                    style: window.currentRecipeStyle || 'classic',
+                    method: window.currentCookingMethod || 'any',
+                    spice: window.currentSpiceLevel || 'medium',
+                    dietary: window.currentDietaryFocus || 'balanced'
+                };
+                
+                const recipe = generateRecipeFromIngredients(window.currentIngredients, window.currentRestrictions, combinedSettings);
+                displayRecipe(recipe);
+            } else {
+                alert('No previous recipe to regenerate. Generate a recipe first!');
+            }
         }
 
         function resetApp() {
