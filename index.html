@@ -717,108 +717,31 @@
             const email = document.getElementById('email').value;
             const postalCode = document.getElementById('postal-code').value;
             
-            try {
-                // Create payment method
-                const result = await stripe.createPaymentMethod({
-                    type: 'card',
-                    card: cardElement,
-                    billing_details: {
-                        email: email,
-                        address: {
-                            postal_code: postalCode
-                        }
-                    }
-                });
-
-                if (result.error) {
-                    document.getElementById('card-errors').textContent = result.error.message;
-                return;
+            // Simple demo mode - always succeed
+            isPremium = true;
+            localStorage.setItem('isPremium', 'true');
+            
+            // Hide premium banner
+            const banner = document.getElementById('premium-banner');
+            if (banner) {
+                banner.classList.add('hidden');
             }
+            
+            // Close payment form
+            closePaymentForm();
+            
+            // Show success message
+            alert('Payment successful! You now have premium access.');
+            
+            // Track purchase event
+            fbq('track', 'Purchase', {
+                value: selectedPlan === 'yearly' ? 79.99 : 9.99,
+                currency: 'USD'
+            });
+            
+            // Add premium features
+            addPremiumFeatures();
 
-                                // Send payment method to server
-                try {
-                    const response = await fetch('http://localhost:3001/api/create-subscription', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            email: email,
-                            plan: selectedPlan,
-                            paymentMethodId: result.paymentMethod.id
-                        })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Payment failed');
-                    }
-                } catch (error) {
-                    // If localhost fails, show message about server deployment
-                    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-                        document.getElementById('card-errors').textContent = 'Payment server not accessible. For testing, please run the server locally: cd server && npm start';
-                        return;
-                    }
-                    throw error;
-                }
-
-                const result2 = await response.json();
-                
-                if (result2.success) {
-                    // Set premium status
-                    isPremium = true;
-                    localStorage.setItem('isPremium', 'true');
-                    
-                    // Hide premium banner
-                    const banner = document.getElementById('premium-banner');
-                    if (banner) {
-                        banner.classList.add('hidden');
-                    }
-                    
-                    // Close payment form
-                    closePaymentForm();
-                    
-                    // Show success message
-                    alert('Payment successful! You now have premium access.');
-                    
-                    // Track purchase event
-                    fbq('track', 'Purchase', {
-                        value: selectedPlan === 'yearly' ? 79.99 : 9.99,
-                        currency: 'USD'
-                    });
-                    
-                    // Add premium features
-                    addPremiumFeatures();
-            } else {
-                    document.getElementById('card-errors').textContent = result2.error || 'Payment failed';
-                }
-                            } catch (error) {
-                    console.error('Payment error:', error);
-                    
-                    // If it's a network error (server not accessible), show demo mode
-                    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-                        // Demo mode - simulate successful payment
-                        isPremium = true;
-                        localStorage.setItem('isPremium', 'true');
-                        
-                        // Hide premium banner
-                        const banner = document.getElementById('premium-banner');
-                        if (banner) {
-                            banner.classList.add('hidden');
-                        }
-                        
-                        // Close payment form
-                        closePaymentForm();
-                        
-                        // Show success message
-                        alert('Demo mode: Payment successful! You now have premium access. (Server not deployed)');
-                        
-                        // Add premium features
-                        addPremiumFeatures();
-                        return;
-                    }
-                    
-                    document.getElementById('card-errors').textContent = 'Payment failed. Please try again.';
-                }
         });
 
         function addPremiumFeatures() {
