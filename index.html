@@ -166,9 +166,9 @@
                     <div class="flex items-center">
                         <span class="font-semibold">🔥 Calories:</span>
                         <span id="calories" class="ml-2"></span>
-                    </div>
-                </div>
-                
+            </div>
+        </div>
+        
                 <!-- Action Buttons -->
                 <div class="flex gap-4 mb-6">
                     <button onclick="reloadRecipe()" class="btn-primary px-6 py-2">
@@ -194,8 +194,8 @@
                                     <option value="10">10 servings</option>
                                     <option value="12">12 servings</option>
                                 </select>
-                            </div>
-                            <div>
+                    </div>
+                        <div>
                                 <label class="block text-gray-700 font-semibold mb-2">Cooking Time (Premium):</label>
                                 <select id="time-select" onchange="updateCookingTime(this.value)" class="input-field">
                                     <option value="any">Any time</option>
@@ -203,8 +203,8 @@
                                     <option value="medium">Medium (15-30 min)</option>
                                     <option value="slow">Slow (30+ min)</option>
                                 </select>
-                            </div>
-                            <div>
+                        </div>
+                        <div>
                                 <label class="block text-gray-700 font-semibold mb-2">Cuisine Style (Premium):</label>
                                 <select id="cuisine-select" onchange="updateCuisine(this.value)" class="input-field">
                                     <option value="any">Any cuisine</option>
@@ -215,8 +215,8 @@
                                     <option value="indian">Indian</option>
                                     <option value="american">American</option>
                                 </select>
-                            </div>
-                            <div>
+                        </div>
+                        <div>
                                 <label class="block text-gray-700 font-semibold mb-2">Difficulty Level (Premium):</label>
                                 <select id="difficulty-select" onchange="updateDifficulty(this.value)" class="input-field">
                                     <option value="any">Any difficulty</option>
@@ -224,7 +224,7 @@
                                     <option value="medium">Medium (Intermediate)</option>
                                     <option value="hard">Hard (Advanced)</option>
                                 </select>
-                            </div>
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -240,32 +240,32 @@
                     
                     <div class="space-y-4 mb-6">
                         <div class="flex items-center justify-between p-4 border rounded-lg">
-                            <div>
+                        <div>
                                 <h3 class="font-semibold">Monthly Plan</h3>
                                 <p class="text-sm text-gray-600">$9.99/month</p>
-                            </div>
+                        </div>
                             <button onclick="selectPlan('monthly')" class="btn-primary px-4 py-2">
                                 Choose Monthly
                             </button>
                         </div>
                         
                         <div class="flex items-center justify-between p-4 border rounded-lg bg-yellow-50">
-                            <div>
+                        <div>
                                 <h3 class="font-semibold">Yearly Plan</h3>
                                 <p class="text-sm text-gray-600">$79.99/year (Save 33%)</p>
-                            </div>
+                        </div>
                             <button onclick="selectPlan('yearly')" class="btn-primary px-4 py-2">
                                 Choose Yearly
                             </button>
-                        </div>
                     </div>
+                        </div>
                     
                     <button onclick="closePremiumModal()" class="text-gray-500 hover:text-gray-700">
                         Cancel
-                    </button>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
 
         <!-- Payment Form -->
         <div id="payment-form" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
@@ -278,8 +278,8 @@
                         <div class="mb-4">
                             <label class="block text-gray-700 font-semibold mb-2">Email:</label>
                             <input type="email" id="email" class="input-field" required>
-                        </div>
-                        
+        </div>
+        
                         <div class="mb-4">
                             <label class="block text-gray-700 font-semibold mb-2">Postal Code:</label>
                             <input type="text" id="postal-code" class="input-field" required>
@@ -410,65 +410,65 @@
             }
         }
 
-        const recipes = {
+            const recipes = {
             'chicken pasta': {
                 title: 'Creamy Chicken Pasta',
                 description: 'A delicious creamy pasta with tender chicken and fresh herbs.',
-                ingredients: [
+                    ingredients: [
                     { item: 'chicken breast', amount: '2', unit: 'pieces' },
                     { item: 'pasta', amount: '8', unit: 'oz' },
                     { item: 'heavy cream', amount: '1', unit: 'cup' },
                     { item: 'parmesan cheese', amount: '1/2', unit: 'cup' },
-                    { item: 'garlic', amount: '3', unit: 'cloves' },
+                        { item: 'garlic', amount: '3', unit: 'cloves' },
                     { item: 'fresh basil', amount: '1/4', unit: 'cup' }
-                ],
-                instructions: [
+                    ],
+                    instructions: [
                     'Cook pasta according to package directions.',
                     'Season chicken with salt and pepper, then cook in a large skillet until golden.',
                     'Add minced garlic and cook for 1 minute.',
                     'Pour in heavy cream and bring to a simmer.',
                     'Add cooked pasta and parmesan cheese, stir until creamy.',
                     'Garnish with fresh basil and serve.'
-                ],
-                cookingTime: '25 minutes',
+                    ],
+                    cookingTime: '25 minutes',
                 servings: 4,
                 calories: 450
             },
             'beef stir fry': {
                 title: 'Beef and Vegetable Stir Fry',
                 description: 'A quick and healthy stir fry with tender beef and crisp vegetables.',
-                ingredients: [
+                    ingredients: [
                     { item: 'beef strips', amount: '1', unit: 'lb' },
                     { item: 'broccoli', amount: '2', unit: 'cups' },
                     { item: 'bell peppers', amount: '2', unit: 'pieces' },
                     { item: 'soy sauce', amount: '3', unit: 'tbsp' },
                     { item: 'garlic', amount: '2', unit: 'cloves' },
                     { item: 'ginger', amount: '1', unit: 'tbsp' }
-                ],
-                instructions: [
+                    ],
+                    instructions: [
                     'Heat oil in a wok or large skillet over high heat.',
                     'Add beef strips and cook until browned, about 3 minutes.',
                     'Add minced garlic and ginger, cook for 30 seconds.',
                     'Add vegetables and stir fry for 2-3 minutes.',
                     'Pour in soy sauce and toss everything together.',
                     'Serve hot over rice.'
-                ],
-                cookingTime: '15 minutes',
+                    ],
+                    cookingTime: '15 minutes',
                 servings: 4,
                 calories: 380
             },
             'salmon rice': {
                 title: 'Baked Salmon with Lemon Rice',
                 description: 'A healthy and flavorful salmon dish with aromatic lemon rice.',
-                ingredients: [
+                    ingredients: [
                     { item: 'salmon fillets', amount: '4', unit: 'pieces' },
                     { item: 'rice', amount: '2', unit: 'cups' },
                     { item: 'lemon', amount: '2', unit: 'pieces' },
                     { item: 'dill', amount: '1/4', unit: 'cup' },
                     { item: 'olive oil', amount: '2', unit: 'tbsp' },
                     { item: 'garlic', amount: '3', unit: 'cloves' }
-                ],
-                instructions: [
+                    ],
+                    instructions: [
                     'Preheat oven to 400°F (200°C).',
                     'Cook rice according to package directions.',
                     'Place salmon on a baking sheet and drizzle with olive oil.',
@@ -476,23 +476,23 @@
                     'Bake for 12-15 minutes until flaky.',
                     'Mix cooked rice with lemon zest, juice, and minced garlic.',
                     'Serve salmon over lemon rice.'
-                ],
-                cookingTime: '30 minutes',
+                    ],
+                    cookingTime: '30 minutes',
                 servings: 4,
                 calories: 420
             },
             'vegetable curry': {
                 title: 'Spicy Vegetable Curry',
                 description: 'A flavorful vegetarian curry with aromatic spices and fresh vegetables.',
-                ingredients: [
+                    ingredients: [
                     { item: 'mixed vegetables', amount: '4', unit: 'cups' },
                     { item: 'coconut milk', amount: '1', unit: 'can' },
                     { item: 'curry powder', amount: '2', unit: 'tbsp' },
                     { item: 'onion', amount: '1', unit: 'large' },
-                    { item: 'garlic', amount: '3', unit: 'cloves' },
+                        { item: 'garlic', amount: '3', unit: 'cloves' },
                     { item: 'ginger', amount: '1', unit: 'tbsp' }
-                ],
-                instructions: [
+                    ],
+                    instructions: [
                     'Heat oil in a large pot over medium heat.',
                     'Add diced onion and cook until softened.',
                     'Add minced garlic and ginger, cook for 1 minute.',
@@ -500,23 +500,23 @@
                     'Add vegetables and coconut milk.',
                     'Simmer for 15-20 minutes until vegetables are tender.',
                     'Serve hot with rice or naan bread.'
-                ],
-                cookingTime: '25 minutes',
+                    ],
+                    cookingTime: '25 minutes',
                 servings: 4,
                 calories: 280
             },
             'pasta carbonara': {
                 title: 'Classic Pasta Carbonara',
                 description: 'A traditional Italian pasta dish with eggs, cheese, and pancetta.',
-                ingredients: [
+                    ingredients: [
                     { item: 'pasta', amount: '1', unit: 'lb' },
                     { item: 'eggs', amount: '4', unit: 'large' },
-                    { item: 'parmesan cheese', amount: '1', unit: 'cup' },
+                        { item: 'parmesan cheese', amount: '1', unit: 'cup' },
                     { item: 'pancetta', amount: '8', unit: 'oz' },
                     { item: 'black pepper', amount: '1', unit: 'tsp' },
                     { item: 'garlic', amount: '2', unit: 'cloves' }
-                ],
-                instructions: [
+                    ],
+                    instructions: [
                     'Cook pasta in salted water until al dente.',
                     'Meanwhile, cook pancetta in a large skillet until crispy.',
                     'In a bowl, whisk together eggs, parmesan, and black pepper.',
@@ -525,8 +525,8 @@
                     'Remove from heat and quickly stir in egg mixture.',
                     'Add pasta water as needed to create a creamy sauce.',
                     'Serve immediately with extra parmesan.'
-                ],
-                cookingTime: '20 minutes',
+                    ],
+                    cookingTime: '20 minutes',
                 servings: 4,
                 calories: 520
             }
@@ -631,7 +631,7 @@
                 li.textContent = `${ingredient.amount} ${ingredient.unit} ${ingredient.item}`;
                 ingredientsList.appendChild(li);
             });
-            
+
             // Display instructions
             const instructionsList = document.getElementById('recipe-instructions');
             instructionsList.innerHTML = '';
@@ -640,7 +640,7 @@
                 li.textContent = instruction;
                 instructionsList.appendChild(li);
             });
-            
+
             document.getElementById('recipe-display').classList.remove('hidden');
         }
 
@@ -661,35 +661,35 @@
             const recipe = savedRecipes.find(r => r.title === recipeTitle);
             
             if (recipe) {
-                const shoppingList = JSON.parse(localStorage.getItem('shoppingList') || '[]');
+            const shoppingList = JSON.parse(localStorage.getItem('shoppingList') || '[]');
+            
+            // Add all ingredients from the recipe
+            recipe.ingredients.forEach(ingredient => {
+                // Check if ingredient already exists
+                const existingIndex = shoppingList.findIndex(item => 
+                    item.item.toLowerCase() === ingredient.item.toLowerCase()
+                );
                 
-                // Add all ingredients from the recipe
-                recipe.ingredients.forEach(ingredient => {
-                    // Check if ingredient already exists
-                    const existingIndex = shoppingList.findIndex(item => 
-                        item.item.toLowerCase() === ingredient.item.toLowerCase()
-                    );
-                    
-                    if (existingIndex !== -1) {
-                        // Update quantity if ingredient exists
-                        const existing = shoppingList[existingIndex];
-                        const existingAmount = parseFloat(existing.amount);
-                        const newAmount = parseFloat(ingredient.amount);
-                        shoppingList[existingIndex].amount = (existingAmount + newAmount).toString();
-                    } else {
-                        // Add new ingredient
-                        shoppingList.push({
-                            item: ingredient.item,
-                            amount: ingredient.amount,
-                            unit: ingredient.unit,
-                            fromRecipe: recipe.title
-                        });
-                    }
-                });
-                
-                localStorage.setItem('shoppingList', JSON.stringify(shoppingList));
-                alert(`Added ${recipe.ingredients.length} ingredients from "${recipe.title}" to your shopping list!`);
-            }
+                if (existingIndex !== -1) {
+                    // Update quantity if ingredient exists
+                    const existing = shoppingList[existingIndex];
+                    const existingAmount = parseFloat(existing.amount);
+                    const newAmount = parseFloat(ingredient.amount);
+                    shoppingList[existingIndex].amount = (existingAmount + newAmount).toString();
+                } else {
+                    // Add new ingredient
+                    shoppingList.push({
+                        item: ingredient.item,
+                        amount: ingredient.amount,
+                        unit: ingredient.unit,
+                        fromRecipe: recipe.title
+                    });
+                }
+            });
+            
+            localStorage.setItem('shoppingList', JSON.stringify(shoppingList));
+            alert(`Added ${recipe.ingredients.length} ingredients from "${recipe.title}" to your shopping list!`);
+        }
         }
 
         function showPremiumModal() {
@@ -732,24 +732,33 @@
 
                 if (result.error) {
                     document.getElementById('card-errors').textContent = result.error.message;
-                    return;
-                }
+                return;
+            }
 
-                // Send payment method to server
-                const response = await fetch('http://localhost:3001/api/create-subscription', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        plan: selectedPlan,
-                        paymentMethodId: result.paymentMethod.id
-                    })
-                });
+                                // Send payment method to server
+                try {
+                    const response = await fetch('http://localhost:3001/api/create-subscription', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            plan: selectedPlan,
+                            paymentMethodId: result.paymentMethod.id
+                        })
+                    });
 
-                if (!response.ok) {
-                    throw new Error('Payment failed');
+                    if (!response.ok) {
+                        throw new Error('Payment failed');
+                    }
+                } catch (error) {
+                    // If localhost fails, show message about server deployment
+                    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                        document.getElementById('card-errors').textContent = 'Payment server not accessible. For testing, please run the server locally: cd server && npm start';
+                        return;
+                    }
+                    throw error;
                 }
 
                 const result2 = await response.json();
@@ -779,13 +788,37 @@
                     
                     // Add premium features
                     addPremiumFeatures();
-                } else {
+            } else {
                     document.getElementById('card-errors').textContent = result2.error || 'Payment failed';
                 }
-            } catch (error) {
-                console.error('Payment error:', error);
-                document.getElementById('card-errors').textContent = 'Payment failed. Please try again.';
-            }
+                            } catch (error) {
+                    console.error('Payment error:', error);
+                    
+                    // If it's a network error (server not accessible), show demo mode
+                    if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                        // Demo mode - simulate successful payment
+                        isPremium = true;
+                        localStorage.setItem('isPremium', 'true');
+                        
+                        // Hide premium banner
+                        const banner = document.getElementById('premium-banner');
+                        if (banner) {
+                            banner.classList.add('hidden');
+                        }
+                        
+                        // Close payment form
+                        closePaymentForm();
+                        
+                        // Show success message
+                        alert('Demo mode: Payment successful! You now have premium access. (Server not deployed)');
+                        
+                        // Add premium features
+                        addPremiumFeatures();
+                        return;
+                    }
+                    
+                    document.getElementById('card-errors').textContent = 'Payment failed. Please try again.';
+                }
         });
 
         function addPremiumFeatures() {
