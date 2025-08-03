@@ -52,6 +52,32 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .ingredient-tag {
+            background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .step-number {
+            background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body class="gradient-bg min-h-screen">
@@ -60,6 +86,19 @@
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-gray-800 mb-2">Recipe Generator</h1>
             <p class="text-gray-600">Enter your ingredients and get delicious recipes!</p>
+            
+            <!-- Premium Banner -->
+            <div id="premium-banner" class="card p-4 mt-4 bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-200">
+                <div class="flex items-center justify-center gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-800">Upgrade to Premium</h3>
+                        <p class="text-sm text-gray-600">Unlock advanced features and unlimited recipes!</p>
+                    </div>
+                    <button onclick="showPremiumModal()" class="btn-primary px-4 py-2 text-sm">
+                        Upgrade Now
+                    </button>
+                </div>
+            </div>
         </div>
 
         <!-- Input Form -->
@@ -135,14 +174,181 @@
                     <button onclick="reloadRecipe()" class="btn-primary px-6 py-2">
                         🔄 Reload Recipe
                     </button>
+                    <button onclick="addToShoppingList()" class="btn-primary px-6 py-2">
+                        🛒 Add to Shopping List
+                    </button>
+                </div>
+                
+                <!-- Premium Features (shown after recipe creation) -->
+                <div id="premium-features-after-recipe" class="hidden">
+                    <div class="border-t pt-6 mt-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Premium Features</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Servings (Premium):</label>
+                                <select id="servings-select" onchange="updateServings(this.value)" class="input-field">
+                                    <option value="2">2 servings</option>
+                                    <option value="4" selected>4 servings</option>
+                                    <option value="6">6 servings</option>
+                                    <option value="8">8 servings</option>
+                                    <option value="10">10 servings</option>
+                                    <option value="12">12 servings</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Cooking Time (Premium):</label>
+                                <select id="time-select" onchange="updateCookingTime(this.value)" class="input-field">
+                                    <option value="any">Any time</option>
+                                    <option value="quick">Quick (15 min or less)</option>
+                                    <option value="medium">Medium (15-30 min)</option>
+                                    <option value="slow">Slow (30+ min)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Cuisine Style (Premium):</label>
+                                <select id="cuisine-select" onchange="updateCuisine(this.value)" class="input-field">
+                                    <option value="any">Any cuisine</option>
+                                    <option value="italian">Italian</option>
+                                    <option value="asian">Asian</option>
+                                    <option value="mexican">Mexican</option>
+                                    <option value="mediterranean">Mediterranean</option>
+                                    <option value="indian">Indian</option>
+                                    <option value="american">American</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Difficulty Level (Premium):</label>
+                                <select id="difficulty-select" onchange="updateDifficulty(this.value)" class="input-field">
+                                    <option value="any">Any difficulty</option>
+                                    <option value="easy">Easy (Beginner)</option>
+                                    <option value="medium">Medium (Intermediate)</option>
+                                    <option value="hard">Hard (Advanced)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Premium Modal -->
+        <div id="premium-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="card p-8 max-w-md w-full">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Upgrade to Premium</h2>
+                    <p class="text-gray-600 mb-6">Get unlimited recipes and advanced features!</p>
+                    
+                    <div class="space-y-4 mb-6">
+                        <div class="flex items-center justify-between p-4 border rounded-lg">
+                            <div>
+                                <h3 class="font-semibold">Monthly Plan</h3>
+                                <p class="text-sm text-gray-600">$9.99/month</p>
+                            </div>
+                            <button onclick="selectPlan('monthly')" class="btn-primary px-4 py-2">
+                                Choose Monthly
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 border rounded-lg bg-yellow-50">
+                            <div>
+                                <h3 class="font-semibold">Yearly Plan</h3>
+                                <p class="text-sm text-gray-600">$79.99/year (Save 33%)</p>
+                            </div>
+                            <button onclick="selectPlan('yearly')" class="btn-primary px-4 py-2">
+                                Choose Yearly
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button onclick="closePremiumModal()" class="text-gray-500 hover:text-gray-700">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Form -->
+        <div id="payment-form" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="card p-8 max-w-md w-full">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Complete Payment</h2>
+                    <p class="text-gray-600 mb-6">Enter your payment details to upgrade to premium.</p>
+                    
+                    <form id="payment-form-element">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Email:</label>
+                            <input type="email" id="email" class="input-field" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Postal Code:</label>
+                            <input type="text" id="postal-code" class="input-field" required>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-gray-700 font-semibold mb-2">Card Details:</label>
+                            <div id="card-element" class="input-field p-3"></div>
+                            <div id="card-errors" class="text-red-500 text-sm mt-2"></div>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary w-full py-3">
+                            Subscribe Now
+                        </button>
+                    </form>
+                    
+                    <button onclick="closePaymentForm()" class="text-gray-500 hover:text-gray-700 mt-4">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-8">
+            <button onclick="resetApp()" class="text-sm text-gray-500 hover:text-gray-700 underline">
+                Reset App (Clear All Data)
+            </button>
         </div>
     </div>
 
     <script>
         let ingredientCount = 1;
         let isPremium = false;
+        let selectedPlan = '';
+        let servings = 4;
+
+        // Initialize Stripe
+        const stripe = Stripe('pk_live_51QGR3EDYRm11DoRiF412084WDjELauYMAvVDQ3W1pHL05fLavgUQeUm9MwrtDhRLEeRTB3NfnqHAwHtt2vf0MTVp00QRkSfv5x');
+        const elements = stripe.elements();
+        const cardElement = elements.create('card');
+        cardElement.mount('#card-element');
+
+        // Facebook Pixel
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1958412844735395');
+        fbq('track', 'PageView');
+
+        // Check if user is premium on page load
+        window.addEventListener('load', function() {
+            // Check if premium status is stored
+            const premiumStatus = localStorage.getItem('isPremium');
+            if (premiumStatus === 'true') {
+                isPremium = true;
+                // Hide the premium banner and show premium features
+                const banner = document.getElementById('premium-banner');
+                if (banner) {
+                    banner.classList.add('hidden');
+                }
+                // Add premium features to the form
+                addPremiumFeatures();
+            }
+        });
 
         function addIngredient() {
             const container = document.getElementById('ingredients-container');
@@ -197,6 +403,11 @@
             // Generate recipe based on ingredients
             const recipe = generateRecipeFromIngredients(ingredients, restrictions);
             displayRecipe(recipe);
+            
+            // Show premium features after recipe creation
+            if (isPremium) {
+                document.getElementById('premium-features-after-recipe').classList.remove('hidden');
+            }
         }
 
         const recipes = {
@@ -269,6 +480,55 @@
                 cookingTime: '30 minutes',
                 servings: 4,
                 calories: 420
+            },
+            'vegetable curry': {
+                title: 'Spicy Vegetable Curry',
+                description: 'A flavorful vegetarian curry with aromatic spices and fresh vegetables.',
+                ingredients: [
+                    { item: 'mixed vegetables', amount: '4', unit: 'cups' },
+                    { item: 'coconut milk', amount: '1', unit: 'can' },
+                    { item: 'curry powder', amount: '2', unit: 'tbsp' },
+                    { item: 'onion', amount: '1', unit: 'large' },
+                    { item: 'garlic', amount: '3', unit: 'cloves' },
+                    { item: 'ginger', amount: '1', unit: 'tbsp' }
+                ],
+                instructions: [
+                    'Heat oil in a large pot over medium heat.',
+                    'Add diced onion and cook until softened.',
+                    'Add minced garlic and ginger, cook for 1 minute.',
+                    'Add curry powder and stir for 30 seconds.',
+                    'Add vegetables and coconut milk.',
+                    'Simmer for 15-20 minutes until vegetables are tender.',
+                    'Serve hot with rice or naan bread.'
+                ],
+                cookingTime: '25 minutes',
+                servings: 4,
+                calories: 280
+            },
+            'pasta carbonara': {
+                title: 'Classic Pasta Carbonara',
+                description: 'A traditional Italian pasta dish with eggs, cheese, and pancetta.',
+                ingredients: [
+                    { item: 'pasta', amount: '1', unit: 'lb' },
+                    { item: 'eggs', amount: '4', unit: 'large' },
+                    { item: 'parmesan cheese', amount: '1', unit: 'cup' },
+                    { item: 'pancetta', amount: '8', unit: 'oz' },
+                    { item: 'black pepper', amount: '1', unit: 'tsp' },
+                    { item: 'garlic', amount: '2', unit: 'cloves' }
+                ],
+                instructions: [
+                    'Cook pasta in salted water until al dente.',
+                    'Meanwhile, cook pancetta in a large skillet until crispy.',
+                    'In a bowl, whisk together eggs, parmesan, and black pepper.',
+                    'Drain pasta, reserving 1 cup of pasta water.',
+                    'Add hot pasta to the skillet with pancetta.',
+                    'Remove from heat and quickly stir in egg mixture.',
+                    'Add pasta water as needed to create a creamy sauce.',
+                    'Serve immediately with extra parmesan.'
+                ],
+                cookingTime: '20 minutes',
+                servings: 4,
+                calories: 520
             }
         };
 
@@ -382,6 +642,194 @@
             });
             
             document.getElementById('recipe-display').classList.remove('hidden');
+        }
+
+        function addToShoppingList() {
+            const recipeTitle = document.getElementById('recipe-title').textContent;
+            const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
+            const currentRecipe = savedRecipes.find(r => r.title === recipeTitle);
+            
+            if (currentRecipe) {
+                addIngredientsToShoppingList(recipeTitle);
+            } else {
+                alert('Recipe not found in saved recipes!');
+            }
+        }
+
+        function addIngredientsToShoppingList(recipeTitle) {
+            const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
+            const recipe = savedRecipes.find(r => r.title === recipeTitle);
+            
+            if (recipe) {
+                const shoppingList = JSON.parse(localStorage.getItem('shoppingList') || '[]');
+                
+                // Add all ingredients from the recipe
+                recipe.ingredients.forEach(ingredient => {
+                    // Check if ingredient already exists
+                    const existingIndex = shoppingList.findIndex(item => 
+                        item.item.toLowerCase() === ingredient.item.toLowerCase()
+                    );
+                    
+                    if (existingIndex !== -1) {
+                        // Update quantity if ingredient exists
+                        const existing = shoppingList[existingIndex];
+                        const existingAmount = parseFloat(existing.amount);
+                        const newAmount = parseFloat(ingredient.amount);
+                        shoppingList[existingIndex].amount = (existingAmount + newAmount).toString();
+                    } else {
+                        // Add new ingredient
+                        shoppingList.push({
+                            item: ingredient.item,
+                            amount: ingredient.amount,
+                            unit: ingredient.unit,
+                            fromRecipe: recipe.title
+                        });
+                    }
+                });
+                
+                localStorage.setItem('shoppingList', JSON.stringify(shoppingList));
+                alert(`Added ${recipe.ingredients.length} ingredients from "${recipe.title}" to your shopping list!`);
+            }
+        }
+
+        function showPremiumModal() {
+            document.getElementById('premium-modal').classList.remove('hidden');
+        }
+
+        function closePremiumModal() {
+            document.getElementById('premium-modal').classList.add('hidden');
+        }
+
+        function selectPlan(plan) {
+            selectedPlan = plan;
+            document.getElementById('premium-modal').classList.add('hidden');
+            document.getElementById('payment-form').classList.remove('hidden');
+        }
+
+        function closePaymentForm() {
+            document.getElementById('payment-form').classList.add('hidden');
+        }
+
+        // Handle payment form submission
+        document.getElementById('payment-form-element').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const postalCode = document.getElementById('postal-code').value;
+            
+            try {
+                // Create payment method
+                const result = await stripe.createPaymentMethod({
+                    type: 'card',
+                    card: cardElement,
+                    billing_details: {
+                        email: email,
+                        address: {
+                            postal_code: postalCode
+                        }
+                    }
+                });
+
+                if (result.error) {
+                    document.getElementById('card-errors').textContent = result.error.message;
+                    return;
+                }
+
+                // Send payment method to server
+                const response = await fetch('http://localhost:3001/api/create-subscription', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        plan: selectedPlan,
+                        paymentMethodId: result.paymentMethod.id
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Payment failed');
+                }
+
+                const result2 = await response.json();
+                
+                if (result2.success) {
+                    // Set premium status
+                    isPremium = true;
+                    localStorage.setItem('isPremium', 'true');
+                    
+                    // Hide premium banner
+                    const banner = document.getElementById('premium-banner');
+                    if (banner) {
+                        banner.classList.add('hidden');
+                    }
+                    
+                    // Close payment form
+                    closePaymentForm();
+                    
+                    // Show success message
+                    alert('Payment successful! You now have premium access.');
+                    
+                    // Track purchase event
+                    fbq('track', 'Purchase', {
+                        value: selectedPlan === 'yearly' ? 79.99 : 9.99,
+                        currency: 'USD'
+                    });
+                    
+                    // Add premium features
+                    addPremiumFeatures();
+                } else {
+                    document.getElementById('card-errors').textContent = result2.error || 'Payment failed';
+                }
+            } catch (error) {
+                console.error('Payment error:', error);
+                document.getElementById('card-errors').textContent = 'Payment failed. Please try again.';
+            }
+        });
+
+        function addPremiumFeatures() {
+            // Premium features are already in the HTML, just need to show them
+            const premiumFeatures = document.getElementById('premium-features-after-recipe');
+            if (premiumFeatures) {
+                premiumFeatures.classList.remove('hidden');
+            }
+        }
+
+        function updateServings(value) {
+            servings = parseInt(value);
+            // Update recipe display if a recipe is currently shown
+            if (window.currentRecipe) {
+                displayRecipe(window.currentRecipe);
+            }
+        }
+
+        function updateCookingTime(value) {
+            // This would filter recipes by cooking time
+            console.log('Cooking time filter:', value);
+        }
+
+        function updateCuisine(value) {
+            // This would filter recipes by cuisine
+            console.log('Cuisine filter:', value);
+        }
+
+        function updateDifficulty(value) {
+            // This would filter recipes by difficulty
+            console.log('Difficulty filter:', value);
+        }
+
+        function resetApp() {
+            // Clear all localStorage data
+            localStorage.clear();
+            
+            // Reset variables
+            isPremium = false;
+            ingredientCount = 1;
+            servings = 4;
+            
+            // Reload the page
+            location.reload();
         }
     </script>
 </body>
