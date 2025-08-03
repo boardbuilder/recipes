@@ -1046,7 +1046,7 @@
             payButton.disabled = true;
 
             // Create payment intent with Stripe
-            fetch('/api/create-subscription', {
+            fetch('http://localhost:3001/api/create-subscription', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

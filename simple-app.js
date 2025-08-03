@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +15,7 @@
             color: white;
             font-weight: 600;
             padding: 12px 24px;
-            border-radius: 8px;
+            border-radius: 4px;
             transition: all 0.3s;
             transform: scale(1);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -27,7 +28,7 @@
             width: 100%;
             padding: 12px 16px;
             border: 1px solid #fce7f3;
-            border-radius: 8px;
+            border-radius: 4px;
             outline: none;
             transition: all 0.2s;
             background: rgba(255, 255, 255, 0.9);
@@ -39,7 +40,7 @@
         }
         .card {
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 8px;
+            border-radius: 4px;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
             border: 1px solid #fce7f3;
         }
@@ -81,7 +82,8 @@
             <p class="text-gray-600">Enter your ingredients and get delicious recipes!</p>
             
             <!-- Premium Banner -->
-            <div id="premium-banner" class="card p-4 mt-4 bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-200">
+            <div id="premium-banner" class="card p-4 mt-4 bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-200 relative">
+                <div class="absolute top-2 right-2 text-xs text-gray-500 font-bold">P</div>
                 <div class="flex items-center justify-center gap-4">
                     <div>
                         <h3 class="text-lg font-bold text-gray-800">Upgrade to Premium</h3>
@@ -164,7 +166,32 @@
         </div>
     </div>
 
+    <!-- Facebook Pixel Code -->
     <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1958412844735395');
+        fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id=1958412844735395&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Facebook Pixel Code -->
+
+    <!-- Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        // Initialize Stripe
+        const stripe = Stripe('pk_live_51QGR3EDYRm11DoRiF412084WDjELauYMAvVDQ3W1pHL05fLavgUQeUm9MwrtDhRLEeRTB3NfnqHAwHtt2vf0MTVp00QRkSfv5x');
+        let elements;
+        let cardElement;
+        
         let ingredientCount = 1;
 
         function addIngredient() {
@@ -391,20 +418,43 @@
 
         function selectPlan(plan) {
             selectedPlan = plan;
-            const price = plan === 'monthly' ? '$9.99' : '$59.99';
+            const price = plan === 'monthly' ? '$9.99' : '$79.99';
             document.getElementById('plan-price').textContent = price;
             document.getElementById('payment-form').classList.remove('hidden');
+            
+            // Initialize Stripe Elements if not already done
+            if (!elements) {
+                elements = stripe.elements();
+                cardElement = elements.create('card', {
+                    style: {
+                        base: {
+                            fontSize: '16px',
+                            color: '#424770',
+                            '::placeholder': {
+                                color: '#aab7c4',
+                            },
+                        },
+                    },
+                });
+                cardElement.mount('#card-element');
+                
+                // Handle validation errors
+                cardElement.on('change', function(event) {
+                    const displayError = document.getElementById('card-errors');
+                    if (event.error) {
+                        displayError.textContent = event.error.message;
+                    } else {
+                        displayError.textContent = '';
+                    }
+                });
+            }
         }
 
         function processPayment() {
-            const cardNumber = document.getElementById('card-number').value;
-            const cardExpiry = document.getElementById('card-expiry').value;
-            const cardCvv = document.getElementById('card-cvv').value;
-            const cardName = document.getElementById('card-name').value;
             const email = document.getElementById('customer-email').value;
 
-            if (!cardNumber || !cardExpiry || !cardCvv || !cardName || !email) {
-                alert('Please fill in all payment fields including email');
+            if (!email) {
+                alert('Please enter your email address');
                 return;
             }
 
@@ -414,42 +464,72 @@
             payButton.textContent = 'Processing...';
             payButton.disabled = true;
 
-            // Create payment method with Stripe
-            fetch('/api/create-subscription', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
+            // Create payment method with Stripe Elements
+            stripe.createPaymentMethod({
+                type: 'card',
+                card: cardElement,
+                billing_details: {
                     email: email,
-                    plan: selectedPlan,
-                    paymentMethodId: 'pm_card_visa' // In real app, this would be created by Stripe Elements
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    throw new Error(data.error);
+                },
+            }).then(function(result) {
+                if (result.error) {
+                    // Show error to customer
+                    const errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
+                    payButton.textContent = originalText;
+                    payButton.disabled = false;
+                } else {
+                    // Send payment method ID to server
+                    fetch('http://localhost:3001/api/create-subscription', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            plan: selectedPlan,
+                            paymentMethodId: result.paymentMethod.id
+                        })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.error) {
+                            throw new Error(data.error);
+                        }
+                        
+                        // Payment successful - track with Facebook Pixel
+                        fbq('track', 'Purchase', {
+                            value: selectedPlan === 'monthly' ? 9.99 : 79.99,
+                            currency: 'USD',
+                            content_name: 'Recipe Generator Premium',
+                            content_category: 'Subscription'
+                        });
+                        
+                        // Update local storage
+                        isPremium = true;
+                        localStorage.setItem('isPremium', 'true');
+                        localStorage.setItem('subscriptionId', data.subscriptionId);
+                        localStorage.setItem('customerId', data.customerId);
+                        
+                        hidePremiumModal();
+                        document.getElementById('premium-banner').classList.add('hidden');
+                        
+                        alert('Payment successful! Welcome to Premium!');
+                    })
+                    .catch(error => {
+                        console.error('Payment error:', error);
+                        alert('Payment failed: ' + error.message);
+                    })
+                    .finally(() => {
+                        payButton.textContent = originalText;
+                        payButton.disabled = false;
+                    });
                 }
-                
-                // Payment successful
-                isPremium = true;
-                localStorage.setItem('isPremium', 'true');
-                localStorage.setItem('subscriptionId', data.subscriptionId);
-                localStorage.setItem('customerId', data.customerId);
-                
-                hidePremiumModal();
-                document.getElementById('premium-banner').classList.add('hidden');
-                
-                alert('Payment successful! Welcome to Premium!');
-            })
-            .catch(error => {
-                console.error('Payment error:', error);
-                alert('Payment failed: ' + error.message);
-            })
-            .finally(() => {
-                payButton.textContent = originalText;
-                payButton.disabled = false;
             });
         }
     </script>
@@ -499,9 +579,9 @@
                                 </span>
                             </div>
                             <div class="text-right">
-                                <div class="text-2xl font-bold text-pink-600">$59.99</div>
+                                <div class="text-2xl font-bold text-pink-600">$79.99</div>
                                 <div class="text-sm text-gray-500">per year</div>
-                                <div class="text-xs text-green-600">Save $59.89</div>
+                                <div class="text-xs text-green-600">Save $39.89</div>
                             </div>
                         </div>
                     </div>
@@ -512,42 +592,9 @@
                     
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Card Number</label>
-                            <input 
-                                type="text" 
-                                id="card-number"
-                                placeholder="1234 5678 9012 3456"
-                                class="input-field"
-                            />
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
-                                <input 
-                                    type="text" 
-                                    id="card-expiry"
-                                    placeholder="MM/YY"
-                                    class="input-field"
-                                />
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">CVV</label>
-                                <input 
-                                    type="text" 
-                                    id="card-cvv"
-                                    placeholder="123"
-                                    class="input-field"
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Cardholder Name</label>
-                            <input 
-                                type="text" 
-                                id="card-name"
-                                placeholder="John Doe"
-                                class="input-field"
-                            />
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Card Details</label>
+                            <div id="card-element" class="input-field p-3 min-h-[40px]"></div>
+                            <div id="card-errors" class="text-red-500 text-sm mt-2"></div>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>

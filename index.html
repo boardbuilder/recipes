@@ -16,6 +16,8 @@
     n.queue=[];t=b.createElement(e);t.async=!0;
     t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
     document,'script','https://connect.facebook.net/en_US/fbevents.js');
+
+    
     fbq('init', '1958412844735395'); // Facebook Pixel ID
     fbq('track', 'PageView');
     </script>
@@ -1575,7 +1577,7 @@
                 }
                 
                 // Send payment method to server
-                return fetch('/api/create-subscription', {
+                return fetch('http://localhost:3001/api/create-subscription', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1583,10 +1585,15 @@
                 body: JSON.stringify({
                     email: email,
                     plan: selectedPlan,
-                        paymentMethodId: result.paymentMethod.id
+                    paymentMethodId: result.paymentMethod.id
                 })
                 });
-            }).then(response => response.json())
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.error) {
                     throw new Error(data.error);
@@ -1601,7 +1608,7 @@
                 // Track purchase with Facebook Pixel
                 if (typeof fbq !== 'undefined') {
                     fbq('track', 'Purchase', {
-                        value: selectedPlan === 'monthly' ? 9.99 : 99.99,
+                        value: selectedPlan === 'monthly' ? 9.99 : 79.99,
                         currency: 'USD',
                         content_name: selectedPlan === 'monthly' ? 'Monthly Premium Plan' : 'Yearly Premium Plan',
                         content_category: 'Recipe Generator Premium'

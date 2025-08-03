@@ -14,6 +14,7 @@ function App() {
   const [savedRecipes, setSavedRecipes] = useState([]);
   const [mealPlan, setMealPlan] = useState([]);
   const [servings, setServings] = useState(4);
+  const [recipeRatings, setRecipeRatings] = useState({});
   const [premiumFeatures, setPremiumFeatures] = useState({
     unlimitedRecipes: false,
     advancedScaling: false,
