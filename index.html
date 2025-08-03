@@ -1,4 +1,4 @@
-<!-- Updated: August 3, 2025 - All features working! NO DUPLICATES! -->
+<!-- Updated: August 3, 2025 - All features working! -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -391,7 +391,7 @@
             }
         }
 
-            const recipes = {
+        const recipes = {
             
 
         function generateRecipeFromIngredients(ingredients, restrictions) {
@@ -1233,13 +1233,13 @@
                 
                 // Send payment method to server
                 return fetch('http://localhost:3001/api/create-subscription', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: email,
-                    plan: selectedPlan,
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        plan: selectedPlan,
                         paymentMethodId: result.paymentMethod.id
                     })
                 });
@@ -1715,28 +1715,1257 @@
                                     </button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Form -->
+                    <div class="card p-6 mb-6">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Ingredients:</label>
+                            <div id="ingredients-container">
+                                <div class="flex gap-2 mb-2">
+                                    <input type="text" class="input-field flex-1" placeholder="Enter an ingredient..." id="ingredient-0">
+                                    <button onclick="addIngredient()" class="btn-primary">+</button>
                                 </div>
                             </div>
                         </div>
 
-    <script>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Dietary Restrictions:</label>
+                            <div class="flex flex-wrap gap-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="mr-2" value="vegetarian"> Vegetarian
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="mr-2" value="vegan"> Vegan
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="mr-2" value="gluten-free"> Gluten-Free
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="mr-2" value="dairy-free"> Dairy-Free
+                                </label>
+                            </div>
+                        </div>
 
-    <script>
-        let ingredientCount = 1;
-        let isPremium = false;
-        let selectedPlan = '';
-        let servings = 4;
+                        <!-- Premium Features -->
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Servings (Premium):</label>
+                            <select id="servings-select" onchange="updateServings(this.value)" class="input-field">
+                                <option value="2">2 servings</option>
+                                <option value="4" selected>4 servings</option>
+                                <option value="6">6 servings</option>
+                                <option value="8">8 servings</option>
+                                <option value="10">10 servings</option>
+                                <option value="12">12 servings</option>
+                            </select>
+                        </div>
 
-        // Check if user is premium on page load
-        window.addEventListener('load', function() {
-            // Check if premium status is stored
-            const premiumStatus = localStorage.getItem('isPremium');
-            if (premiumStatus === 'true') {
-                isPremium = true;
-                // Hide the premium banner and show premium features
-                const banner = document.getElementById('premium-banner');
-                if (banner) {
-                    banner.classList.add('hidden');
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Cooking Time (Premium):</label>
+                            <select id="time-select" onchange="updateCookingTime(this.value)" class="input-field">
+                                <option value="any">Any time</option>
+                                <option value="quick">Quick (15 min or less)</option>
+                                <option value="medium">Medium (15-30 min)</option>
+                                <option value="slow">Slow (30+ min)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Cuisine Style (Premium):</label>
+                            <select id="cuisine-select" onchange="updateCuisine(this.value)" class="input-field">
+                                <option value="any">Any cuisine</option>
+                                <option value="italian">Italian</option>
+                                <option value="asian">Asian</option>
+                                <option value="mexican">Mexican</option>
+                                <option value="mediterranean">Mediterranean</option>
+                                <option value="indian">Indian</option>
+                                <option value="american">American</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Difficulty Level (Premium):</label>
+                            <select id="difficulty-select" onchange="updateDifficulty(this.value)" class="input-field">
+                                <option value="any">Any difficulty</option>
+                                <option value="easy">Easy (Beginner)</option>
+                                <option value="medium">Medium (Intermediate)</option>
+                                <option value="hard">Hard (Advanced)</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Meal Planning (Premium):</label>
+                            <div class="flex gap-2">
+                                <button onclick="addToMealPlan('breakfast')" class="btn-primary text-sm px-3 py-1">Breakfast</button>
+                                <button onclick="addToMealPlan('lunch')" class="btn-primary text-sm px-3 py-1">Lunch</button>
+                                <button onclick="addToMealPlan('dinner')" class="btn-primary text-sm px-3 py-1">Dinner</button>
+                                <button onclick="addToMealPlan('snack')" class="btn-primary text-sm px-3 py-1">Snack</button>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Recipe Collections (Premium):</label>
+                            <div class="flex gap-2">
+                                <button onclick="navigateToPage('saved-recipes')" class="btn-primary text-sm px-3 py-1">Saved Recipes</button>
+                                <button onclick="navigateToPage('shopping-list')" class="btn-primary text-sm px-3 py-1">Shopping List</button>
+                                <button onclick="navigateToPage('meal-plan')" class="btn-primary text-sm px-3 py-1">Meal Plan</button>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Smart Features (Premium):</label>
+                            <div class="flex gap-2">
+                                <button onclick="navigateToPage('cooking-tips')" class="btn-primary text-sm px-3 py-1">Cooking Tips</button>
+                                <button onclick="navigateToPage('substitutions')" class="btn-primary text-sm px-3 py-1">Substitutions</button>
+                                <button onclick="navigateToPage('wine-pairing')" class="btn-primary text-sm px-3 py-1">Wine Pairing</button>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Recipe Rating (Premium):</label>
+                            <div class="flex gap-2">
+                                <button onclick="rateRecipe(5)" class="text-2xl">★</button>
+                                <button onclick="rateRecipe(4)" class="text-2xl">★</button>
+                                <button onclick="rateRecipe(3)" class="text-2xl">★</button>
+                                <button onclick="rateRecipe(2)" class="text-2xl">★</button>
+                                <button onclick="rateRecipe(1)" class="text-2xl">★</button>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Cooking Timer (Premium):</label>
+                            <div class="flex gap-2">
+                                <button onclick="startTimer(5)" class="btn-primary text-sm px-3 py-1">5 min</button>
+                                <button onclick="startTimer(10)" class="btn-primary text-sm px-3 py-1">10 min</button>
+                                <button onclick="startTimer(15)" class="btn-primary text-sm px-3 py-1">15 min</button>
+                                <button onclick="startTimer(30)" class="btn-primary text-sm px-3 py-1">30 min</button>
+                                <button onclick="customTimer()" class="btn-primary text-sm px-3 py-1">Custom</button>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Recipe History (Premium):</label>
+                            <div class="flex gap-2">
+                                <button onclick="navigateToPage('recipe-history')" class="btn-primary text-sm px-3 py-1">History</button>
+                                <button onclick="navigateToPage('favorites')" class="btn-primary text-sm px-3 py-1">Favorites</button>
+                                <button onclick="navigateToPage('timer')" class="btn-primary text-sm px-3 py-1">Timer</button>
+                            </div>
+                        </div>
+
+                        <button onclick="generateRecipe()" class="btn-primary w-full py-3">
+                            Generate Recipe
+                        </button>
+                    </div>
+
+                    <!-- Recipe Display -->
+                    <div id="recipe-display" class="hidden">
+                        <div class="card p-8 recipe-card">
+                            <h2 id="recipe-title" class="text-3xl font-bold text-gray-800 mb-4"></h2>
+                            <p id="recipe-description" class="text-gray-600 mb-6"></p>
+                            
+                            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Ingredients:</h3>
+                                    <ul id="recipe-ingredients" class="space-y-2"></ul>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Instructions:</h3>
+                                    <ol id="recipe-instructions" class="space-y-3"></ol>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-wrap gap-4 text-sm text-gray-600">
+                                <div class="flex items-center">
+                                    <span class="font-semibold">Cooking Time:</span>
+                                    <span id="cooking-time" class="ml-2"></span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="font-semibold">Servings:</span>
+                                    <span id="servings" class="ml-2"></span>
+                                </div>
+                                <div class="flex items-center">
+                                    <span class="font-semibold">Calories:</span>
+                                    <span id="calories" class="ml-2"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Premium Modal -->
+                    <div id="premium-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                        <div class="bg-white rounded-lg p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-3xl font-bold text-gray-800">Premium Features</h2>
+                                <button onclick="hidePremiumModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                            </div>
+                            
+                            <!-- Premium Status Section -->
+                            <div id="premium-status" class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg hidden">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h3 class="text-lg font-bold text-green-800">Premium Active</h3>
+                                        <p class="text-sm text-green-600">You have access to all premium features</p>
+                                    </div>
+                                    <button onclick="cancelPremium()" class="btn-primary bg-red-500 hover:bg-red-600 px-4 py-2 text-sm">
+                                        Cancel Premium
+                                    </button>
+                                </div>
+                            </div>
+                            </div>
+                            
+                            <!-- Premium Plans -->
+                            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                                <div class="border-2 border-gray-200 rounded-lg p-6 hover:border-pink-300 transition-colors">
+                                    <h3 class="text-xl font-bold text-gray-800 mb-2">Monthly Plan</h3>
+                                    <div class="text-3xl font-bold text-pink-500 mb-2">$9.99<span class="text-lg text-gray-500">/month</span></div>
+                                    <ul class="space-y-2 text-gray-600 mb-4">
+                                        <li>✓ Unlimited recipe generation</li>
+                                        <li>✓ Advanced dietary filters</li>
+                                        <li>✓ Recipe scaling (2-12 servings)</li>
+                                        <li>✓ Nutritional information</li>
+                                        <li>✓ Recipe collections</li>
+                                        <li>✓ Ad-free experience</li>
+                                    </ul>
+                                    <button onclick="selectPlan('monthly')" class="btn-primary w-full">Choose Monthly</button>
+                                </div>
+                                
+                                <div class="border-2 border-pink-300 rounded-lg p-6 bg-pink-50 relative">
+                                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-pink-500 text-white px-4 py-1 rounded-full text-sm font-bold">BEST VALUE</div>
+                                    <h3 class="text-xl font-bold text-gray-800 mb-2">Yearly Plan</h3>
+                                    <div class="text-3xl font-bold text-pink-500 mb-2">$79.99<span class="text-lg text-gray-500">/year</span></div>
+                                    <div class="text-sm text-green-600 mb-2">Save 33% compared to monthly!</div>
+                                    <ul class="space-y-2 text-gray-600 mb-4">
+                                        <li>✓ Everything in Monthly</li>
+                                        <li>✓ Meal planning tools</li>
+                                        <li>✓ Shopping list generator</li>
+                                        <li>✓ Recipe sharing</li>
+                                        <li>✓ Priority support</li>
+                                        <li>✓ Early access to new features</li>
+                                    </ul>
+                                    <button onclick="selectPlan('yearly')" class="btn-primary w-full">Choose Yearly</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Payment Form -->
+                            <div id="payment-form" class="hidden">
+                                <h3 class="text-xl font-bold text-gray-800 mb-4">Payment Information</h3>
+                                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label class="block text-gray-700 font-semibold mb-2">Card Number</label>
+                                        <input type="text" id="card-number" class="input-field" placeholder="1234 5678 9012 3456">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 font-semibold mb-2">Expiry Date</label>
+                                        <input type="text" id="card-expiry" class="input-field" placeholder="MM/YY">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 font-semibold mb-2">CVV</label>
+                                        <input type="text" id="card-cvv" class="input-field" placeholder="123">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 font-semibold mb-2">Name on Card</label>
+                                        <input type="text" id="card-name" class="input-field" placeholder="John Doe">
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div class="text-lg font-bold text-gray-800">
+                                        Total: <span id="plan-price">$9.99</span>
+                                    </div>
+                                    <button onclick="processPayment()" class="btn-primary px-8 py-3">
+                                        Pay Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Reset ingredient count
+                ingredientCount = 1;
+            } else {
+                // If not premium, just reload
+                location.reload();
+            }
+        }
+
+        // Missing page functions
+        function showWinePairingPage() {
+            currentPage = 'wine-pairing';
+            const mainContent = document.querySelector('.container');
+            mainContent.innerHTML = `
+                <div class="text-center mb-8">
+                    <button onclick="goBack()" class="btn-primary mb-4">← Back to Recipe Generator</button>
+                    <h1 class="text-4xl font-bold text-gray-800 mb-2">Wine Pairing Guide</h1>
+                    <p class="text-gray-600">Expert wine recommendations for your dishes!</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Red Wines</h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li><strong>Cabernet Sauvignon:</strong> Beef, lamb, aged cheese</li>
+                            <li><strong>Pinot Noir:</strong> Chicken, salmon, mushrooms</li>
+                            <li><strong>Merlot:</strong> Pork, pasta, soft cheese</li>
+                            <li><strong>Syrah:</strong> Spicy dishes, grilled meats</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">White Wines</h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li><strong>Chardonnay:</strong> Fish, chicken, creamy sauces</li>
+                            <li><strong>Sauvignon Blanc:</strong> Seafood, goat cheese, herbs</li>
+                            <li><strong>Pinot Grigio:</strong> Light pasta, salads, shellfish</li>
+                            <li><strong>Riesling:</strong> Spicy food, Asian cuisine</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Sparkling & Dessert</h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li><strong>Champagne:</strong> Appetizers, celebrations</li>
+                            <li><strong>Prosecco:</strong> Light appetizers, brunch</li>
+                            <li><strong>Port:</strong> Chocolate, blue cheese</li>
+                            <li><strong>Sauternes:</strong> Foie gras, sweet desserts</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">General Rules</h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li>• White wines with light dishes</li>
+                            <li>• Red wines with hearty dishes</li>
+                            <li>• Sparkling wines with appetizers</li>
+                            <li>• Sweet wines with desserts</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showSavedRecipesPage() {
+            currentPage = 'saved-recipes';
+            const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
+            const mainContent = document.querySelector('.container');
+            
+            let recipesHtml = '';
+            if (savedRecipes.length === 0) {
+                recipesHtml = `
+                    <div class="text-center text-gray-500 py-8">
+                        <h3 class="text-xl font-bold text-gray-700 mb-2">No saved recipes yet!</h3>
+                        <p class="text-gray-500">Generate and save recipes to see them here.</p>
+                    </div>
+                `;
+            } else {
+                // Sort recipes by save date (newest first)
+                savedRecipes.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
+                
+                savedRecipes.forEach((recipe, index) => {
+                    const savedDate = new Date(recipe.savedAt).toLocaleDateString();
+                    const ingredientsList = recipe.ingredients.map(ing => 
+                        `<span class="ingredient-tag text-xs mr-1 mb-1">${ing.amount} ${ing.unit} ${ing.item}</span>`
+                    ).join('');
+                    
+                    recipesHtml += `
+                        <div class="card p-6 mb-4 hover:shadow-lg transition-shadow">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="flex-1">
+                                    <h3 class="text-xl font-bold text-gray-800 mb-2">${recipe.title}</h3>
+                                    <p class="text-gray-600 mb-3">${recipe.description}</p>
+                                    
+                                    <div class="flex flex-wrap gap-4 text-sm text-gray-600 mb-3">
+                                        <div class="flex items-center">
+                                            <span class="font-semibold">Time:</span>
+                                            <span class="ml-1">${recipe.cookingTime}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <span class="font-semibold">Servings:</span>
+                                            <span class="ml-1">${recipe.servings}</span>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <span class="font-semibold">Calories:</span>
+                                            <span class="ml-1">${recipe.calories}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <h4 class="font-semibold text-gray-700 mb-2">Ingredients:</h4>
+                                        <div class="flex flex-wrap">
+                                            ${ingredientsList}
+                                        </div>
+                                    </div>
+                                    
+                                    <p class="text-sm text-gray-500">Saved: ${savedDate}</p>
+                                </div>
+                                
+                                <div class="flex flex-col gap-2 ml-4">
+                                    <button onclick="viewRecipe('${recipe.title}')" class="btn-primary text-sm px-3 py-1">
+                                        View Full
+                                    </button>
+                                    <button onclick="addIngredientsToShoppingList('${recipe.title}')" class="btn-primary text-sm px-3 py-1 bg-blue-500 hover:bg-blue-600">
+                                        Add to Shopping List
+                                    </button>
+                                    <button onclick="removeRecipe('${recipe.title}')" class="btn-primary text-sm px-3 py-1 bg-red-500 hover:bg-red-600">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            mainContent.innerHTML = `
+                <div class="text-center mb-8">
+                    <button onclick="goBack()" class="btn-primary mb-4">← Back to Recipe Generator</button>
+                    <h1 class="text-4xl font-bold text-gray-800 mb-2">Saved Recipes</h1>
+                    <p class="text-gray-600">Your personal recipe collection (${savedRecipes.length} recipes)</p>
+                </div>
+                ${recipesHtml}
+            `;
+        }
+
+        function showShoppingListPage() {
+            currentPage = 'shopping-list';
+            const shoppingList = JSON.parse(localStorage.getItem('shoppingList') || '[]');
+            const mainContent = document.querySelector('.container');
+            
+            let itemsHtml = '';
+            if (shoppingList.length === 0) {
+                itemsHtml = `
+                    <div class="text-center text-gray-500 py-8">
+                        <h3 class="text-xl font-bold text-gray-700 mb-2">Shopping list is empty!</h3>
+                        <p class="text-gray-500">Add ingredients from recipes to see them here.</p>
+                    </div>
+                `;
+            } else {
+                // Group items by recipe source
+                const groupedItems = {};
+                shoppingList.forEach(item => {
+                    const source = item.fromRecipe || 'Manual';
+                    if (!groupedItems[source]) {
+                        groupedItems[source] = [];
+                    }
+                    groupedItems[source].push(item);
+                });
+                
+                Object.entries(groupedItems).forEach(([source, items]) => {
+                    itemsHtml += `
+                        <div class="card p-4 mb-4">
+                            <h3 class="font-bold text-gray-800 mb-3">${source}</h3>
+                    `;
+                    
+                    items.forEach((item, index) => {
+                        const globalIndex = shoppingList.findIndex(i => 
+                            i.item === item.item && i.amount === item.amount && i.unit === item.unit
+                        );
+                        itemsHtml += `
+                            <div class="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">
+                                <div class="flex items-center">
+                                    <span class="font-medium">${item.amount} ${item.unit} ${item.item}</span>
+                                    ${item.fromRecipe ? `<span class="text-xs text-gray-500 ml-2">(from recipe)</span>` : ''}
+                                </div>
+                                <button onclick="removeFromShoppingList(${globalIndex})" class="btn-primary text-sm px-2 py-1 bg-red-500 hover:bg-red-600">
+                                    Remove
+                                </button>
+                            </div>
+                        `;
+                    });
+                    
+                    itemsHtml += '</div>';
+                });
+            }
+            
+            mainContent.innerHTML = `
+                <div class="text-center mb-8">
+                    <button onclick="goBack()" class="btn-primary mb-4">← Back to Recipe Generator</button>
+                    <h1 class="text-4xl font-bold text-gray-800 mb-2">Shopping List</h1>
+                    <p class="text-gray-600">Your grocery shopping items (${shoppingList.length} items)</p>
+                </div>
+                ${itemsHtml}
+            `;
+        }
+
+        function showMealPlanPage() {
+            currentPage = 'meal-plan';
+            const mealPlan = JSON.parse(localStorage.getItem('mealPlan') || '{}');
+            const mainContent = document.querySelector('.container');
+            
+            let planHtml = '';
+            const mealTypes = ['breakfast', 'lunch', 'dinner', 'snack'];
+            let hasMeals = false;
+            
+            mealTypes.forEach(mealType => {
+                if (mealPlan[mealType] && mealPlan[mealType].length > 0) {
+                    hasMeals = true;
+                    planHtml += `
+                        <div class="card p-6 mb-4">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">${mealType.charAt(0).toUpperCase() + mealType.slice(1)}</h3>
+                    `;
+                    mealPlan[mealType].forEach(recipe => {
+                        planHtml += `
+                            <div class="mb-2 p-3 bg-gray-50 rounded">
+                                <strong>${recipe.title}</strong>
+                                <p class="text-sm text-gray-600">${recipe.description}</p>
+                            </div>
+                        `;
+                    });
+                    planHtml += '</div>';
+                }
+            });
+            
+            if (!hasMeals) {
+                planHtml = '<div class="text-center text-gray-500">No meals planned yet!</div>';
+            }
+            
+            mainContent.innerHTML = `
+                <div class="text-center mb-8">
+                    <button onclick="goBack()" class="btn-primary mb-4">← Back to Recipe Generator</button>
+                    <h1 class="text-4xl font-bold text-gray-800 mb-2">Meal Plan</h1>
+                    <p class="text-gray-600">Your weekly meal organization</p>
+                </div>
+                ${planHtml}
+            `;
+        }
+
+        function showRecipeHistoryPage() {
+            currentPage = 'recipe-history';
+            const history = JSON.parse(localStorage.getItem('recipeHistory') || '[]');
+            const mainContent = document.querySelector('.container');
+            
+            let historyHtml = '';
+            if (history.length === 0) {
+                historyHtml = '<div class="text-center text-gray-500">No recipe history yet!</div>';
+            } else {
+                history.slice(-10).reverse().forEach((recipe, index) => {
+                    historyHtml += `
+                        <div class="card p-4 mb-2">
+                            <h3 class="font-bold text-gray-800">${recipe.title}</h3>
+                            <p class="text-sm text-gray-500">Generated: ${new Date(recipe.date).toLocaleDateString()}</p>
+                        </div>
+                    `;
+                });
+            }
+            
+            mainContent.innerHTML = `
+                <div class="text-center mb-8">
+                    <button onclick="goBack()" class="btn-primary mb-4">← Back to Recipe Generator</button>
+                    <h1 class="text-4xl font-bold text-gray-800 mb-2">Recipe History</h1>
+                    <p class="text-gray-600">Your recent recipe generations</p>
+                </div>
+                ${historyHtml}
+            `;
+        }
+
+        function showFavoritesPage() {
+            currentPage = 'favorites';
+            const ratings = JSON.parse(localStorage.getItem('recipeRatings') || '{}');
+            const favorites = Object.entries(ratings).filter(([title, data]) => data.rating >= 4);
+            const mainContent = document.querySelector('.container');
+            
+            let favoritesHtml = '';
+            if (favorites.length === 0) {
+                favoritesHtml = '<div class="text-center text-gray-500">No favorite recipes yet!</div>';
+            } else {
+                favorites.forEach(([title, data]) => {
+                    favoritesHtml += `
+                        <div class="card p-4 mb-2">
+                            <h3 class="font-bold text-gray-800">${title}</h3>
+                            <p class="text-sm text-gray-500">Rated: ${'★'.repeat(data.rating)} (${data.rating}/5)</p>
+                        </div>
+                    `;
+                });
+            }
+            
+            mainContent.innerHTML = `
+                <div class="text-center mb-8">
+                    <button onclick="goBack()" class="btn-primary mb-4">← Back to Recipe Generator</button>
+                    <h1 class="text-4xl font-bold text-gray-800 mb-2">Favorite Recipes</h1>
+                    <p class="text-gray-600">Your highest rated recipes</p>
+                </div>
+                ${favoritesHtml}
+            `;
+        }
+
+        function showTimerPage() {
+            currentPage = 'timer';
+            const mainContent = document.querySelector('.container');
+            mainContent.innerHTML = `
+                <div class="text-center mb-8">
+                    <button onclick="goBack()" class="btn-primary mb-4">← Back to Recipe Generator</button>
+                    <h1 class="text-4xl font-bold text-gray-800 mb-2">Cooking Timer</h1>
+                    <p class="text-gray-600">Set timers for your cooking steps</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Quick Timers</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="startTimer(5)" class="btn-primary">5 min</button>
+                            <button onclick="startTimer(10)" class="btn-primary">10 min</button>
+                            <button onclick="startTimer(15)" class="btn-primary">15 min</button>
+                            <button onclick="startTimer(30)" class="btn-primary">30 min</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Custom Timer</h3>
+                        <input type="number" id="custom-timer" placeholder="Enter minutes" class="input-field mb-4">
+                        <button onclick="startCustomTimer()" class="btn-primary w-full">Start Custom Timer</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function startCustomTimer() {
+            const minutes = document.getElementById('custom-timer').value;
+            if (minutes && !isNaN(minutes)) {
+                startTimer(parseInt(minutes));
+            }
+        }
+
+        function removeFromShoppingList(index) {
+            const shoppingList = JSON.parse(localStorage.getItem('shoppingList') || '[]');
+            shoppingList.splice(index, 1);
+            localStorage.setItem('shoppingList', JSON.stringify(shoppingList));
+            showShoppingListPage();
+        }
+
+        // Enhanced recipe generation with history tracking
+        function generateRecipe() {
+            const ingredients = [];
+            for (let i = 0; i < ingredientCount; i++) {
+                const input = document.getElementById(`ingredient-${i}`);
+                if (input && input.value.trim()) {
+                    ingredients.push(input.value.trim());
+                }
+            }
+
+            if (ingredients.length === 0) {
+                alert('Please add at least one ingredient!');
+                return;
+            }
+
+            // Get dietary restrictions
+            const restrictions = [];
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                restrictions.push(cb.value);
+            });
+
+            // Generate recipe based on ingredients
+            const recipe = generateRecipeFromIngredients(ingredients, restrictions);
+            
+            // Track recipe in history
+            const history = JSON.parse(localStorage.getItem('recipeHistory') || '[]');
+            history.push({
+                ...recipe,
+                date: new Date().toISOString(),
+                ingredients: ingredients
+            });
+            localStorage.setItem('recipeHistory', JSON.stringify(history));
+            
+            displayRecipe(recipe);
+        }
+
+        // Smart features functions
+        function showCookingTips() {
+            const tips = [
+                "🔪 Always sharpen your knives before cooking for cleaner cuts",
+                "🌡️ Let meat rest for 5-10 minutes after cooking for juicier results",
+                "🧂 Season in layers - add salt throughout the cooking process",
+                "🔥 Preheat your pan before adding ingredients for better searing",
+                "🧄 Mince garlic finely for stronger flavor, chop coarsely for milder taste",
+                "🥘 Use a wooden spoon for stirring to avoid scratching non-stick pans",
+                "🌿 Add fresh herbs at the end of cooking to preserve their flavor",
+                "💧 Keep a bowl of water nearby to test if oil is hot enough (should sizzle)",
+                "📏 Use a meat thermometer for perfectly cooked proteins",
+                "🥄 Taste as you cook and adjust seasoning gradually"
+            ];
+            
+            const randomTip = tips[Math.floor(Math.random() * tips.length)];
+            alert(`💡 Cooking Tip:\n\n${randomTip}`);
+        }
+
+        function showSubstitutions() {
+            const substitutions = {
+                "butter": "Olive oil, coconut oil, or applesauce (for baking)",
+                "eggs": "Flax seeds + water, mashed banana, or commercial egg replacer",
+                "milk": "Almond milk, soy milk, oat milk, or coconut milk",
+                "flour": "Almond flour, coconut flour, or gluten-free flour blend",
+                "sugar": "Honey, maple syrup, stevia, or coconut sugar",
+                "salt": "Herbs, spices, or lemon juice for flavor",
+                "garlic": "Garlic powder, shallots, or onion",
+                "onion": "Shallots, leeks, or green onions",
+                "tomato sauce": "Crushed tomatoes, tomato paste + water, or fresh tomatoes",
+                "cream": "Coconut milk, cashew cream, or Greek yogurt"
+            };
+            
+            let subText = "🔄 Common Ingredient Substitutions:\n\n";
+            Object.entries(substitutions).forEach(([ingredient, sub]) => {
+                subText += `${ingredient}: ${sub}\n\n`;
+            });
+            
+            alert(subText);
+        }
+
+        function showWinePairing() {
+            const winePairings = {
+                "chicken": "🍷 Chardonnay, Pinot Grigio, or Sauvignon Blanc",
+                "beef": "🍷 Cabernet Sauvignon, Merlot, or Malbec",
+                "salmon": "🍷 Pinot Noir, Chardonnay, or Riesling",
+                "pasta": "🍷 Chianti, Pinot Grigio, or Barbera",
+                "seafood": "🍷 Sauvignon Blanc, Pinot Grigio, or Albariño",
+                "pork": "🍷 Pinot Noir, Chardonnay, or Riesling",
+                "lamb": "🍷 Cabernet Sauvignon, Syrah, or Bordeaux",
+                "vegetarian": "🍷 Pinot Noir, Chardonnay, or Sauvignon Blanc",
+                "spicy": "🍷 Riesling, Gewürztraminer, or Moscato",
+                "dessert": "🍷 Port, Sauternes, or Ice Wine"
+            };
+            
+            const currentRecipe = getCurrentRecipe();
+            let pairing = "🍷 Wine Pairing Suggestions:\n\n";
+            
+            if (currentRecipe) {
+                const title = currentRecipe.title.toLowerCase();
+                let found = false;
+                
+                Object.entries(winePairings).forEach(([food, wine]) => {
+                    if (title.includes(food)) {
+                        pairing += `For ${currentRecipe.title}:\n${wine}\n\n`;
+                        found = true;
+                    }
+                });
+                
+                if (!found) {
+                    pairing += "General pairing tips:\n• White wines with light dishes\n• Red wines with hearty dishes\n• Sparkling wines with appetizers\n• Sweet wines with desserts";
+                }
+            } else {
+                pairing += "Generate a recipe first to get specific wine pairing suggestions!";
+            }
+            
+            alert(pairing);
+        }
+
+        function createMultiIngredientRecipe(ingredients, restrictions) {
+            const mainIngredient = ingredients[0];
+            const secondaryIngredients = ingredients.slice(1);
+            
+            let recipeTitle, description, additionalIngredients, instructions, calories;
+            
+            // Determine recipe type based on ingredients
+            const hasProtein = ingredients.some(i => ['chicken', 'beef', 'pork', 'fish', 'salmon', 'tuna', 'shrimp', 'tofu'].includes(i.toLowerCase()));
+            const hasVegetables = ingredients.some(i => ['carrot', 'broccoli', 'spinach', 'tomato', 'onion', 'pepper', 'mushroom', 'zucchini'].includes(i.toLowerCase()));
+            const hasGrains = ingredients.some(i => ['rice', 'pasta', 'quinoa', 'bread'].includes(i.toLowerCase()));
+            
+            if (hasProtein && hasVegetables) {
+                recipeTitle = `${mainIngredient} Stir-Fry with ${secondaryIngredients.join(', ')}`;
+                description = `A delicious stir-fry combining your ingredients with Asian flavors`;
+                additionalIngredients = [
+                    { item: mainIngredient, amount: '1', unit: 'pound' },
+                    ...secondaryIngredients.map(ing => ({ item: ing, amount: '1', unit: 'cup' })),
+                    { item: 'soy sauce', amount: '3', unit: 'tablespoons' },
+                    { item: 'sesame oil', amount: '1', unit: 'tablespoon' },
+                    { item: 'garlic', amount: '3', unit: 'cloves' },
+                    { item: 'ginger', amount: '1', unit: 'tablespoon' },
+                    { item: 'vegetable oil', amount: '2', unit: 'tablespoons' }
+                ];
+                instructions = [
+                    'Heat vegetable oil in a large wok or skillet over high heat',
+                    'Add minced garlic and ginger, cook for 30 seconds',
+                    `Add ${mainIngredient} and stir-fry for 3-4 minutes`,
+                    `Add ${secondaryIngredients.join(', ')} and continue cooking for 2-3 minutes`,
+                    'Add soy sauce and sesame oil, cook for 1 minute',
+                    'Serve hot with steamed rice'
+                ];
+                calories = '320 calories per serving';
+            } else if (hasGrains && hasVegetables) {
+                recipeTitle = `${mainIngredient} Bowl with ${secondaryIngredients.join(', ')}`;
+                description = `A healthy grain bowl featuring your ingredients`;
+                additionalIngredients = [
+                    { item: mainIngredient, amount: '2', unit: 'cups' },
+                    ...secondaryIngredients.map(ing => ({ item: ing, amount: '1', unit: 'cup' })),
+                    { item: 'olive oil', amount: '2', unit: 'tablespoons' },
+                    { item: 'lemon', amount: '1', unit: 'whole' },
+                    { item: 'garlic', amount: '2', unit: 'cloves' },
+                    { item: 'fresh herbs', amount: '2', unit: 'tablespoons' },
+                    { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                ];
+                instructions = [
+                    'Cook grains according to package directions',
+                    'Meanwhile, prepare vegetables and chop herbs',
+                    'Heat olive oil in a large skillet over medium heat',
+                    'Add garlic and cook for 1 minute until fragrant',
+                    `Add ${secondaryIngredients.join(', ')} and cook for 3-4 minutes`,
+                    'Combine with cooked grains and fresh herbs',
+                    'Squeeze lemon juice over and season to taste'
+                ];
+                calories = '280 calories per serving';
+            } else {
+                recipeTitle = `${mainIngredient} and ${secondaryIngredients.join(', ')} Medley`;
+                description = `A flavorful dish combining all your ingredients`;
+                additionalIngredients = [
+                    { item: mainIngredient, amount: '2', unit: 'cups' },
+                    ...secondaryIngredients.map(ing => ({ item: ing, amount: '1', unit: 'cup' })),
+                    { item: 'olive oil', amount: '3', unit: 'tablespoons' },
+                    { item: 'garlic', amount: '3', unit: 'cloves' },
+                    { item: 'fresh herbs', amount: '2', unit: 'tablespoons' },
+                    { item: 'lemon', amount: '1', unit: 'whole' },
+                    { item: 'salt and pepper', amount: 'to taste', unit: '' }
+                ];
+                instructions = [
+                    'Heat olive oil in a large skillet over medium heat',
+                    'Add minced garlic and cook for 1 minute until fragrant',
+                    `Add ${mainIngredient} and cook for 3-4 minutes`,
+                    `Add ${secondaryIngredients.join(', ')} and continue cooking for 2-3 minutes`,
+                    'Add fresh herbs and squeeze lemon juice over',
+                    'Season with salt and pepper to taste',
+                    'Serve hot as a side dish or over rice'
+                ];
+                calories = '250 calories per serving';
+            }
+            
+            return {
+                title: recipeTitle,
+                description: description,
+                ingredients: additionalIngredients,
+                instructions: instructions,
+                cookingTime: '25 minutes',
+                servings: '4 servings',
+                calories: calories
+            };
+        }
+
+        function rateRecipe(rating) {
+            const currentRecipe = getCurrentRecipe();
+            if (!currentRecipe) {
+                alert('Please generate a recipe first!');
+                return;
+            }
+            
+            const ratings = JSON.parse(localStorage.getItem('recipeRatings') || '{}');
+            ratings[currentRecipe.title] = {
+                rating: rating,
+                date: new Date().toISOString()
+            };
+            
+            localStorage.setItem('recipeRatings', JSON.stringify(ratings));
+            
+            const stars = '⭐'.repeat(rating);
+            alert(`Rated "${currentRecipe.title}" ${stars} (${rating}/5 stars)`);
+        }
+
+        // Meal planning functions
+        function addToMealPlan(mealType) {
+            const currentRecipe = getCurrentRecipe();
+            if (!currentRecipe) {
+                alert('Please generate a recipe first!');
+                return;
+            }
+            
+            const mealPlan = JSON.parse(localStorage.getItem('mealPlan') || '{}');
+            if (!mealPlan[mealType]) {
+                mealPlan[mealType] = [];
+            }
+            
+            mealPlan[mealType].push({
+                ...currentRecipe,
+                addedAt: new Date().toISOString()
+            });
+            
+            localStorage.setItem('mealPlan', JSON.stringify(mealPlan));
+            alert(`Added to ${mealType} meal plan!`);
+        }
+
+        function getCurrentRecipe() {
+            const title = document.getElementById('recipe-title')?.textContent;
+            const description = document.getElementById('recipe-description')?.textContent;
+            
+            if (!title) return null;
+            
+            return {
+                title: title,
+                description: description,
+                ingredients: [], // Would need to parse from DOM
+                instructions: [], // Would need to parse from DOM
+                cookingTime: document.getElementById('cooking-time')?.textContent || '',
+                servings: document.getElementById('servings')?.textContent || '',
+                calories: document.getElementById('calories')?.textContent || ''
+            };
+        }
+
+        function viewSavedRecipes() {
+            const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
+            if (savedRecipes.length === 0) {
+                alert('No saved recipes yet! Save a recipe to see it here.');
+                return;
+            }
+            
+            const recipeList = savedRecipes.map(recipe => 
+                `📖 ${recipe.title} (saved ${new Date(recipe.savedAt).toLocaleDateString()})`
+            ).join('\n');
+            
+            alert(`Saved Recipes:\n\n${recipeList}`);
+        }
+
+        function viewShoppingList() {
+            const shoppingList = JSON.parse(localStorage.getItem('shoppingList') || '[]');
+            if (shoppingList.length === 0) {
+                alert('Shopping list is empty! Add ingredients from recipes to see them here.');
+                return;
+            }
+            
+            const itemList = shoppingList.map(item => 
+                `🛒 ${item.amount} ${item.unit} ${item.item}`
+            ).join('\n');
+            
+            alert(`Shopping List:\n\n${itemList}`);
+        }
+
+        function viewMealPlan() {
+            const mealPlan = JSON.parse(localStorage.getItem('mealPlan') || '{}');
+            let planText = '📅 Your Meal Plan:\n\n';
+            
+            const mealTypes = ['breakfast', 'lunch', 'dinner', 'snack'];
+            let hasMeals = false;
+            
+            mealTypes.forEach(mealType => {
+                if (mealPlan[mealType] && mealPlan[mealType].length > 0) {
+                    hasMeals = true;
+                    planText += `${mealType.toUpperCase()}:\n`;
+                    mealPlan[mealType].forEach(recipe => {
+                        planText += `  🍳 ${recipe.title}\n`;
+                    });
+                    planText += '\n';
+                }
+            });
+            
+            if (!hasMeals) {
+                planText = 'No meals planned yet! Add recipes to your meal plan.';
+            }
+            
+            alert(planText);
+        }
+
+        function updateServings(value) {
+            servings = parseInt(value);
+        }
+
+        function updateCookingTime(value) {
+            localStorage.setItem('cookingTime', value);
+        }
+
+        function updateCuisine(value) {
+            localStorage.setItem('cuisine', value);
+        }
+
+        function updateDifficulty(value) {
+            localStorage.setItem('difficulty', value);
+        }
+
+        // Enhanced recipe display with premium features
+        function displayRecipe(recipe) {
+            document.getElementById('recipe-title').textContent = recipe.title;
+            document.getElementById('recipe-description').textContent = recipe.description;
+            
+            // Display ingredients (scale for premium users)
+            const ingredientsList = document.getElementById('recipe-ingredients');
+            ingredientsList.innerHTML = '';
+            recipe.ingredients.forEach(ingredient => {
+                const li = document.createElement('li');
+                li.className = 'flex items-center';
+                let amount = ingredient.amount;
+                let unit = ingredient.unit;
+                
+                // Scale ingredients for premium users
+                if (isPremium && servings !== 4) {
+                    const originalAmount = parseFloat(amount);
+                    const scaleFactor = servings / 4;
+                    amount = (originalAmount * scaleFactor).toFixed(1);
+                    if (amount.endsWith('.0')) amount = amount.slice(0, -2);
+                }
+                
+                li.innerHTML = `
+                    <span class="ingredient-tag mr-2">${amount} ${unit}</span>
+                    <span class="text-gray-700">${ingredient.item}</span>
+                `;
+                ingredientsList.appendChild(li);
+            });
+
+            // Display instructions
+            const instructionsList = document.getElementById('recipe-instructions');
+            instructionsList.innerHTML = '';
+            recipe.instructions.forEach((instruction, index) => {
+                const li = document.createElement('li');
+                li.className = 'flex items-start gap-3';
+                li.innerHTML = `
+                    <div class="step-number">${index + 1}</div>
+                    <span class="text-gray-700">${instruction}</span>
+                `;
+                instructionsList.appendChild(li);
+            });
+
+            // Display cooking info with premium enhancements
+            document.getElementById('cooking-time').textContent = recipe.cookingTime;
+            document.getElementById('servings').textContent = isPremium ? `${servings} servings` : recipe.servings;
+            document.getElementById('calories').textContent = recipe.calories;
+
+            // Add premium features to recipe display
+            if (isPremium) {
+                addPremiumRecipeFeatures(recipe);
+            }
+
+            // Add save recipe button for all users
+            addSaveRecipeButton(recipe);
+
+            // Show the recipe
+            document.getElementById('recipe-display').classList.remove('hidden');
+            document.getElementById('recipe-display').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function addSaveRecipeButton(recipe) {
+            const recipeCard = document.querySelector('.recipe-card');
+            
+            // Check if save button already exists
+            const existingSaveBtn = recipeCard.querySelector('.save-recipe-btn');
+            if (existingSaveBtn) {
+                existingSaveBtn.remove();
+            }
+            
+            // Create save button
+            const saveButton = document.createElement('button');
+            saveButton.className = 'save-recipe-btn btn-primary mt-4 px-6 py-2';
+            saveButton.innerHTML = 'Save Recipe';
+            saveButton.onclick = () => saveRecipe(recipe);
+            
+            // Add to recipe card
+            recipeCard.appendChild(saveButton);
+        }
+
+        function saveRecipe(recipe) {
+            const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
+            
+            // Check if recipe is already saved
+            const existingIndex = savedRecipes.findIndex(saved => saved.title === recipe.title);
+            
+            if (existingIndex !== -1) {
+                if (confirm('This recipe is already saved. Do you want to update it?')) {
+                    savedRecipes[existingIndex] = {
+                        ...recipe,
+                        savedAt: new Date().toISOString(),
+                        lastModified: new Date().toISOString()
+                    };
+                } else {
+                    return;
+                }
+            } else {
+                // Add new recipe
+                savedRecipes.push({
+                    ...recipe,
+                    savedAt: new Date().toISOString(),
+                    lastModified: new Date().toISOString()
+                });
+            }
+            
+            localStorage.setItem('savedRecipes', JSON.stringify(savedRecipes));
+            alert('Recipe saved successfully!');
+            
+            // Update button text
+            const saveBtn = document.querySelector('.save-recipe-btn');
+            if (saveBtn) {
+                saveBtn.innerHTML = 'Saved!';
+                saveBtn.disabled = true;
+                setTimeout(() => {
+                    saveBtn.innerHTML = 'Save Recipe';
+                    saveBtn.disabled = false;
+                }, 2000);
+            }
+        }
+
+        function addPremiumRecipeFeatures(recipe) {
+            const recipeCard = document.querySelector('.recipe-card');
+            
+            // Add save recipe button
+            const saveButton = document.createElement('button');
+            saveButton.className = 'btn-primary mt-4 mr-2';
+            saveButton.innerHTML = 'Save Recipe';
+            saveButton.onclick = () => saveRecipe(recipe);
+            
+            // Add share recipe button
+            const shareButton = document.createElement('button');
+            shareButton.className = 'btn-primary mt-4 mr-2';
+            shareButton.innerHTML = 'Share Recipe';
+            shareButton.onclick = () => shareRecipe(recipe);
+            
+            // Add shopping list button
+            const shoppingButton = document.createElement('button');
+            shoppingButton.className = 'btn-primary mt-4';
+            shoppingButton.innerHTML = 'Add to Shopping List';
+            shoppingButton.onclick = () => addToShoppingList(recipe);
+            
+            // Add buttons to recipe card
+            const buttonContainer = document.createElement('div');
+            buttonContainer.className = 'flex flex-wrap gap-2 mt-6';
+            buttonContainer.appendChild(saveButton);
+            buttonContainer.appendChild(shareButton);
+            buttonContainer.appendChild(shoppingButton);
+            
+            recipeCard.appendChild(buttonContainer);
+            
+            // Add nutritional breakdown for premium users
+            addNutritionalInfo(recipe);
+        }
+
+
+
+        function shareRecipe(recipe) {
+            const recipeText = `
+${recipe.title}
+
+${recipe.description}
+
+Ingredients:
+${recipe.ingredients.map(i => `- ${i.amount} ${i.unit} ${i.item}`).join('\n')}
+
+Instructions:
+${recipe.instructions.map((step, i) => `${i + 1}. ${step}`).join('\n')}
+
+Cooking Time: ${recipe.cookingTime}
+Servings: ${recipe.servings}
+Calories: ${recipe.calories}
+
+Shared from Recipe Generator App
+            `;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: recipe.title,
+                    text: recipeText
+                });
+            } else {
+                navigator.clipboard.writeText(recipeText);
+                alert('Recipe copied to clipboard!');
+            }
+        }
+
+        function addToShoppingList(recipe) {
+            const shoppingList = JSON.parse(localStorage.getItem('shoppingList') || '[]');
+            recipe.ingredients.forEach(ingredient => {
+                shoppingList.push({
+                    item: ingredient.item,
+                    amount: ingredient.amount,
+                    unit: ingredient.unit,
+                    addedAt: new Date().toISOString()
+                });
+            });
+            localStorage.setItem('shoppingList', JSON.stringify(shoppingList));
+            alert('Ingredients added to shopping list!');
+        }
+
+        function addNutritionalInfo(recipe) {
+            const nutritionDiv = document.createElement('div');
+            nutritionDiv.className = 'mt-6 p-4 bg-pink-50 rounded-lg';
+            nutritionDiv.innerHTML = `
+                <h4 class="text-lg font-bold text-gray-800 mb-3">Nutritional Information (Premium)</h4>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div class="text-center">
+                        <div class="font-bold text-pink-600">${recipe.calories}</div>
+                        <div class="text-gray-600">Calories</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="font-bold text-pink-600">12g</div>
+                        <div class="text-gray-600">Protein</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="font-bold text-pink-600">8g</div>
+                        <div class="text-gray-600">Fat</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="font-bold text-pink-600">45g</div>
+                        <div class="text-gray-600">Carbs</div>
+                    </div>
+                </div>
+            `;
+            
+            const recipeCard = document.querySelector('.recipe-card');
+            recipeCard.appendChild(nutritionDiv);
+        }
+
+        function viewRecipe(recipeTitle) {
+            const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
+            const recipe = savedRecipes.find(r => r.title === recipeTitle);
+            
+            if (!recipe) {
+                alert('Recipe not found!');
+                return;
+            }
+            
+            // Go back to main page first
+            showMainPage();
+            
+            // Wait a moment for the page to load, then display the recipe
+            setTimeout(() => {
+                displayRecipe(recipe);
+            }, 100);
+        }
+
+        function addIngredientsToShoppingList(recipeTitle) {
+            const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
+            const recipe = savedRecipes.find(r => r.title === recipeTitle);
+            
+            if (!recipe) {
+                alert('Recipe not found!');
+                return;
+            }
+            
+            const shoppingList = JSON.parse(localStorage.getItem('shoppingList') || '[]');
+            
+            // Add all ingredients from the recipe
+            recipe.ingredients.forEach(ingredient => {
+                // Check if ingredient already exists
+                const existingIndex = shoppingList.findIndex(item => 
+                    item.item.toLowerCase() === ingredient.item.toLowerCase()
+                );
+                
+                if (existingIndex !== -1) {
+                    // Update quantity if ingredient exists
+                    const existing = shoppingList[existingIndex];
+                    const existingAmount = parseFloat(existing.amount);
+                    const newAmount = parseFloat(ingredient.amount);
+                    shoppingList[existingIndex].amount = (existingAmount + newAmount).toString();
+                } else {
+                    // Add new ingredient
+                    shoppingList.push({
+                        item: ingredient.item,
+                        amount: ingredient.amount,
+                        unit: ingredient.unit,
+                        fromRecipe: recipe.title
+                    });
+                }
+            });
+            
+            localStorage.setItem('shoppingList', JSON.stringify(shoppingList));
+            alert(`Added ${recipe.ingredients.length} ingredients from "${recipe.title}" to your shopping list!`);
+        }
+
+        function removeRecipe(recipeTitle) {
+            const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
+            const recipeIndex = savedRecipes.findIndex(r => r.title === recipeTitle);
+            
+            if (recipeIndex === -1) {
+                alert('Recipe not found!');
+                return;
+            }
+            
+            if (confirm(`Are you sure you want to delete "${recipeTitle}" from your saved recipes?`)) {
+                savedRecipes.splice(recipeIndex, 1);
+                localStorage.setItem('savedRecipes', JSON.stringify(savedRecipes));
+                
+                // Refresh the saved recipes page
+                showSavedRecipesPage();
+                
+                alert('Recipe deleted successfully!');
+            }
         }
     </script>
 </body>
