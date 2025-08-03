@@ -225,64 +225,56 @@
                     </button>
                 </div>
                 
-                <!-- Premium Features AFTER Recipe Creation -->
+                                <!-- Premium Features AFTER Recipe Creation -->
                 <div id="premium-features-after-recipe" class="hidden">
                     <div class="border-t pt-6 mt-6">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Recipe Enhancement Tools</h3>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Additional Premium Features</h3>
                         <div class="grid md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-gray-700 font-semibold mb-2">Add Side Dish:</label>
-                                <select id="side-dish-select" onchange="updateSideDish(this.value)" class="input-field">
-                                    <option value="none">No side dish</option>
-                                    <option value="salad">Fresh Salad</option>
-                                    <option value="rice">Steamed Rice</option>
-                                    <option value="bread">Garlic Bread</option>
-                                    <option value="potatoes">Roasted Potatoes</option>
-                                    <option value="vegetables">Grilled Vegetables</option>
+                                <label class="block text-gray-700 font-semibold mb-2">Servings (Premium):</label>
+                                <select id="servings-select" onchange="updateServings(this.value)" class="input-field">
+                                    <option value="2">2 servings</option>
+                                    <option value="4" selected>4 servings</option>
+                                    <option value="6">6 servings</option>
+                                    <option value="8">8 servings</option>
+                                    <option value="10">10 servings</option>
+                                    <option value="12">12 servings</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-gray-700 font-semibold mb-2">Sauce Options:</label>
-                                <select id="sauce-select" onchange="updateSauce(this.value)" class="input-field">
-                                    <option value="none">No sauce</option>
-                                    <option value="creamy">Creamy Sauce</option>
-                                    <option value="spicy">Spicy Sauce</option>
-                                    <option value="herb">Herb Sauce</option>
-                                    <option value="citrus">Citrus Sauce</option>
-                                    <option value="garlic">Garlic Sauce</option>
+                                <label class="block text-gray-700 font-semibold mb-2">Cooking Time (Premium):</label>
+                                <select id="time-select" onchange="updateCookingTime(this.value)" class="input-field">
+                                    <option value="any">Any time</option>
+                                    <option value="quick">Quick (15 min or less)</option>
+                                    <option value="medium">Medium (15-30 min)</option>
+                                    <option value="slow">Slow (30+ min)</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-gray-700 font-semibold mb-2">Garnish:</label>
-                                <select id="garnish-select" onchange="updateGarnish(this.value)" class="input-field">
-                                    <option value="none">No garnish</option>
-                                    <option value="herbs">Fresh Herbs</option>
-                                    <option value="cheese">Grated Cheese</option>
-                                    <option value="nuts">Chopped Nuts</option>
-                                    <option value="seeds">Toasted Seeds</option>
-                                    <option value="citrus">Citrus Zest</option>
+                                <label class="block text-gray-700 font-semibold mb-2">Cuisine Style (Premium):</label>
+                                <select id="cuisine-select" onchange="updateCuisine(this.value)" class="input-field">
+                                    <option value="any">Any cuisine</option>
+                                    <option value="italian">Italian</option>
+                                    <option value="asian">Asian</option>
+                                    <option value="mexican">Mexican</option>
+                                    <option value="mediterranean">Mediterranean</option>
+                                    <option value="indian">Indian</option>
+                                    <option value="american">American</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-gray-700 font-semibold mb-2">Presentation Style:</label>
-                                <select id="presentation-select" onchange="updatePresentation(this.value)" class="input-field">
-                                    <option value="casual">Casual</option>
-                                    <option value="elegant">Elegant</option>
-                                    <option value="rustic">Rustic</option>
-                                    <option value="modern">Modern</option>
-                                    <option value="family-style">Family Style</option>
+                                <label class="block text-gray-700 font-semibold mb-2">Difficulty Level (Premium):</label>
+                                <select id="difficulty-select" onchange="updateDifficulty(this.value)" class="input-field">
+                                    <option value="any">Any difficulty</option>
+                                    <option value="easy">Easy (Beginner)</option>
+                                    <option value="medium">Medium (Intermediate)</option>
+                                    <option value="hard">Hard (Advanced)</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="mt-4 space-y-3">
-                            <button onclick="addSideDish()" class="btn-primary w-full">
-                                Add Side Dish to Recipe
-                            </button>
-                            <button onclick="addSauce()" class="btn-primary w-full">
-                                Add Sauce to Recipe
-                            </button>
-                            <button onclick="regenerateWithEnhancements()" class="btn-primary w-full">
-                                Regenerate with All Enhancements
+                        <div class="mt-4">
+                            <button onclick="regenerateWithNewSettings()" class="btn-primary w-full">
+                                Regenerate Recipe with New Settings
                             </button>
                         </div>
                     </div>
@@ -653,7 +645,7 @@
         }
 
         function estimateIngredientAmount(ingredient, servings) {
-            const scaleFactor = servings / 4;
+                    const scaleFactor = servings / 4;
             
             // Common ingredient amounts
             const amounts = {
@@ -1086,79 +1078,25 @@ function estimateCalories(ingredients) {
             console.log('Difficulty filter:', value);
         }
 
-        // New premium feature functions for AFTER recipe generation
-        function updateSideDish(value) {
-            console.log('Side dish:', value);
-            window.currentSideDish = value;
-        }
-
-        function updateSauce(value) {
-            console.log('Sauce:', value);
-            window.currentSauce = value;
-        }
-
-        function updateGarnish(value) {
-            console.log('Garnish:', value);
-            window.currentGarnish = value;
-        }
-
-        function updatePresentation(value) {
-            console.log('Presentation:', value);
-            window.currentPresentation = value;
-        }
-
-        function addSideDish() {
-            const sideDish = document.getElementById('side-dish-select').value;
-            if (sideDish !== 'none' && window.currentRecipe) {
-                const sideDishRecipes = {
-                    'salad': { name: 'Fresh Garden Salad', ingredients: ['Mixed greens', 'Cherry tomatoes', 'Cucumber', 'Red onion', 'Balsamic vinaigrette'], instructions: ['Wash and chop all vegetables', 'Combine in a bowl', 'Drizzle with vinaigrette and toss'] },
-                    'rice': { name: 'Steamed Jasmine Rice', ingredients: ['Jasmine rice', 'Water', 'Salt'], instructions: ['Rinse rice until water runs clear', 'Add rice and water to pot', 'Bring to boil, then simmer covered for 18 minutes'] },
-                    'bread': { name: 'Garlic Bread', ingredients: ['French bread', 'Butter', 'Garlic', 'Parsley', 'Parmesan cheese'], instructions: ['Mix softened butter with minced garlic and herbs', 'Spread on bread slices', 'Sprinkle with cheese and bake at 375°F for 10 minutes'] },
-                    'potatoes': { name: 'Roasted Potatoes', ingredients: ['Potatoes', 'Olive oil', 'Rosemary', 'Salt', 'Black pepper'], instructions: ['Cut potatoes into chunks', 'Toss with oil and seasonings', 'Roast at 425°F for 25-30 minutes until crispy'] },
-                    'vegetables': { name: 'Grilled Vegetables', ingredients: ['Zucchini', 'Bell peppers', 'Mushrooms', 'Olive oil', 'Italian herbs'], instructions: ['Slice vegetables', 'Brush with oil and seasonings', 'Grill for 8-10 minutes until charred'] }
-                };
-                
-                const sideRecipe = sideDishRecipes[sideDish];
-                if (sideRecipe) {
-                    const currentRecipe = window.currentRecipe;
-                    currentRecipe.sideDish = sideRecipe;
-                    displayRecipe(currentRecipe);
-                }
-            }
-        }
-
-        function addSauce() {
-            const sauce = document.getElementById('sauce-select').value;
-            if (sauce !== 'none' && window.currentRecipe) {
-                const sauceRecipes = {
-                    'creamy': { name: 'Creamy Garlic Sauce', ingredients: ['Heavy cream', 'Garlic', 'Butter', 'Parmesan cheese', 'Black pepper'], instructions: ['Melt butter in pan', 'Add minced garlic and cook until fragrant', 'Add cream and simmer', 'Stir in cheese until melted'] },
-                    'spicy': { name: 'Spicy Chili Sauce', ingredients: ['Chili peppers', 'Garlic', 'Ginger', 'Soy sauce', 'Sesame oil'], instructions: ['Finely chop peppers, garlic, and ginger', 'Heat oil in pan', 'Add ingredients and cook until fragrant', 'Add soy sauce and simmer'] },
-                    'herb': { name: 'Fresh Herb Sauce', ingredients: ['Fresh herbs (basil, parsley, thyme)', 'Olive oil', 'Lemon juice', 'Garlic', 'Salt'], instructions: ['Chop herbs finely', 'Mix with oil, lemon juice, and garlic', 'Season with salt to taste'] },
-                    'citrus': { name: 'Citrus Vinaigrette', ingredients: ['Lemon juice', 'Orange juice', 'Olive oil', 'Honey', 'Dijon mustard'], instructions: ['Whisk together juices and mustard', 'Slowly drizzle in oil while whisking', 'Add honey to taste'] },
-                    'garlic': { name: 'Garlic Butter Sauce', ingredients: ['Butter', 'Garlic', 'Lemon juice', 'Parsley', 'Salt'], instructions: ['Melt butter in pan', 'Add minced garlic and cook until golden', 'Add lemon juice and parsley', 'Season with salt'] }
-                };
-                
-                const sauceRecipe = sauceRecipes[sauce];
-                if (sauceRecipe) {
-                    const currentRecipe = window.currentRecipe;
-                    currentRecipe.sauce = sauceRecipe;
-                    displayRecipe(currentRecipe);
-                }
-            }
-        }
-
-        function regenerateWithEnhancements() {
+                // Premium feature functions for AFTER recipe generation
+        function regenerateWithNewSettings() {
             if (window.currentIngredients && window.currentRestrictions && window.currentPremiumSettings) {
-                // Combine original settings with enhancement settings
-                const enhancedSettings = {
+                // Get the new settings from the after-recipe form
+                const newServings = document.getElementById('servings-select').value;
+                const newCookingTime = document.getElementById('time-select').value;
+                const newCuisine = document.getElementById('cuisine-select').value;
+                const newDifficulty = document.getElementById('difficulty-select').value;
+                
+                // Combine original settings with new after-recipe settings
+                const combinedSettings = {
                     ...window.currentPremiumSettings,
-                    sideDish: window.currentSideDish || 'none',
-                    sauce: window.currentSauce || 'none',
-                    garnish: window.currentGarnish || 'none',
-                    presentation: window.currentPresentation || 'casual'
+                    servings: parseInt(newServings),
+                    cookingTime: newCookingTime,
+                    cuisine: newCuisine,
+                    difficulty: newDifficulty
                 };
                 
-                const recipe = generateRecipeFromIngredients(window.currentIngredients, window.currentRestrictions, enhancedSettings);
+                const recipe = generateRecipeFromIngredients(window.currentIngredients, window.currentRestrictions, combinedSettings);
                 displayRecipe(recipe);
             } else {
                 alert('No previous recipe to regenerate. Generate a recipe first!');
