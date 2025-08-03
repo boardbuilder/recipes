@@ -391,7 +391,7 @@
             }
         }
 
-        const recipes = {
+            const recipes = {
             
 
         function generateRecipeFromIngredients(ingredients, restrictions) {
@@ -1233,13 +1233,13 @@
                 
                 // Send payment method to server
                 return fetch('http://localhost:3001/api/create-subscription', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        plan: selectedPlan,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    plan: selectedPlan,
                         paymentMethodId: result.paymentMethod.id
                     })
                 });
@@ -1715,9 +1715,9 @@
                                     </button>
                                 </div>
                             </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-    </div>
 
     <script>
 
@@ -1737,7 +1737,7 @@
                 const banner = document.getElementById('premium-banner');
                 if (banner) {
                     banner.classList.add('hidden');
-                }
+        }
     </script>
 </body>
-</html>
+</html> 
