@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://js.stripe.com/v3/"></script>
     <style>
         .gradient-bg {
             background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fbbf24 100%);
@@ -46,6 +47,11 @@
         .recipe-card {
             animation: slideIn 0.5s ease-out;
         }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -146,7 +152,7 @@
                     </div>
                 </div>
 
-                <div class="flex flex-wrap gap-4 text-sm text-gray-600">
+                <div class="flex flex-wrap gap-4 text-sm text-gray-600 mb-6">
                     <div class="flex items-center">
                         <span class="font-semibold">⏱️ Cooking Time:</span>
                         <span id="cooking-time" class="ml-2"></span>
@@ -158,6 +164,66 @@
                     <div class="flex items-center">
                         <span class="font-semibold">🔥 Calories:</span>
                         <span id="calories" class="ml-2"></span>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex gap-4 mb-6">
+                    <button onclick="reloadRecipe()" class="btn-primary px-6 py-2">
+                        🔄 Reload Recipe
+                    </button>
+                    <button onclick="addToShoppingList()" class="btn-primary px-6 py-2">
+                        🛒 Add to Shopping List
+                    </button>
+                </div>
+                
+                <!-- Premium Features (shown after recipe creation) -->
+                <div id="premium-features-after-recipe" class="hidden">
+                    <div class="border-t pt-6 mt-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Premium Features</h3>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Servings (Premium):</label>
+                                <select id="servings-select" onchange="updateServings(this.value)" class="input-field">
+                                    <option value="2">2 servings</option>
+                                    <option value="4" selected>4 servings</option>
+                                    <option value="6">6 servings</option>
+                                    <option value="8">8 servings</option>
+                                    <option value="10">10 servings</option>
+                                    <option value="12">12 servings</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Cooking Time (Premium):</label>
+                                <select id="time-select" onchange="updateCookingTime(this.value)" class="input-field">
+                                    <option value="any">Any time</option>
+                                    <option value="quick">Quick (15 min or less)</option>
+                                    <option value="medium">Medium (15-30 min)</option>
+                                    <option value="slow">Slow (30+ min)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Cuisine Style (Premium):</label>
+                                <select id="cuisine-select" onchange="updateCuisine(this.value)" class="input-field">
+                                    <option value="any">Any cuisine</option>
+                                    <option value="italian">Italian</option>
+                                    <option value="asian">Asian</option>
+                                    <option value="mexican">Mexican</option>
+                                    <option value="mediterranean">Mediterranean</option>
+                                    <option value="indian">Indian</option>
+                                    <option value="american">American</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-semibold mb-2">Difficulty Level (Premium):</label>
+                                <select id="difficulty-select" onchange="updateDifficulty(this.value)" class="input-field">
+                                    <option value="any">Any difficulty</option>
+                                    <option value="easy">Easy (Beginner)</option>
+                                    <option value="medium">Medium (Intermediate)</option>
+                                    <option value="hard">Hard (Advanced)</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -213,20 +279,12 @@
                             <input type="email" id="customer-email" class="input-field" placeholder="your@email.com" required>
                         </div>
                         <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Card Number</label>
-                            <input type="text" id="card-number" class="input-field" placeholder="1234 5678 9012 3456">
+                            <label class="block text-gray-700 font-semibold mb-2">Postal Code</label>
+                            <input type="text" id="postal-code" class="input-field" placeholder="12345" required>
                         </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Expiry Date</label>
-                            <input type="text" id="card-expiry" class="input-field" placeholder="MM/YY">
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">CVV</label>
-                            <input type="text" id="card-cvv" class="input-field" placeholder="123">
-                        </div>
-                        <div>
-                            <label class="block text-gray-700 font-semibold mb-2">Name on Card</label>
-                            <input type="text" id="card-name" class="input-field" placeholder="John Doe">
+                        <div class="md:col-span-2">
+                            <label class="block text-gray-700 font-semibold mb-2">Card Details</label>
+                            <div id="card-element" class="input-field" style="padding: 12px 16px; min-height: 40px;"></div>
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
@@ -277,6 +335,7 @@
             newDiv.className = 'flex gap-2 mb-2';
             newDiv.innerHTML = `
                 <input type="text" class="input-field flex-1" placeholder="Enter an ingredient..." id="ingredient-${ingredientCount}">
+                <button onclick="addIngredient()" class="btn-primary">+</button>
                 <button onclick="removeIngredient(this)" class="btn-primary">-</button>
             `;
             container.appendChild(newDiv);
@@ -285,6 +344,15 @@
 
         function removeIngredient(button) {
             button.parentElement.remove();
+        }
+
+        function reloadRecipe() {
+            if (window.currentIngredients && window.currentRestrictions) {
+                const recipe = generateRecipeFromIngredients(window.currentIngredients, window.currentRestrictions);
+                displayRecipe(recipe);
+            } else {
+                alert('No previous recipe to reload. Generate a recipe first!');
+            }
         }
 
         function generateRecipe() {
@@ -307,13 +375,78 @@
                 restrictions.push(cb.value);
             });
 
+            // Store current ingredients and restrictions for reload
+            window.currentIngredients = ingredients;
+            window.currentRestrictions = restrictions;
+
             // Generate recipe based on ingredients
             const recipe = generateRecipeFromIngredients(ingredients, restrictions);
             displayRecipe(recipe);
+            
+            // Show premium features after recipe creation
+            if (isPremium) {
+                document.getElementById('premium-features-after-recipe').classList.remove('hidden');
+            }
         }
 
+        const recipes = {
+            
+
         function generateRecipeFromIngredients(ingredients, restrictions) {
-            const recipes = {
+            // Filter recipes based on dietary restrictions
+            let availableRecipes = Object.keys(recipes);
+            
+            if (restrictions.includes('vegetarian')) {
+                availableRecipes = availableRecipes.filter(recipe => 
+                    !['beef', 'chicken', 'salmon'].includes(recipe)
+                );
+            }
+            
+            if (restrictions.includes('vegan')) {
+                availableRecipes = availableRecipes.filter(recipe => 
+                    !['beef', 'chicken', 'salmon', 'pasta'].includes(recipe)
+                );
+            }
+            
+            if (restrictions.includes('gluten-free')) {
+                availableRecipes = availableRecipes.filter(recipe => 
+                    !['pasta', 'bread'].includes(recipe)
+                );
+            }
+            
+            if (restrictions.includes('dairy-free')) {
+                availableRecipes = availableRecipes.filter(recipe => 
+                    !['pasta', 'pizza'].includes(recipe)
+                );
+            }
+            
+            // If no recipes match restrictions, return a fallback
+            if (availableRecipes.length === 0) {
+                return {
+                    title: 'Custom Vegetable Stir-Fry',
+                    description: 'A healthy vegetable stir-fry that meets your dietary requirements',
+                    ingredients: ingredients.map(ingredient => ({
+                        item: ingredient,
+                        amount: '1',
+                        unit: 'cup'
+                    })),
+                    instructions: [
+                        'Wash and prepare all vegetables',
+                        'Heat oil in a large wok',
+                        'Stir-fry vegetables for 5-7 minutes',
+                        'Add soy sauce and seasonings',
+                        'Serve hot'
+                    ],
+                    cookingTime: '15 minutes',
+                    servings: '4 servings',
+                    calories: '180 calories per serving'
+                };
+            }
+            
+                        // Select a random recipe from available options
+            const selectedRecipe = availableRecipes[Math.floor(Math.random() * availableRecipes.length)];
+            return recipes[selectedRecipe];
+        }
                 'chicken': {
                     title: 'Chicken Stir-Fry',
                     description: 'A quick and delicious stir-fry with vegetables and soy sauce',
@@ -1024,18 +1157,54 @@
             selectedPlan = plan;
             const price = plan === 'monthly' ? '$9.99' : '$79.99';
             document.getElementById('plan-price').textContent = price;
+            
+            // Hide plan selection and show payment form with animation
+            document.querySelector('.grid.md\\:grid-cols-2').classList.add('hidden');
             document.getElementById('payment-form').classList.remove('hidden');
+            document.getElementById('payment-form').style.animation = 'slideIn 0.5s ease-out';
+            
+            // Initialize Stripe when payment form is shown
+            if (!stripe) {
+                initializeStripe();
+            }
+        }
+
+        // Stripe initialization
+        let stripe;
+        let cardElement;
+
+        function initializeStripe() {
+            stripe = Stripe('pk_live_51QGR3EDYRm11DoRiF412084WDjELauYMAvVDQ3W1pHL05fLavgUQeUm9MwrtDhRLEeRTB3NfnqHAwHtt2vf0MTVp00QRkSfv5x');
+            
+            const elements = stripe.elements();
+            cardElement = elements.create('card', {
+                style: {
+                    base: {
+                        fontSize: '16px',
+                        color: '#424770',
+                        '::placeholder': {
+                            color: '#aab7c4',
+                        },
+                    },
+                    invalid: {
+                        color: '#9e2146',
+                    },
+                },
+            });
+            
+            cardElement.mount('#card-element');
         }
 
         function processPayment() {
-            const cardNumber = document.getElementById('card-number').value;
-            const cardExpiry = document.getElementById('card-expiry').value;
-            const cardCvv = document.getElementById('card-cvv').value;
-            const cardName = document.getElementById('card-name').value;
             const email = document.getElementById('customer-email').value;
 
-            if (!cardNumber || !cardExpiry || !cardCvv || !cardName || !email) {
-                alert('Please fill in all payment fields including email');
+            if (!email) {
+                alert('Please enter your email address');
+                return;
+            }
+
+            if (!stripe || !cardElement) {
+                alert('Payment system not initialized. Please try again.');
                 return;
             }
 
@@ -1045,20 +1214,42 @@
             payButton.textContent = 'Processing...';
             payButton.disabled = true;
 
-            // Create payment intent with Stripe
-            fetch('http://localhost:3001/api/create-subscription', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
+            // Create payment method with Stripe Elements
+            stripe.createPaymentMethod({
+                type: 'card',
+                card: cardElement,
+                billing_details: {
                     email: email,
-                    plan: selectedPlan,
-                    paymentMethodId: 'pm_card_visa' // This would be created by Stripe Elements
-                })
+                    address: {
+                        postal_code: document.getElementById('postal-code').value
+                    }
+                },
+            }).then(function(result) {
+                if (result.error) {
+                    throw new Error(result.error.message);
+                }
+                
+                // Send payment method to server
+                return fetch('http://localhost:3001/api/create-subscription', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        plan: selectedPlan,
+                        paymentMethodId: result.paymentMethod.id
+                    })
+                });
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
             })
-            .then(response => response.json())
             .then(data => {
+                console.log('Payment response:', data);
+                
                 if (data.error) {
                     throw new Error(data.error);
                 }
@@ -1069,6 +1260,7 @@
                 localStorage.setItem('subscriptionId', data.subscriptionId);
                 localStorage.setItem('customerId', data.customerId);
                 
+                console.log('Setting premium status to true');
                 hidePremiumModal();
                 document.getElementById('premium-banner').classList.add('hidden');
                 addPremiumFeatures();
@@ -1078,6 +1270,10 @@
             .catch(error => {
                 console.error('Payment error:', error);
                 alert('Payment failed: ' + error.message);
+                
+                // Reset payment form on error
+                payButton.textContent = originalText;
+                payButton.disabled = false;
             })
             .finally(() => {
                 payButton.textContent = originalText;
@@ -1086,7 +1282,13 @@
         }
 
         function addPremiumFeatures() {
+            console.log('Adding premium features...');
             const form = document.querySelector('.card.p-6.mb-6');
+            
+            if (!form) {
+                console.error('Could not find form element');
+                return;
+            }
             
             // Add servings selector
             const servingsDiv = document.createElement('div');
