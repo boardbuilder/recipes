@@ -240,8 +240,8 @@
                                     <option value="10">10 servings</option>
                                     <option value="12">12 servings</option>
                                 </select>
-                            </div>
-                            <div>
+                    </div>
+                        <div>
                                 <label class="block text-gray-700 font-semibold mb-2">Cooking Time (Premium):</label>
                                 <select id="time-select" onchange="updateCookingTime(this.value)" class="input-field">
                                     <option value="any">Any time</option>
@@ -249,8 +249,8 @@
                                     <option value="medium">Medium (15-30 min)</option>
                                     <option value="slow">Slow (30+ min)</option>
                                 </select>
-                            </div>
-                            <div>
+                        </div>
+                        <div>
                                 <label class="block text-gray-700 font-semibold mb-2">Cuisine Style (Premium):</label>
                                 <select id="cuisine-select" onchange="updateCuisine(this.value)" class="input-field">
                                     <option value="any">Any cuisine</option>
@@ -261,8 +261,8 @@
                                     <option value="indian">Indian</option>
                                     <option value="american">American</option>
                                 </select>
-                            </div>
-                            <div>
+                        </div>
+                        <div>
                                 <label class="block text-gray-700 font-semibold mb-2">Difficulty Level (Premium):</label>
                                 <select id="difficulty-select" onchange="updateDifficulty(this.value)" class="input-field">
                                     <option value="any">Any difficulty</option>
@@ -270,11 +270,26 @@
                                     <option value="medium">Medium (Intermediate)</option>
                                     <option value="hard">Hard (Advanced)</option>
                                 </select>
-                            </div>
                         </div>
-                        <div class="mt-4">
+                        </div>
+                        <div class="mt-4 space-y-3">
                             <button onclick="regenerateWithNewSettings()" class="btn-primary w-full">
                                 Regenerate Recipe with New Settings
+                            </button>
+                            <button onclick="addSideDish()" class="btn-primary w-full">
+                                Add Side Dish
+                            </button>
+                            <button onclick="addSauce()" class="btn-primary w-full">
+                                Add Sauce
+                            </button>
+                            <button onclick="addGarnish()" class="btn-primary w-full">
+                                Add Garnish
+                            </button>
+                            <button onclick="makeItSpicy()" class="btn-primary w-full">
+                                Make It Spicy
+                            </button>
+                            <button onclick="makeItHealthy()" class="btn-primary w-full">
+                                Make It Healthy
                             </button>
                         </div>
                     </div>
@@ -895,6 +910,28 @@ function estimateCalories(ingredients) {
                 document.getElementById('recipe-display').appendChild(sauceSection);
             }
 
+            // Display garnish if added
+            if (recipe.garnish) {
+                const garnishSection = document.createElement('div');
+                garnishSection.className = 'mt-4 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-400';
+                garnishSection.innerHTML = `
+                    <h4 class="font-semibold text-purple-800 mb-2">🌿 ${recipe.garnish.name}</h4>
+                    <div class="mb-3">
+                        <h5 class="font-medium text-purple-700 mb-1">Ingredients:</h5>
+                        <ul class="list-disc list-inside text-sm text-purple-600">
+                            ${recipe.garnish.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 class="font-medium text-purple-700 mb-1">Instructions:</h5>
+                        <ol class="list-decimal list-inside text-sm text-purple-600">
+                            ${recipe.garnish.instructions.map((inst, i) => `<li>${inst}</li>`).join('')}
+                        </ol>
+                    </div>
+                `;
+                document.getElementById('recipe-display').appendChild(garnishSection);
+            }
+
             document.getElementById('recipe-display').classList.remove('hidden');
             
             // Store current recipe for enhancements
@@ -1078,7 +1115,7 @@ function estimateCalories(ingredients) {
             console.log('Difficulty filter:', value);
         }
 
-                // Premium feature functions for AFTER recipe generation
+                        // Premium feature functions for AFTER recipe generation
         function regenerateWithNewSettings() {
             if (window.currentIngredients && window.currentRestrictions && window.currentPremiumSettings) {
                 // Get the new settings from the after-recipe form
@@ -1100,6 +1137,107 @@ function estimateCalories(ingredients) {
                 displayRecipe(recipe);
             } else {
                 alert('No previous recipe to regenerate. Generate a recipe first!');
+            }
+        }
+
+        function addSideDish() {
+            if (window.currentRecipe) {
+                const sideDishes = [
+                    { name: 'Fresh Garden Salad', ingredients: ['Mixed greens', 'Cherry tomatoes', 'Cucumber', 'Red onion', 'Balsamic vinaigrette'], instructions: ['Wash and chop all vegetables', 'Combine in a bowl', 'Drizzle with vinaigrette and toss'] },
+                    { name: 'Steamed Jasmine Rice', ingredients: ['Jasmine rice', 'Water', 'Salt'], instructions: ['Rinse rice until water runs clear', 'Add rice and water to pot', 'Bring to boil, then simmer covered for 18 minutes'] },
+                    { name: 'Garlic Bread', ingredients: ['French bread', 'Butter', 'Garlic', 'Parsley', 'Parmesan cheese'], instructions: ['Mix softened butter with minced garlic and herbs', 'Spread on bread slices', 'Sprinkle with cheese and bake at 375°F for 10 minutes'] },
+                    { name: 'Roasted Potatoes', ingredients: ['Potatoes', 'Olive oil', 'Rosemary', 'Salt', 'Black pepper'], instructions: ['Cut potatoes into chunks', 'Toss with oil and seasonings', 'Roast at 425°F for 25-30 minutes until crispy'] },
+                    { name: 'Grilled Vegetables', ingredients: ['Zucchini', 'Bell peppers', 'Mushrooms', 'Olive oil', 'Italian herbs'], instructions: ['Slice vegetables', 'Brush with oil and seasonings', 'Grill for 8-10 minutes until charred'] }
+                ];
+                
+                const randomSideDish = sideDishes[Math.floor(Math.random() * sideDishes.length)];
+                window.currentRecipe.sideDish = randomSideDish;
+                displayRecipe(window.currentRecipe);
+            } else {
+                alert('No recipe to add side dish to. Generate a recipe first!');
+            }
+        }
+
+        function addSauce() {
+            if (window.currentRecipe) {
+                const sauces = [
+                    { name: 'Creamy Garlic Sauce', ingredients: ['Heavy cream', 'Garlic', 'Butter', 'Parmesan cheese', 'Black pepper'], instructions: ['Melt butter in pan', 'Add minced garlic and cook until fragrant', 'Add cream and simmer', 'Stir in cheese until melted'] },
+                    { name: 'Spicy Chili Sauce', ingredients: ['Chili peppers', 'Garlic', 'Ginger', 'Soy sauce', 'Sesame oil'], instructions: ['Finely chop peppers, garlic, and ginger', 'Heat oil in pan', 'Add ingredients and cook until fragrant', 'Add soy sauce and simmer'] },
+                    { name: 'Fresh Herb Sauce', ingredients: ['Fresh herbs (basil, parsley, thyme)', 'Olive oil', 'Lemon juice', 'Garlic', 'Salt'], instructions: ['Chop herbs finely', 'Mix with oil, lemon juice, and garlic', 'Season with salt to taste'] },
+                    { name: 'Citrus Vinaigrette', ingredients: ['Lemon juice', 'Orange juice', 'Olive oil', 'Honey', 'Dijon mustard'], instructions: ['Whisk together juices and mustard', 'Slowly drizzle in oil while whisking', 'Add honey to taste'] },
+                    { name: 'Garlic Butter Sauce', ingredients: ['Butter', 'Garlic', 'Lemon juice', 'Parsley', 'Salt'], instructions: ['Melt butter in pan', 'Add minced garlic and cook until golden', 'Add lemon juice and parsley', 'Season with salt'] }
+                ];
+                
+                const randomSauce = sauces[Math.floor(Math.random() * sauces.length)];
+                window.currentRecipe.sauce = randomSauce;
+                displayRecipe(window.currentRecipe);
+            } else {
+                alert('No recipe to add sauce to. Generate a recipe first!');
+            }
+        }
+
+        function addGarnish() {
+            if (window.currentRecipe) {
+                const garnishes = [
+                    { name: 'Fresh Herbs', ingredients: ['Fresh basil', 'Fresh parsley', 'Fresh cilantro'], instructions: ['Wash herbs thoroughly', 'Chop finely', 'Sprinkle over finished dish'] },
+                    { name: 'Grated Cheese', ingredients: ['Parmesan cheese', 'Pecorino cheese'], instructions: ['Grate cheese finely', 'Sprinkle generously over dish'] },
+                    { name: 'Chopped Nuts', ingredients: ['Pine nuts', 'Almonds', 'Walnuts'], instructions: ['Toast nuts in dry pan until golden', 'Chop coarsely', 'Sprinkle over dish'] },
+                    { name: 'Toasted Seeds', ingredients: ['Sesame seeds', 'Pumpkin seeds', 'Sunflower seeds'], instructions: ['Toast seeds in dry pan until golden', 'Sprinkle over dish'] },
+                    { name: 'Citrus Zest', ingredients: ['Lemon', 'Lime', 'Orange'], instructions: ['Wash citrus thoroughly', 'Zest the peel finely', 'Sprinkle over dish'] }
+                ];
+                
+                const randomGarnish = garnishes[Math.floor(Math.random() * garnishes.length)];
+                window.currentRecipe.garnish = randomGarnish;
+                displayRecipe(window.currentRecipe);
+            } else {
+                alert('No recipe to add garnish to. Generate a recipe first!');
+            }
+        }
+
+        function makeItSpicy() {
+            if (window.currentRecipe) {
+                // Add spicy ingredients to the recipe
+                const spicyIngredients = ['Chili peppers', 'Cayenne pepper', 'Red pepper flakes', 'Hot sauce', 'Jalapeños'];
+                const randomSpicy = spicyIngredients[Math.floor(Math.random() * spicyIngredients.length)];
+                
+                // Add to ingredients
+                window.currentRecipe.ingredients.push({
+                    item: randomSpicy,
+                    amount: '1',
+                    unit: 'to taste'
+                });
+                
+                // Add spicy instruction
+                window.currentRecipe.instructions.push(`Add ${randomSpicy.toLowerCase()} to taste for extra heat.`);
+                
+                displayRecipe(window.currentRecipe);
+            } else {
+                alert('No recipe to make spicy. Generate a recipe first!');
+            }
+        }
+
+        function makeItHealthy() {
+            if (window.currentRecipe) {
+                // Add healthy ingredients to the recipe
+                const healthyIngredients = ['Spinach', 'Kale', 'Quinoa', 'Avocado', 'Greek yogurt'];
+                const randomHealthy = healthyIngredients[Math.floor(Math.random() * healthyIngredients.length)];
+                
+                // Add to ingredients
+                window.currentRecipe.ingredients.push({
+                    item: randomHealthy,
+                    amount: '1',
+                    unit: 'cup'
+                });
+                
+                // Add healthy instruction
+                window.currentRecipe.instructions.push(`Add ${randomHealthy.toLowerCase()} for extra nutrition.`);
+                
+                // Update calories
+                window.currentRecipe.calories = Math.max(100, window.currentRecipe.calories - 50);
+                
+                displayRecipe(window.currentRecipe);
+            } else {
+                alert('No recipe to make healthy. Generate a recipe first!');
             }
         }
 
