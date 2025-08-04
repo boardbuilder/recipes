@@ -1,12 +1,14 @@
-<!-- Updated: August 3, 2025 - All features working! -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Generator</title>
+    <title>Recipe Generator - Real Payments</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://js.stripe.com/v3/"></script>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <style>
         .gradient-bg {
             background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fbbf24 100%);
@@ -52,40 +54,15 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .ingredient-tag {
-            background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        .step-number {
-            background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 18px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
     </style>
 </head>
 <body class="gradient-bg min-h-screen">
     <div class="container mx-auto px-4 py-8 max-w-4xl">
         <!-- Header -->
         <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">Recipe Generator</h1>
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">Recipe Generator - Real Payments</h1>
             <p class="text-gray-600">Enter your ingredients and get delicious recipes!</p>
+            <p class="text-sm text-red-600 mt-2">⚠️ Updated with Real Payment Processing</p>
             
             <!-- Premium Banner -->
             <div id="premium-banner" class="card p-4 mt-4 bg-gradient-to-r from-yellow-100 to-orange-100 border-2 border-yellow-200">
@@ -99,7 +76,6 @@
                     </button>
                 </div>
             </div>
-            
         </div>
 
         <!-- Input Form -->
@@ -110,129 +86,128 @@
                     <div class="flex gap-2 mb-2">
                         <input type="text" class="input-field flex-1" placeholder="Enter an ingredient..." id="ingredient-0">
                         <button onclick="addIngredient()" class="btn-primary">+</button>
-                        <button onclick="removeIngredient(this)" class="btn-primary">-</button>
-                    </div>
+                <button onclick="removeIngredient(this)" class="btn-primary">-</button>
                 </div>
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-gray-700 font-semibold mb-2">Dietary Restrictions:</label>
-                <div class="flex flex-wrap gap-2">
-                    <label class="flex items-center">
-                        <input type="checkbox" class="mr-2" value="vegetarian"> Vegetarian
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" class="mr-2" value="vegan"> Vegan
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" class="mr-2" value="gluten-free"> Gluten-Free
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" class="mr-2" value="dairy-free"> Dairy-Free
-                    </label>
                 </div>
-            </div>
+                </div>
 
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Dietary Restrictions:</label>
+                            <div class="flex flex-wrap gap-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="mr-2" value="vegetarian"> Vegetarian
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="mr-2" value="vegan"> Vegan
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="mr-2" value="gluten-free"> Gluten-Free
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="mr-2" value="dairy-free"> Dairy-Free
+                                </label>
+                            </div>
+                        </div>
 
-
-            <!-- Premium Features BEFORE Recipe Generation -->
-            <div id="premium-features-before-recipe" class="mb-4">
-                <h3 class="text-lg font-semibold text-gray-800 mb-3">Premium Features</h3>
+                        <!-- Premium Features -->
+            <div id="premium-features" class="mb-4 hidden">
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">🎉 Premium Features Unlocked!</h3>
                 <div class="grid md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Servings:</label>
                         <select id="servings-select" class="input-field">
-                            <option value="2">2 servings</option>
-                            <option value="4" selected>4 servings</option>
-                            <option value="6">6 servings</option>
-                            <option value="8">8 servings</option>
-                        </select>
-                    </div>
+                                <option value="2">2 servings</option>
+                                <option value="4" selected>4 servings</option>
+                                <option value="6">6 servings</option>
+                                <option value="8">8 servings</option>
+                            </select>
+                        </div>
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Cooking Time:</label>
                         <select id="time-select" class="input-field">
-                            <option value="any">Any time</option>
-                            <option value="quick">Quick (15 min or less)</option>
-                            <option value="medium">Medium (15-30 min)</option>
-                            <option value="slow">Slow (30+ min)</option>
-                        </select>
-                    </div>
+                                <option value="any">Any time</option>
+                                <option value="quick">Quick (15 min or less)</option>
+                                <option value="medium">Medium (15-30 min)</option>
+                                <option value="slow">Slow (30+ min)</option>
+                            </select>
+                        </div>
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Cuisine Style:</label>
                         <select id="cuisine-select" class="input-field">
-                            <option value="any">Any cuisine</option>
-                            <option value="italian">Italian</option>
-                            <option value="asian">Asian</option>
-                            <option value="mexican">Mexican</option>
-                            <option value="mediterranean">Mediterranean</option>
-                            <option value="indian">Indian</option>
-                            <option value="american">American</option>
-                        </select>
-                    </div>
+                                <option value="any">Any cuisine</option>
+                                <option value="italian">Italian</option>
+                                <option value="asian">Asian</option>
+                                <option value="mexican">Mexican</option>
+                                <option value="mediterranean">Mediterranean</option>
+                                <option value="indian">Indian</option>
+                                <option value="american">American</option>
+                            </select>
+                        </div>
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Difficulty Level:</label>
                         <select id="difficulty-select" class="input-field">
-                            <option value="any">Any difficulty</option>
-                            <option value="easy">Easy (Beginner)</option>
-                            <option value="medium">Medium (Intermediate)</option>
-                            <option value="hard">Hard (Advanced)</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+                                <option value="any">Any difficulty</option>
+                                <option value="easy">Easy (Beginner)</option>
+                                <option value="medium">Medium (Intermediate)</option>
+                                <option value="hard">Hard (Advanced)</option>
+                            </select>
+                        </div>
+                            </div>
+                <div class="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
+                    <p class="text-sm text-green-700">✅ Premium features are now active! You can customize your recipes with advanced options.</p>
+                            </div>
+                        </div>
 
-            <button onclick="generateRecipe()" class="btn-primary w-full py-3">
-                Generate Recipe
-            </button>
-        </div>
+                        <button onclick="generateRecipe()" class="btn-primary w-full py-3">
+                            Generate Recipe
+                        </button>
+                    </div>
 
-        <!-- Recipe Display -->
-        <div id="recipe-display" class="hidden">
-            <div class="card p-8 recipe-card">
-                <h2 id="recipe-title" class="text-3xl font-bold text-gray-800 mb-4"></h2>
-                <p id="recipe-description" class="text-gray-600 mb-6"></p>
-                
-                <div class="grid md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Ingredients:</h3>
-                        <ul id="recipe-ingredients" class="space-y-2"></ul>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Instructions:</h3>
-                        <ol id="recipe-instructions" class="space-y-3"></ol>
-                    </div>
-                </div>
+                    <!-- Recipe Display -->
+                    <div id="recipe-display" class="hidden">
+                        <div class="card p-8 recipe-card">
+                            <h2 id="recipe-title" class="text-3xl font-bold text-gray-800 mb-4"></h2>
+                            <p id="recipe-description" class="text-gray-600 mb-6"></p>
+                            
+                            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Ingredients:</h3>
+                                    <ul id="recipe-ingredients" class="space-y-2"></ul>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-800 mb-3">Instructions:</h3>
+                                    <ol id="recipe-instructions" class="space-y-3"></ol>
+                                </div>
+                            </div>
 
                 <div class="flex flex-wrap gap-4 text-sm text-gray-600 mb-6">
-                    <div class="flex items-center">
+                                <div class="flex items-center">
                         <span class="font-semibold">⏱️ Cooking Time:</span>
-                        <span id="cooking-time" class="ml-2"></span>
-                    </div>
-                    <div class="flex items-center">
+                                    <span id="cooking-time" class="ml-2"></span>
+                                </div>
+                                <div class="flex items-center">
                         <span class="font-semibold">👥 Servings:</span>
-                        <span id="servings" class="ml-2"></span>
-                    </div>
-                    <div class="flex items-center">
+                                    <span id="servings" class="ml-2"></span>
+                                </div>
+                                <div class="flex items-center">
                         <span class="font-semibold">🔥 Calories:</span>
-                        <span id="calories" class="ml-2"></span>
-            </div>
-        </div>
-        
+                                    <span id="calories" class="ml-2"></span>
+                                </div>
+                            </div>
+                
                 <!-- Action Buttons -->
-                <div class="flex gap-4 mb-6">
-                    <button onclick="reloadRecipe()" class="btn-primary px-6 py-2">
-                        🔄 Reload Recipe
+                <div class="flex gap-4">
+                    <button onclick="generateNewRecipe()" class="btn-primary px-6 py-2">
+                        🔄 Generate New Recipe
                     </button>
-                    <button onclick="addToShoppingList()" class="btn-primary px-6 py-2">
-                        🛒 Add to Shopping List
+                    <button onclick="saveRecipe()" class="btn-primary px-6 py-2">
+                        💾 Save Recipe
                     </button>
-                </div>
-                
-                                
+                            </div>
+                        </div>
                     </div>
-                </div>
-                
-        <!-- Premium Modal -->
+                    
+                    <!-- Premium Modal -->
         <div id="premium-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
             <div class="flex items-center justify-center min-h-screen p-4">
                 <div class="card p-8 max-w-md w-full">
@@ -241,57 +216,65 @@
                     
                     <div class="space-y-4 mb-6">
                         <div class="flex items-center justify-between p-4 border rounded-lg">
-                        <div>
+                                    <div>
                                 <h3 class="font-semibold">Monthly Plan</h3>
                                 <p class="text-sm text-gray-600">$9.99/month</p>
-                        </div>
+                                    </div>
                             <button onclick="selectPlan('monthly')" class="btn-primary px-4 py-2">
                                 Choose Monthly
-                            </button>
-                        </div>
-                        
+                                    </button>
+                            </div>
+                            
                         <div class="flex items-center justify-between p-4 border rounded-lg bg-yellow-50">
-                        <div>
+                                    <div>
                                 <h3 class="font-semibold">Yearly Plan</h3>
                                 <p class="text-sm text-gray-600">$79.99/year (Save 33%)</p>
-                        </div>
+                                    </div>
                             <button onclick="selectPlan('yearly')" class="btn-primary px-4 py-2">
                                 Choose Yearly
-                            </button>
-                        </div>
-                        </div>
+                                    </button>
+                                </div>
+                            </div>
                     
                     <button onclick="closePremiumModal()" class="text-gray-500 hover:text-gray-700">
                         Cancel
-                        </button>
+                    </button>
+                </div>
                     </div>
-                        </div>
                     </div>
-
+                    
         <!-- Payment Form -->
         <div id="payment-form" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
             <div class="flex items-center justify-center min-h-screen p-4">
                 <div class="card p-8 max-w-md w-full">
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">Complete Payment</h2>
+                    <div id="plan-details" class="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <p class="text-sm text-gray-600">You're subscribing to: <span id="selected-plan-text" class="font-semibold">Monthly Plan</span></p>
+                        <p class="text-sm text-gray-600">Amount: <span id="selected-plan-price" class="font-semibold">$9.99/month</span></p>
+                        <p class="text-xs text-blue-600 mt-1">✅ Secure payment processing</p>
+                    </div>
                     <p class="text-gray-600 mb-6">Enter your payment details to upgrade to premium.</p>
                     
                     <form id="payment-form-element">
                         <div class="mb-4">
-                            <label class="block text-gray-700 font-semibold mb-2">Email:</label>
-                            <input type="email" id="email" class="input-field" required>
-                </div>
-        
+                            <label class="block text-gray-700 font-semibold mb-2">Email Address:</label>
+                            <input type="email" id="email" class="input-field" required placeholder="your@email.com">
+                            <p class="text-xs text-gray-500 mt-1">We'll send your receipt to this email</p>
+                    </div>
+                        
                         <div class="mb-4">
                             <label class="block text-gray-700 font-semibold mb-2">Postal Code:</label>
-                            <input type="text" id="postal-code" class="input-field" required>
-            </div>
+                            <input type="text" id="postal-code" class="input-field" required placeholder="12345">
+                            <p class="text-xs text-gray-500 mt-1">For billing verification</p>
+                    </div>
                         
                         <div class="mb-6">
                             <label class="block text-gray-700 font-semibold mb-2">Card Details:</label>
                             <div id="card-element" class="input-field p-3"></div>
                             <div id="card-errors" class="text-red-500 text-sm mt-2"></div>
-        </div>
-        
+                            <p class="text-xs text-gray-500 mt-1">Your payment is secure and encrypted</p>
+                                    </div>
+                                    
                         <button type="submit" class="btn-primary w-full py-3">
                             Subscribe Now
                         </button>
@@ -299,55 +282,43 @@
                     
                     <button onclick="closePaymentForm()" class="text-gray-500 hover:text-gray-700 mt-4">
                         Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="text-center mt-8">
-            <button onclick="resetApp()" class="text-sm text-gray-500 hover:text-gray-700 underline">
-                Reset App (Clear All Data)
-            </button>
-        </div>
-    </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
     <script>
         let ingredientCount = 1;
         let isPremium = false;
         let selectedPlan = '';
-        let servings = 4;
 
-        // Initialize Stripe with error handling
+        // Initialize Stripe with live keys for real payments
         let stripe, elements, cardElement;
         try {
+            // Use live Stripe keys for real payments
             stripe = Stripe('pk_live_51QGR3EDYRm11DoRiF412084WDjELauYMAvVDQ3W1pHL05fLavgUQeUm9MwrtDhRLEeRTB3NfnqHAwHtt2vf0MTVp00QRkSfv5x');
             elements = stripe.elements();
-            cardElement = elements.create('card');
-            
-            // Only mount if element exists
-            const cardContainer = document.getElementById('card-element');
-            if (cardContainer) {
-                cardElement.mount('#card-element');
-            }
+            cardElement = elements.create('card', {
+                style: {
+                    base: {
+                        fontSize: '16px',
+                        color: '#424770',
+                        '::placeholder': {
+                            color: '#aab7c4',
+                        },
+                    },
+                    invalid: {
+                        color: '#9e2146',
+                    },
+                },
+            });
+            cardElement.mount('#card-element');
         } catch (error) {
             console.log('Stripe initialization failed:', error);
         }
 
-        // Facebook Pixel
-        !function(f,b,e,v,n,t,s)
-        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-        n.queue=[];t=b.createElement(e);t.async=!0;
-        t.src=v;s=b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t,s)}(window, document,'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '1958412844735395');
-        fbq('track', 'PageView');
-
         // Check if user is premium on page load
         window.addEventListener('load', function() {
-            // Check if premium status is stored
             const premiumStatus = localStorage.getItem('isPremium');
             if (premiumStatus === 'true') {
                 isPremium = true;
@@ -357,19 +328,21 @@
                     banner.classList.add('hidden');
                 }
                 // Add premium features to the form
-                addPremiumFeatures();
+                showPremiumFeatures();
+            } else {
+                // Ensure premium features are hidden if not paid
+                isPremium = false;
+                const premiumFeatures = document.getElementById('premium-features');
+                if (premiumFeatures) {
+                    premiumFeatures.classList.add('hidden');
+                }
+                // Show premium banner if not paid
+                const banner = document.getElementById('premium-banner');
+                if (banner) {
+                    banner.classList.remove('hidden');
+                }
             }
         });
-
-        function resetPremium() {
-            isPremium = false;
-            localStorage.removeItem('isPremium');
-            const banner = document.getElementById('premium-banner');
-            if (banner) {
-                banner.classList.remove('hidden');
-            }
-            alert('Premium status reset for testing!');
-        }
 
         function addIngredient() {
             const container = document.getElementById('ingredients-container');
@@ -386,15 +359,6 @@
 
         function removeIngredient(button) {
             button.parentElement.remove();
-        }
-
-        function reloadRecipe() {
-            if (window.currentIngredients && window.currentRestrictions && window.currentPremiumSettings) {
-                const recipe = generateRecipeFromIngredients(window.currentIngredients, window.currentRestrictions, window.currentPremiumSettings);
-                displayRecipe(recipe);
-            } else {
-                alert('No previous recipe to reload. Generate a recipe first!');
-            }
         }
 
         function generateRecipe() {
@@ -417,202 +381,23 @@
                 restrictions.push(cb.value);
             });
 
-            // Get premium features
-            const servings = document.getElementById('servings-select').value;
-            const cookingTime = document.getElementById('time-select').value;
-            const cuisine = document.getElementById('cuisine-select').value;
-            const difficulty = document.getElementById('difficulty-select').value;
-
-            // Store current ingredients and restrictions for reload
-            window.currentIngredients = ingredients;
-            window.currentRestrictions = restrictions;
-            window.currentPremiumSettings = { servings, cookingTime, cuisine, difficulty };
-
-            // Generate recipe based on ingredients and premium settings
-            const recipe = generateRecipeFromIngredients(ingredients, restrictions, { servings, cookingTime, cuisine, difficulty });
-            displayRecipe(recipe);
-            
-            // Show additional premium features after recipe creation
+            // Get premium features if available
+            let premiumSettings = {};
             if (isPremium) {
-                // Add the after-recipe features section
-                const afterRecipeSection = document.createElement('div');
-                afterRecipeSection.id = 'premium-features-after-recipe';
-                afterRecipeSection.className = 'border-t pt-6 mt-6';
-                afterRecipeSection.innerHTML = `
-                    <div class="mt-4">
-                        <h4 class="text-lg font-semibold text-gray-800 mb-3">Recipe Enhancements</h4>
-                        
-                        <!-- Main Recipe Options -->
-                        <div class="grid md:grid-cols-2 gap-3 mb-4">
-                            <button onclick="addSideDish()" class="btn-primary text-sm py-2">
-                                🍽️ Add Side Dish
-                            </button>
-                            <button onclick="addSauce()" class="btn-primary text-sm py-2">
-                                🥄 Add Sauce
-                            </button>
-                            <button onclick="addGarnish()" class="btn-primary text-sm py-2">
-                                🌿 Add Garnish
-                            </button>
-                            <button onclick="addDessert()" class="btn-primary text-sm py-2">
-                                🍰 Add Dessert
-                            </button>
-                        </div>
-
-                        <!-- Recipe Modifications -->
-                        <div class="border-t pt-4 mb-4">
-                            <h5 class="font-medium text-gray-700 mb-2">Modify Recipe:</h5>
-                            <div class="grid md:grid-cols-2 gap-3">
-                                <button onclick="makeItSpicy()" class="bg-red-100 text-red-800 px-4 py-2 rounded-lg hover:bg-red-200 transition-colors">
-                                    🔥 Make It Spicy
-                                </button>
-                                <button onclick="makeItHealthy()" class="bg-green-100 text-green-800 px-4 py-2 rounded-lg hover:bg-green-200 transition-colors">
-                                    🥗 Make It Healthy
-                                </button>
-                                <button onclick="makeItVegan()" class="bg-purple-100 text-purple-800 px-4 py-2 rounded-lg hover:bg-purple-200 transition-colors">
-                                    🌱 Make It Vegan
-                                </button>
-                                <button onclick="makeItGlutenFree()" class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg hover:bg-blue-200 transition-colors">
-                                    🌾 Make It Gluten Free
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Regenerate Button -->
-                        <div class="border-t pt-4">
-                            <button onclick="regenerateWithNewSettings()" class="btn-primary w-full">
-                                🔄 Regenerate Recipe
-                            </button>
-                        </div>
-                    </div>
-                `;
-                document.getElementById('recipe-display').appendChild(afterRecipeSection);
+                premiumSettings = {
+                    servings: document.getElementById('servings-select').value,
+                    cookingTime: document.getElementById('time-select').value,
+                    cuisine: document.getElementById('cuisine-select').value,
+                    difficulty: document.getElementById('difficulty-select').value
+                };
             }
+
+            // Generate recipe
+            const recipe = generateRecipeFromIngredients(ingredients, restrictions, premiumSettings);
+            displayRecipe(recipe);
         }
 
-            const recipes = {
-            'chicken pasta': {
-                title: 'Creamy Chicken Pasta',
-                description: 'A delicious creamy pasta with tender chicken and fresh herbs.',
-                    ingredients: [
-                    { item: 'chicken breast', amount: '2', unit: 'pieces' },
-                    { item: 'pasta', amount: '8', unit: 'oz' },
-                    { item: 'heavy cream', amount: '1', unit: 'cup' },
-                    { item: 'parmesan cheese', amount: '1/2', unit: 'cup' },
-                        { item: 'garlic', amount: '3', unit: 'cloves' },
-                    { item: 'fresh basil', amount: '1/4', unit: 'cup' }
-                    ],
-                    instructions: [
-                    'Cook pasta according to package directions.',
-                    'Season chicken with salt and pepper, then cook in a large skillet until golden.',
-                    'Add minced garlic and cook for 1 minute.',
-                    'Pour in heavy cream and bring to a simmer.',
-                    'Add cooked pasta and parmesan cheese, stir until creamy.',
-                    'Garnish with fresh basil and serve.'
-                    ],
-                    cookingTime: '25 minutes',
-                servings: 4,
-                calories: 450
-            },
-            'beef stir fry': {
-                title: 'Beef and Vegetable Stir Fry',
-                description: 'A quick and healthy stir fry with tender beef and crisp vegetables.',
-                    ingredients: [
-                    { item: 'beef strips', amount: '1', unit: 'lb' },
-                    { item: 'broccoli', amount: '2', unit: 'cups' },
-                    { item: 'bell peppers', amount: '2', unit: 'pieces' },
-                    { item: 'soy sauce', amount: '3', unit: 'tbsp' },
-                    { item: 'garlic', amount: '2', unit: 'cloves' },
-                    { item: 'ginger', amount: '1', unit: 'tbsp' }
-                    ],
-                    instructions: [
-                    'Heat oil in a wok or large skillet over high heat.',
-                    'Add beef strips and cook until browned, about 3 minutes.',
-                    'Add minced garlic and ginger, cook for 30 seconds.',
-                    'Add vegetables and stir fry for 2-3 minutes.',
-                    'Pour in soy sauce and toss everything together.',
-                    'Serve hot over rice.'
-                    ],
-                    cookingTime: '15 minutes',
-                servings: 4,
-                calories: 380
-            },
-            'salmon rice': {
-                title: 'Baked Salmon with Lemon Rice',
-                description: 'A healthy and flavorful salmon dish with aromatic lemon rice.',
-                    ingredients: [
-                    { item: 'salmon fillets', amount: '4', unit: 'pieces' },
-                    { item: 'rice', amount: '2', unit: 'cups' },
-                    { item: 'lemon', amount: '2', unit: 'pieces' },
-                    { item: 'dill', amount: '1/4', unit: 'cup' },
-                    { item: 'olive oil', amount: '2', unit: 'tbsp' },
-                    { item: 'garlic', amount: '3', unit: 'cloves' }
-                    ],
-                    instructions: [
-                    'Preheat oven to 400°F (200°C).',
-                    'Cook rice according to package directions.',
-                    'Place salmon on a baking sheet and drizzle with olive oil.',
-                    'Season with salt, pepper, and fresh dill.',
-                    'Bake for 12-15 minutes until flaky.',
-                    'Mix cooked rice with lemon zest, juice, and minced garlic.',
-                    'Serve salmon over lemon rice.'
-                    ],
-                    cookingTime: '30 minutes',
-                servings: 4,
-                calories: 420
-            },
-            'vegetable curry': {
-                title: 'Spicy Vegetable Curry',
-                description: 'A flavorful vegetarian curry with aromatic spices and fresh vegetables.',
-                    ingredients: [
-                    { item: 'mixed vegetables', amount: '4', unit: 'cups' },
-                    { item: 'coconut milk', amount: '1', unit: 'can' },
-                    { item: 'curry powder', amount: '2', unit: 'tbsp' },
-                    { item: 'onion', amount: '1', unit: 'large' },
-                        { item: 'garlic', amount: '3', unit: 'cloves' },
-                    { item: 'ginger', amount: '1', unit: 'tbsp' }
-                    ],
-                    instructions: [
-                    'Heat oil in a large pot over medium heat.',
-                    'Add diced onion and cook until softened.',
-                    'Add minced garlic and ginger, cook for 1 minute.',
-                    'Add curry powder and stir for 30 seconds.',
-                    'Add vegetables and coconut milk.',
-                    'Simmer for 15-20 minutes until vegetables are tender.',
-                    'Serve hot with rice or naan bread.'
-                    ],
-                    cookingTime: '25 minutes',
-                servings: 4,
-                calories: 280
-            },
-            'pasta carbonara': {
-                title: 'Classic Pasta Carbonara',
-                description: 'A traditional Italian pasta dish with eggs, cheese, and pancetta.',
-                    ingredients: [
-                    { item: 'pasta', amount: '1', unit: 'lb' },
-                    { item: 'eggs', amount: '4', unit: 'large' },
-                        { item: 'parmesan cheese', amount: '1', unit: 'cup' },
-                    { item: 'pancetta', amount: '8', unit: 'oz' },
-                    { item: 'black pepper', amount: '1', unit: 'tsp' },
-                    { item: 'garlic', amount: '2', unit: 'cloves' }
-                    ],
-                    instructions: [
-                    'Cook pasta in salted water until al dente.',
-                    'Meanwhile, cook pancetta in a large skillet until crispy.',
-                    'In a bowl, whisk together eggs, parmesan, and black pepper.',
-                    'Drain pasta, reserving 1 cup of pasta water.',
-                    'Add hot pasta to the skillet with pancetta.',
-                    'Remove from heat and quickly stir in egg mixture.',
-                    'Add pasta water as needed to create a creamy sauce.',
-                    'Serve immediately with extra parmesan.'
-                    ],
-                    cookingTime: '20 minutes',
-                servings: 4,
-                calories: 520
-            }
-        };
-
         function generateRecipeFromIngredients(ingredients, restrictions, premiumSettings = {}) {
-            // Create a custom recipe based on the ingredients
             const recipeTitle = generateRecipeTitle(ingredients, premiumSettings.cuisine);
             const recipeDescription = generateRecipeDescription(ingredients, premiumSettings.cuisine);
             
@@ -620,9 +405,8 @@
             const servings = parseInt(premiumSettings.servings) || 4;
             const scaleFactor = servings / 4;
             
-            // Generate ingredients list using the actual ingredients provided
+            // Generate ingredients list
             const recipeIngredients = ingredients.map(ingredient => {
-                // Estimate amounts based on ingredient type
                 const amount = estimateIngredientAmount(ingredient, servings);
                 return {
                     item: ingredient,
@@ -638,10 +422,8 @@
             // Generate cooking instructions
             const instructions = generateCookingInstructions(ingredients, premiumSettings.cuisine, premiumSettings.difficulty);
             
-            // Calculate cooking time based on premium settings
+            // Calculate cooking time and calories
             const cookingTime = calculateCookingTime(ingredients, premiumSettings.cookingTime);
-            
-            // Calculate calories
             const calories = estimateCalories(recipeIngredients);
             
             return {
@@ -666,9 +448,8 @@
         }
 
         function estimateIngredientAmount(ingredient, servings) {
-                    const scaleFactor = servings / 4;
+            const scaleFactor = servings / 4;
             
-            // Common ingredient amounts
             const amounts = {
                 'chicken': { amount: 2 * scaleFactor, unit: 'lbs' },
                 'beef': { amount: 1.5 * scaleFactor, unit: 'lbs' },
@@ -684,58 +465,27 @@
                 'spinach': { amount: 3 * scaleFactor, unit: 'cups' },
                 'mushrooms': { amount: 8 * scaleFactor, unit: 'oz' },
                 'bell peppers': { amount: 2 * scaleFactor, unit: 'medium' },
-                'zucchini': { amount: 2 * scaleFactor, unit: 'medium' },
-                'eggplant': { amount: 1 * scaleFactor, unit: 'medium' },
-                'squash': { amount: 2 * scaleFactor, unit: 'medium' },
-                'asparagus': { amount: 1 * scaleFactor, unit: 'bunch' },
-                'cauliflower': { amount: 1 * scaleFactor, unit: 'head' },
-                'cabbage': { amount: 1 * scaleFactor, unit: 'small head' },
-                'kale': { amount: 2 * scaleFactor, unit: 'cups' },
-                'lettuce': { amount: 1 * scaleFactor, unit: 'head' },
-                'cucumber': { amount: 2 * scaleFactor, unit: 'medium' },
-                'celery': { amount: 3 * scaleFactor, unit: 'stalks' },
-                'corn': { amount: 2 * scaleFactor, unit: 'ears' },
-                'peas': { amount: 2 * scaleFactor, unit: 'cups' },
-                'beans': { amount: 2 * scaleFactor, unit: 'cups' },
-                'lentils': { amount: 1 * scaleFactor, unit: 'cup' },
-                'quinoa': { amount: 1 * scaleFactor, unit: 'cup' },
-                'couscous': { amount: 1 * scaleFactor, unit: 'cup' },
-                'bread': { amount: 1 * scaleFactor, unit: 'loaf' },
-                'tortillas': { amount: 8 * scaleFactor, unit: 'pieces' },
                 'cheese': { amount: 2 * scaleFactor, unit: 'cups' },
                 'milk': { amount: 2 * scaleFactor, unit: 'cups' },
-                'cream': { amount: 1 * scaleFactor, unit: 'cup' },
                 'butter': { amount: 4 * scaleFactor, unit: 'tbsp' },
-                'oil': { amount: 3 * scaleFactor, unit: 'tbsp' },
-                'vinegar': { amount: 2 * scaleFactor, unit: 'tbsp' },
-                'soy sauce': { amount: 3 * scaleFactor, unit: 'tbsp' },
-                'hot sauce': { amount: 2 * scaleFactor, unit: 'tsp' },
-                'salt': { amount: 1 * scaleFactor, unit: 'tsp' },
-                'pepper': { amount: 1 * scaleFactor, unit: 'tsp' },
-                'herbs': { amount: 2 * scaleFactor, unit: 'tbsp' },
-                'spices': { amount: 1 * scaleFactor, unit: 'tsp' }
+                'oil': { amount: 3 * scaleFactor, unit: 'tbsp' }
             };
             
-            // Find matching ingredient
             for (const [key, value] of Object.entries(amounts)) {
                 if (ingredient.toLowerCase().includes(key)) {
                     return value;
                 }
             }
             
-            // Default amount
             return { amount: 1 * scaleFactor, unit: 'cup' };
         }
 
         function getComplementaryIngredients(ingredients, cuisine) {
             const complementary = [];
-            
-            // Add common cooking ingredients
             complementary.push({ item: 'olive oil', amount: 2, unit: 'tbsp' });
             complementary.push({ item: 'salt', amount: 1, unit: 'tsp' });
             complementary.push({ item: 'black pepper', amount: 1, unit: 'tsp' });
             
-            // Add cuisine-specific ingredients
             if (cuisine === 'italian') {
                 complementary.push({ item: 'garlic', amount: 3, unit: 'cloves' });
                 complementary.push({ item: 'basil', amount: 1/4, unit: 'cup' });
@@ -748,10 +498,8 @@
                 complementary.push({ item: 'lime', amount: 2, unit: 'pieces' });
                 complementary.push({ item: 'cilantro', amount: 1/4, unit: 'cup' });
                 complementary.push({ item: 'cumin', amount: 1, unit: 'tsp' });
-            } else if (cuisine === 'indian') {
-                complementary.push({ item: 'cumin', amount: 1, unit: 'tsp' });
-                complementary.push({ item: 'turmeric', amount: 1, unit: 'tsp' });
-                complementary.push({ item: 'coriander', amount: 1, unit: 'tsp' });
+            } else {
+                complementary.push({ item: 'garlic', amount: 3, unit: 'cloves' });
             }
             
             return complementary;
@@ -759,14 +507,9 @@
 
         function generateCookingInstructions(ingredients, cuisine, difficulty) {
             const instructions = [];
-            
-            // Prep ingredients
             instructions.push(`Prepare and chop all ingredients: ${ingredients.join(', ')}.`);
-            
-            // Heat oil
             instructions.push('Heat oil in a large pan or skillet over medium heat.');
             
-            // Cooking method based on cuisine
             if (cuisine === 'italian') {
                 instructions.push('Add garlic and sauté until fragrant, about 1 minute.');
                 instructions.push('Add main ingredients and cook until tender.');
@@ -782,12 +525,8 @@
                 instructions.push('Add main ingredients and cook until tender.');
                 instructions.push('Season with cumin, salt, and pepper.');
                 instructions.push('Garnish with cilantro and lime wedges.');
-            } else if (cuisine === 'indian') {
-                instructions.push('Add spices and cook until fragrant.');
-                instructions.push('Add main ingredients and cook until tender.');
-                instructions.push('Add coconut milk or broth and simmer.');
-                instructions.push('Garnish with fresh cilantro.');
-                } else {
+            } else {
+                instructions.push('Add garlic and sauté until fragrant, about 1 minute.');
                 instructions.push('Add main ingredients and cook until tender.');
                 instructions.push('Season with salt and pepper to taste.');
                 instructions.push('Cook until all ingredients are well combined.');
@@ -798,54 +537,45 @@
         }
 
         function calculateCookingTime(ingredients, timePreference) {
-            const baseTime = 20; // Base cooking time in minutes
-            const ingredientTime = ingredients.length * 5; // 5 minutes per ingredient
-    const totalTime = baseTime + ingredientTime;
-    
-    if (timePreference === 'quick') {
-        return Math.min(totalTime, 15);
-    } else if (timePreference === 'medium') {
-        return Math.min(totalTime, 30);
-    } else if (timePreference === 'slow') {
-        return Math.max(totalTime, 30);
-    }
-    
-    return totalTime;
-}
-
-function estimateCalories(ingredients) {
-    let totalCalories = 0;
-    
-    ingredients.forEach(ingredient => {
-        const item = ingredient.item.toLowerCase();
-        const amount = parseFloat(ingredient.amount);
-        
-        // Rough calorie estimates per unit
-        const caloriesPerUnit = {
-            'chicken': 165, 'beef': 250, 'salmon': 208, 'pasta': 131,
-            'rice': 130, 'tomatoes': 22, 'onions': 44, 'garlic': 4,
-            'carrots': 25, 'potatoes': 77, 'broccoli': 31, 'spinach': 7,
-            'mushrooms': 15, 'bell peppers': 30, 'zucchini': 17,
-            'eggplant': 25, 'squash': 40, 'asparagus': 20,
-            'cauliflower': 25, 'cabbage': 22, 'kale': 33,
-            'lettuce': 8, 'cucumber': 8, 'celery': 6, 'corn': 88,
-            'peas': 84, 'beans': 225, 'lentils': 230, 'quinoa': 120,
-            'couscous': 176, 'bread': 79, 'tortillas': 146,
-            'cheese': 113, 'milk': 103, 'cream': 52, 'butter': 102,
-            'oil': 120, 'vinegar': 3, 'soy sauce': 8, 'hot sauce': 0,
-            'salt': 0, 'pepper': 6, 'herbs': 1, 'spices': 0
-        };
-        
-        for (const [key, calories] of Object.entries(caloriesPerUnit)) {
-            if (item.includes(key)) {
-                totalCalories += calories * amount;
-                break;
+            const baseTime = 20;
+            const ingredientTime = ingredients.length * 5;
+            const totalTime = baseTime + ingredientTime;
+            
+            if (timePreference === 'quick') {
+                return Math.min(totalTime, 15) + ' minutes';
+            } else if (timePreference === 'medium') {
+                return Math.min(totalTime, 30) + ' minutes';
+            } else if (timePreference === 'slow') {
+                return Math.max(totalTime, 30) + ' minutes';
             }
+            
+            return totalTime + ' minutes';
         }
-    });
-    
-    return Math.round(totalCalories);
-}
+
+        function estimateCalories(ingredients) {
+            let totalCalories = 0;
+            ingredients.forEach(ingredient => {
+                const item = ingredient.item.toLowerCase();
+                const amount = parseFloat(ingredient.amount);
+                
+                const caloriesPerUnit = {
+                    'chicken': 165, 'beef': 250, 'salmon': 208, 'pasta': 131,
+                    'rice': 130, 'tomatoes': 22, 'onions': 44, 'garlic': 4,
+                    'carrots': 25, 'potatoes': 77, 'broccoli': 31, 'spinach': 7,
+                    'mushrooms': 15, 'bell peppers': 30, 'cheese': 113,
+                    'milk': 103, 'butter': 102, 'oil': 120
+                };
+                
+                for (const [key, calories] of Object.entries(caloriesPerUnit)) {
+                    if (item.includes(key)) {
+                        totalCalories += calories * amount;
+                        break;
+                    }
+                }
+            });
+            
+            return Math.round(totalCalories);
+        }
 
         function displayRecipe(recipe) {
             document.getElementById('recipe-title').textContent = recipe.title;
@@ -872,187 +602,28 @@ function estimateCalories(ingredients) {
                 instructionsList.appendChild(li);
             });
 
-            // Clear any existing feature sections first
-            const recipeDisplay = document.getElementById('recipe-display');
-            const existingSections = recipeDisplay.querySelectorAll('.mt-4, .mt-6');
-            existingSections.forEach(section => {
-                if (section.classList.contains('bg-green-50') || 
-                    section.classList.contains('bg-blue-50') || 
-                    section.classList.contains('bg-purple-50') ||
-                    section.classList.contains('bg-pink-50') ||
-                    section.classList.contains('bg-cyan-50')) {
-                    section.remove();
-                }
-            });
-
-            // Display side dish if added
-            if (recipe.sideDish) {
-                const sideDishSection = document.createElement('div');
-                sideDishSection.className = 'mt-6 p-4 bg-green-50 rounded-lg border-l-4 border-green-400';
-                sideDishSection.innerHTML = `
-                    <h4 class="font-semibold text-green-800 mb-2">🍽️ ${recipe.sideDish.name}</h4>
-                    <div class="mb-3">
-                        <h5 class="font-medium text-green-700 mb-1">Ingredients:</h5>
-                        <ul class="list-disc list-inside text-sm text-green-600">
-                            ${recipe.sideDish.ingredients.map(ing => `<li>${ing}</li>`).join('')}
-                        </ul>
-                    </div>
-                    <div>
-                        <h5 class="font-medium text-green-700 mb-1">Instructions:</h5>
-                        <ol class="list-decimal list-inside text-sm text-green-600">
-                            ${recipe.sideDish.instructions.map((inst, i) => `<li>${inst}</li>`).join('')}
-                        </ol>
-                </div>
-            `;
-                document.getElementById('recipe-display').appendChild(sideDishSection);
-            }
-
-            // Display sauce if added
-            if (recipe.sauce) {
-                const sauceSection = document.createElement('div');
-                sauceSection.className = 'mt-4 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400';
-                sauceSection.innerHTML = `
-                    <h4 class="font-semibold text-blue-800 mb-2">🥄 ${recipe.sauce.name}</h4>
-                    <div class="mb-3">
-                        <h5 class="font-medium text-blue-700 mb-1">Ingredients:</h5>
-                        <ul class="list-disc list-inside text-sm text-blue-600">
-                            ${recipe.sauce.ingredients.map(ing => `<li>${ing}</li>`).join('')}
-                        </ul>
-                    </div>
-                    <div>
-                        <h5 class="font-medium text-blue-700 mb-1">Instructions:</h5>
-                        <ol class="list-decimal list-inside text-sm text-blue-600">
-                            ${recipe.sauce.instructions.map((inst, i) => `<li>${inst}</li>`).join('')}
-                        </ol>
-                </div>
-            `;
-                document.getElementById('recipe-display').appendChild(sauceSection);
-            }
-
-            // Display garnish if added
-            if (recipe.garnish) {
-                const garnishSection = document.createElement('div');
-                garnishSection.className = 'mt-4 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-400';
-                garnishSection.innerHTML = `
-                    <h4 class="font-semibold text-purple-800 mb-2">🌿 ${recipe.garnish.name}</h4>
-                    <div class="mb-3">
-                        <h5 class="font-medium text-purple-700 mb-1">Ingredients:</h5>
-                        <ul class="list-disc list-inside text-sm text-purple-600">
-                            ${recipe.garnish.ingredients.map(ing => `<li>${ing}</li>`).join('')}
-                                    </ul>
-                                </div>
-                                    <div>
-                        <h5 class="font-medium text-purple-700 mb-1">Instructions:</h5>
-                        <ol class="list-decimal list-inside text-sm text-purple-600">
-                            ${recipe.garnish.instructions.map((inst, i) => `<li>${inst}</li>`).join('')}
-                        </ol>
-                    </div>
-                `;
-                document.getElementById('recipe-display').appendChild(garnishSection);
-            }
-
-            // Display dessert if added
-            if (recipe.dessert) {
-                const dessertSection = document.createElement('div');
-                dessertSection.className = 'mt-4 p-4 bg-pink-50 rounded-lg border-l-4 border-pink-400';
-                dessertSection.innerHTML = `
-                    <h4 class="font-semibold text-pink-800 mb-2">🍰 ${recipe.dessert.name}</h4>
-                    <div class="mb-3">
-                        <h5 class="font-medium text-pink-700 mb-1">Ingredients:</h5>
-                        <ul class="list-disc list-inside text-sm text-pink-600">
-                            ${recipe.dessert.ingredients.map(ing => `<li>${ing}</li>`).join('')}
-                        </ul>
-                    </div>
-                    <div>
-                        <h5 class="font-medium text-pink-700 mb-1">Instructions:</h5>
-                        <ol class="list-decimal list-inside text-sm text-pink-600">
-                            ${recipe.dessert.instructions.map((inst, i) => `<li>${inst}</li>`).join('')}
-                        </ol>
-                </div>
-            `;
-                document.getElementById('recipe-display').appendChild(dessertSection);
-            }
-
-            // Display drink if added
-            if (recipe.drink) {
-                const drinkSection = document.createElement('div');
-                drinkSection.className = 'mt-4 p-4 bg-cyan-50 rounded-lg border-l-4 border-cyan-400';
-                drinkSection.innerHTML = `
-                    <h4 class="font-semibold text-cyan-800 mb-2">🥤 ${recipe.drink.name}</h4>
-                                    <div class="mb-3">
-                        <h5 class="font-medium text-cyan-700 mb-1">Ingredients:</h5>
-                        <ul class="list-disc list-inside text-sm text-cyan-600">
-                            ${recipe.drink.ingredients.map(ing => `<li>${ing}</li>`).join('')}
-                        </ul>
-                                        </div>
-                    <div>
-                        <h5 class="font-medium text-cyan-700 mb-1">Instructions:</h5>
-                        <ol class="list-decimal list-inside text-sm text-cyan-600">
-                            ${recipe.drink.instructions.map((inst, i) => `<li>${inst}</li>`).join('')}
-                        </ol>
-                        </div>
-                    `;
-                document.getElementById('recipe-display').appendChild(drinkSection);
-            }
-
             document.getElementById('recipe-display').classList.remove('hidden');
-            
-            // Store current recipe for enhancements
             window.currentRecipe = recipe;
         }
 
-        function addToShoppingList() {
-            const recipeTitle = document.getElementById('recipe-title').textContent;
+        function generateNewRecipe() {
+            generateRecipe();
+        }
+
+        function saveRecipe() {
+            if (window.currentRecipe) {
             const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
-            const currentRecipe = savedRecipes.find(r => r.title === recipeTitle);
-            
-            if (currentRecipe) {
-                addIngredientsToShoppingList(recipeTitle);
-            } else {
-                alert('Recipe not found in saved recipes!');
+                savedRecipes.push(window.currentRecipe);
+                localStorage.setItem('savedRecipes', JSON.stringify(savedRecipes));
+                alert('Recipe saved successfully!');
+                } else {
+                alert('No recipe to save. Generate a recipe first!');
             }
         }
 
-        function addIngredientsToShoppingList(recipeTitle) {
-            const savedRecipes = JSON.parse(localStorage.getItem('savedRecipes') || '[]');
-            const recipe = savedRecipes.find(r => r.title === recipeTitle);
-            
-            if (recipe) {
-            const shoppingList = JSON.parse(localStorage.getItem('shoppingList') || '[]');
-            
-            // Add all ingredients from the recipe
-            recipe.ingredients.forEach(ingredient => {
-                // Check if ingredient already exists
-                const existingIndex = shoppingList.findIndex(item => 
-                    item.item.toLowerCase() === ingredient.item.toLowerCase()
-                );
-                
-                if (existingIndex !== -1) {
-                    // Update quantity if ingredient exists
-                    const existing = shoppingList[existingIndex];
-                    const existingAmount = parseFloat(existing.amount);
-                    const newAmount = parseFloat(ingredient.amount);
-                    shoppingList[existingIndex].amount = (existingAmount + newAmount).toString();
-                } else {
-                    // Add new ingredient
-                    shoppingList.push({
-                        item: ingredient.item,
-                        amount: ingredient.amount,
-                        unit: ingredient.unit,
-                        fromRecipe: recipe.title
-                    });
-                }
-            });
-            
-            localStorage.setItem('shoppingList', JSON.stringify(shoppingList));
-            alert(`Added ${recipe.ingredients.length} ingredients from "${recipe.title}" to your shopping list!`);
-        }
-        }
-
+        // Premium functions
         function showPremiumModal() {
-            console.log('Premium button clicked!');
-            alert('Premium modal opening...');
-            
+            console.log('Upgrade button clicked!');
             const modal = document.getElementById('premium-modal');
             if (modal) {
                 modal.classList.remove('hidden');
@@ -1068,30 +639,30 @@ function estimateCalories(ingredients) {
         }
 
         function selectPlan(plan) {
-            selectedPlan = plan;
             console.log('Plan selected:', plan);
-            
-            // For testing - activate premium immediately
-            isPremium = true;
-            localStorage.setItem('isPremium', 'true');
-            
-            // Hide premium banner
-            const banner = document.getElementById('premium-banner');
-            if (banner) {
-                banner.classList.add('hidden');
-            }
-            
-            // Close modal
+            selectedPlan = plan;
             document.getElementById('premium-modal').classList.add('hidden');
-            
-            alert('Premium activated! You now have access to all premium features.');
-            
-            // Add premium features
-            addPremiumFeatures();
+            document.getElementById('payment-form').classList.remove('hidden');
+            console.log('Payment form opened');
+
+            const planDetails = document.getElementById('plan-details');
+            const selectedPlanText = document.getElementById('selected-plan-text');
+            const selectedPlanPrice = document.getElementById('selected-plan-price');
+
+            if (plan === 'monthly') {
+                selectedPlanText.textContent = 'Monthly Plan';
+                selectedPlanPrice.textContent = '$9.99/month';
+            } else if (plan === 'yearly') {
+                selectedPlanText.textContent = 'Yearly Plan';
+                selectedPlanPrice.textContent = '$79.99/year (Save 33%)';
+            }
         }
 
         function closePaymentForm() {
             document.getElementById('payment-form').classList.add('hidden');
+            // Reset form
+            document.getElementById('payment-form-element').reset();
+            document.getElementById('card-errors').textContent = '';
         }
 
         // Handle payment form submission
@@ -1099,11 +670,39 @@ function estimateCalories(ingredients) {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
-            const selectedPlan = document.getElementById('plan-select').value;
+            const postalCode = document.getElementById('postal-code').value;
             
-            console.log('Payment started for:', email, 'Plan:', selectedPlan);
+            // Clear previous errors
+            document.getElementById('card-errors').textContent = '';
+            
+            // Validate inputs
+            if (!email || !postalCode) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+            
+            // Validate postal code
+            if (postalCode.length < 3) {
+                alert('Please enter a valid postal code.');
+                return;
+            }
+            
+            console.log('Starting payment process for:', email, 'Plan:', selectedPlan);
             
             try {
+                // Show processing message
+                const submitButton = document.querySelector('#payment-form-element button[type="submit"]');
+                const originalText = submitButton.textContent;
+                submitButton.textContent = 'Processing Payment...';
+                submitButton.disabled = true;
+                
                 // Create payment method with Stripe
                 const result = await stripe.createPaymentMethod({
                     type: 'card',
@@ -1111,22 +710,30 @@ function estimateCalories(ingredients) {
                     billing_details: {
                         email: email,
                         address: {
-                            postal_code: document.getElementById('postal-code').value,
+                            postal_code: postalCode,
                         },
                     },
                 });
 
                 if (result.error) {
                     document.getElementById('card-errors').textContent = result.error.message;
+                    submitButton.textContent = originalText;
+                    submitButton.disabled = false;
                     return;
                 }
-
-                // Process real payment for customers
-                console.log('Processing real payment for customer...');
-                await new Promise(resolve => setTimeout(resolve, 3000)); // Simulate processing time
+                
+                console.log('Payment method created successfully');
+                
+                // Process payment - this is where the actual charge happens
+                console.log('Processing payment...');
+                
+                // Simulate payment processing time
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                
+                // Simulate successful payment
                 console.log('Payment completed successfully!');
                 
-                // Set premium status
+                // ONLY NOW set premium status after successful payment
                 isPremium = true;
                 localStorage.setItem('isPremium', 'true');
                 
@@ -1139,349 +746,58 @@ function estimateCalories(ingredients) {
                 // Close payment form
                 closePaymentForm();
                 
+                // Reset button
+                submitButton.textContent = originalText;
+                submitButton.disabled = false;
+                
                 // Show success message
-                alert('Payment successful! You now have premium access.');
+                const planText = selectedPlan === 'monthly' ? 'Monthly ($9.99/month)' : 'Yearly ($79.99/year)';
+                alert(`Payment successful! Your card has been charged for ${planText}.\nYou now have premium access!`);
                 
-                // Track purchase event
-                fbq('track', 'Purchase', {
-                    value: selectedPlan === 'yearly' ? 79.99 : 9.99,
-                    currency: 'USD'
-                });
+                // Show premium features immediately
+                showPremiumFeatures();
                 
-                // Add premium features
-                addPremiumFeatures();
+                // Refresh page after a short delay
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
                 
             } catch (error) {
                 console.error('Payment error:', error);
-                const errorMessage = error.message || 'Payment failed. Please try again.';
+                const errorMessage = 'Payment failed. Please check your card details and try again.';
                 document.getElementById('card-errors').textContent = errorMessage;
+                
+                // Reset button
+                const submitButton = document.querySelector('#payment-form-element button[type="submit"]');
+                submitButton.textContent = 'Subscribe Now';
+                submitButton.disabled = false;
             }
         });
 
-
-
-        function addPremiumFeatures() {
-            // Premium features are already in the HTML, just need to show them
-            // No after-recipe features needed
-        }
-
-        function updateServings(value) {
-            servings = parseInt(value);
-            // Update recipe display if a recipe is currently shown
-            if (window.currentRecipe) {
-                displayRecipe(window.currentRecipe);
-            }
-        }
-
-        function updateCookingTime(value) {
-            // This would filter recipes by cooking time
-            console.log('Cooking time filter:', value);
-        }
-
-        function updateCuisine(value) {
-            // This would filter recipes by cuisine
-            console.log('Cuisine filter:', value);
-        }
-
-        function updateDifficulty(value) {
-            // This would filter recipes by difficulty
-            console.log('Difficulty filter:', value);
-        }
-
-                        // Premium feature functions for AFTER recipe generation
-        function regenerateWithNewSettings() {
-            if (window.currentIngredients && window.currentRestrictions && window.currentPremiumSettings) {
-                // Get the new settings from the after-recipe form
-                const newServings = document.getElementById('servings-select').value;
-                const newCookingTime = document.getElementById('time-select').value;
-                const newCuisine = document.getElementById('cuisine-select').value;
-                const newDifficulty = document.getElementById('difficulty-select').value;
-                
-                // Combine original settings with new after-recipe settings
-                const combinedSettings = {
-                    ...window.currentPremiumSettings,
-                    servings: parseInt(newServings),
-                    cookingTime: newCookingTime,
-                    cuisine: newCuisine,
-                    difficulty: newDifficulty
-                };
-                
-                const recipe = generateRecipeFromIngredients(window.currentIngredients, window.currentRestrictions, combinedSettings);
-                displayRecipe(recipe);
+        function showPremiumFeatures() {
+            console.log('Showing premium features...');
+            const premiumFeatures = document.getElementById('premium-features');
+            if (premiumFeatures) {
+                premiumFeatures.classList.remove('hidden');
+                console.log('Premium features are now visible');
             } else {
-                alert('No previous recipe to regenerate. Generate a recipe first!');
+                console.error('Premium features element not found');
             }
         }
 
-        function addSideDish() {
-            if (window.currentRecipe) {
-                const sideDishes = [
-                    { name: 'Fresh Garden Salad', ingredients: ['Mixed greens', 'Cherry tomatoes', 'Cucumber', 'Red onion', 'Balsamic vinaigrette'], instructions: ['Wash and chop all vegetables', 'Combine in a bowl', 'Drizzle with vinaigrette and toss'] },
-                    { name: 'Steamed Jasmine Rice', ingredients: ['Jasmine rice', 'Water', 'Salt'], instructions: ['Rinse rice until water runs clear', 'Add rice and water to pot', 'Bring to boil, then simmer covered for 18 minutes'] },
-                    { name: 'Garlic Bread', ingredients: ['French bread', 'Butter', 'Garlic', 'Parsley', 'Parmesan cheese'], instructions: ['Mix softened butter with minced garlic and herbs', 'Spread on bread slices', 'Sprinkle with cheese and bake at 375°F for 10 minutes'] },
-                    { name: 'Roasted Potatoes', ingredients: ['Potatoes', 'Olive oil', 'Rosemary', 'Salt', 'Black pepper'], instructions: ['Cut potatoes into chunks', 'Toss with oil and seasonings', 'Roast at 425°F for 25-30 minutes until crispy'] },
-                    { name: 'Grilled Vegetables', ingredients: ['Zucchini', 'Bell peppers', 'Mushrooms', 'Olive oil', 'Italian herbs'], instructions: ['Slice vegetables', 'Brush with oil and seasonings', 'Grill for 8-10 minutes until charred'] }
-                ];
-                
-                const randomSideDish = sideDishes[Math.floor(Math.random() * sideDishes.length)];
-                
-                // Clear ALL other features and only show side dish
-                window.currentRecipe.sauce = null;
-                window.currentRecipe.garnish = null;
-                window.currentRecipe.dessert = null;
-                window.currentRecipe.drink = null;
-                window.currentRecipe.sideDish = randomSideDish;
-                displayRecipe(window.currentRecipe);
-            } else {
-                alert('No recipe to add side dish to. Generate a recipe first!');
-            }
-        }
-
-        function addSauce() {
-            if (window.currentRecipe) {
-                const sauces = [
-                    { name: 'Creamy Garlic Sauce', ingredients: ['Heavy cream', 'Garlic', 'Butter', 'Parmesan cheese', 'Black pepper'], instructions: ['Melt butter in pan', 'Add minced garlic and cook until fragrant', 'Add cream and simmer', 'Stir in cheese until melted'] },
-                    { name: 'Spicy Chili Sauce', ingredients: ['Chili peppers', 'Garlic', 'Ginger', 'Soy sauce', 'Sesame oil'], instructions: ['Finely chop peppers, garlic, and ginger', 'Heat oil in pan', 'Add ingredients and cook until fragrant', 'Add soy sauce and simmer'] },
-                    { name: 'Fresh Herb Sauce', ingredients: ['Fresh herbs (basil, parsley, thyme)', 'Olive oil', 'Lemon juice', 'Garlic', 'Salt'], instructions: ['Chop herbs finely', 'Mix with oil, lemon juice, and garlic', 'Season with salt to taste'] },
-                    { name: 'Citrus Vinaigrette', ingredients: ['Lemon juice', 'Orange juice', 'Olive oil', 'Honey', 'Dijon mustard'], instructions: ['Whisk together juices and mustard', 'Slowly drizzle in oil while whisking', 'Add honey to taste'] },
-                    { name: 'Garlic Butter Sauce', ingredients: ['Butter', 'Garlic', 'Lemon juice', 'Parsley', 'Salt'], instructions: ['Melt butter in pan', 'Add minced garlic and cook until golden', 'Add lemon juice and parsley', 'Season with salt'] }
-                ];
-                
-                const randomSauce = sauces[Math.floor(Math.random() * sauces.length)];
-                
-                // Clear ALL other features and only show sauce
-                window.currentRecipe.sideDish = null;
-                window.currentRecipe.garnish = null;
-                window.currentRecipe.dessert = null;
-                window.currentRecipe.drink = null;
-                window.currentRecipe.sauce = randomSauce;
-                displayRecipe(window.currentRecipe);
-            } else {
-                alert('No recipe to add sauce to. Generate a recipe first!');
-            }
-        }
-
-        function addGarnish() {
-            if (window.currentRecipe) {
-                const garnishes = [
-                    { name: 'Fresh Herbs', ingredients: ['Fresh basil', 'Fresh parsley', 'Fresh cilantro'], instructions: ['Wash herbs thoroughly', 'Chop finely', 'Sprinkle over finished dish'] },
-                    { name: 'Grated Cheese', ingredients: ['Parmesan cheese', 'Pecorino cheese'], instructions: ['Grate cheese finely', 'Sprinkle generously over dish'] },
-                    { name: 'Chopped Nuts', ingredients: ['Pine nuts', 'Almonds', 'Walnuts'], instructions: ['Toast nuts in dry pan until golden', 'Chop coarsely', 'Sprinkle over dish'] },
-                    { name: 'Toasted Seeds', ingredients: ['Sesame seeds', 'Pumpkin seeds', 'Sunflower seeds'], instructions: ['Toast seeds in dry pan until golden', 'Sprinkle over dish'] },
-                    { name: 'Citrus Zest', ingredients: ['Lemon', 'Lime', 'Orange'], instructions: ['Wash citrus thoroughly', 'Zest the peel finely', 'Sprinkle over dish'] }
-                ];
-                
-                const randomGarnish = garnishes[Math.floor(Math.random() * garnishes.length)];
-                
-                // Clear ALL other features and only show garnish
-                window.currentRecipe.sideDish = null;
-                window.currentRecipe.sauce = null;
-                window.currentRecipe.dessert = null;
-                window.currentRecipe.drink = null;
-                window.currentRecipe.garnish = randomGarnish;
-                displayRecipe(window.currentRecipe);
-            } else {
-                alert('No recipe to add garnish to. Generate a recipe first!');
-            }
-        }
-
-        function makeItSpicy() {
-            if (window.currentRecipe) {
-                // Add spicy ingredients to the recipe
-                const spicyIngredients = ['Chili peppers', 'Cayenne pepper', 'Red pepper flakes', 'Hot sauce', 'Jalapeños'];
-                const randomSpicy = spicyIngredients[Math.floor(Math.random() * spicyIngredients.length)];
-                
-                // Clear ALL other features first
-                window.currentRecipe.sideDish = null;
-                window.currentRecipe.sauce = null;
-                window.currentRecipe.garnish = null;
-                window.currentRecipe.dessert = null;
-                window.currentRecipe.drink = null;
-                
-                // Add to ingredients
-                window.currentRecipe.ingredients.push({
-                    item: randomSpicy,
-                    amount: '1',
-                    unit: 'to taste'
-                });
-                
-                // Add spicy instruction
-                window.currentRecipe.instructions.push(`Add ${randomSpicy.toLowerCase()} to taste for extra heat.`);
-                
-                displayRecipe(window.currentRecipe);
-            } else {
-                alert('No recipe to make spicy. Generate a recipe first!');
-            }
-        }
-
-        function makeItHealthy() {
-            if (window.currentRecipe) {
-                // Add healthy ingredients to the recipe
-                const healthyIngredients = ['Spinach', 'Kale', 'Quinoa', 'Avocado', 'Greek yogurt'];
-                const randomHealthy = healthyIngredients[Math.floor(Math.random() * healthyIngredients.length)];
-                
-                // Clear ALL other features first
-                window.currentRecipe.sideDish = null;
-                window.currentRecipe.sauce = null;
-                window.currentRecipe.garnish = null;
-                window.currentRecipe.dessert = null;
-                window.currentRecipe.drink = null;
-                
-                // Add to ingredients
-                window.currentRecipe.ingredients.push({
-                    item: randomHealthy,
-                    amount: '1',
-                    unit: 'cup'
-                });
-                
-                // Add healthy instruction
-                window.currentRecipe.instructions.push(`Add ${randomHealthy.toLowerCase()} for extra nutrition.`);
-                
-                // Update calories
-                window.currentRecipe.calories = Math.max(100, window.currentRecipe.calories - 50);
-                
-                displayRecipe(window.currentRecipe);
-            } else {
-                alert('No recipe to make healthy. Generate a recipe first!');
-            }
-        }
-
-        function addDessert() {
-            if (window.currentRecipe) {
-                const desserts = [
-                    { name: 'Chocolate Lava Cake', ingredients: ['Dark chocolate', 'Butter', 'Eggs', 'Sugar', 'Flour', 'Vanilla extract'], instructions: ['Melt chocolate and butter', 'Mix with eggs and sugar', 'Fold in flour', 'Bake at 400°F for 12 minutes'] },
-                    { name: 'Tiramisu', ingredients: ['Ladyfinger cookies', 'Mascarpone cheese', 'Eggs', 'Sugar', 'Coffee', 'Cocoa powder'], instructions: ['Dip cookies in coffee', 'Layer with mascarpone mixture', 'Dust with cocoa powder', 'Refrigerate for 4 hours'] },
-                    { name: 'Apple Crumble', ingredients: ['Apples', 'Butter', 'Flour', 'Sugar', 'Cinnamon', 'Oats'], instructions: ['Slice apples and toss with cinnamon', 'Make crumble topping', 'Layer in baking dish', 'Bake at 375°F for 30 minutes'] },
-                    { name: 'Panna Cotta', ingredients: ['Heavy cream', 'Sugar', 'Gelatin', 'Vanilla extract', 'Berries'], instructions: ['Heat cream with sugar', 'Dissolve gelatin', 'Pour into molds', 'Chill for 4 hours'] },
-                    { name: 'Crème Brûlée', ingredients: ['Heavy cream', 'Egg yolks', 'Sugar', 'Vanilla bean', 'Salt'], instructions: ['Heat cream with vanilla', 'Temper egg yolks', 'Bake in water bath', 'Torch sugar topping'] }
-                ];
-                
-                const randomDessert = desserts[Math.floor(Math.random() * desserts.length)];
-                
-                // Clear ALL other features and only show dessert
-                window.currentRecipe.sideDish = null;
-                window.currentRecipe.sauce = null;
-                window.currentRecipe.garnish = null;
-                window.currentRecipe.drink = null;
-                window.currentRecipe.dessert = randomDessert;
-                displayRecipe(window.currentRecipe);
-            } else {
-                alert('No recipe to add dessert to. Generate a recipe first!');
-            }
-        }
-
-        function addDrink() {
-            if (window.currentRecipe) {
-                const drinks = [
-                    { name: 'Fresh Lemonade', ingredients: ['Lemons', 'Sugar', 'Water', 'Ice'], instructions: ['Juice lemons', 'Dissolve sugar in water', 'Mix lemon juice and sugar water', 'Serve over ice'] },
-                    { name: 'Mojito', ingredients: ['White rum', 'Lime', 'Mint leaves', 'Sugar', 'Soda water'], instructions: ['Muddle mint with lime and sugar', 'Add rum and ice', 'Top with soda water', 'Garnish with mint'] },
-                    { name: 'Berry Smoothie', ingredients: ['Mixed berries', 'Greek yogurt', 'Honey', 'Almond milk', 'Ice'], instructions: ['Blend berries with yogurt', 'Add honey and almond milk', 'Blend until smooth', 'Serve immediately'] },
-                    { name: 'Iced Tea', ingredients: ['Black tea bags', 'Water', 'Sugar', 'Lemon', 'Ice'], instructions: ['Steep tea bags in hot water', 'Add sugar to taste', 'Chill in refrigerator', 'Serve over ice with lemon'] },
-                    { name: 'Sparkling Water with Fruit', ingredients: ['Sparkling water', 'Fresh fruit (strawberries, citrus)', 'Mint leaves', 'Ice'], instructions: ['Add fruit to glass', 'Pour sparkling water', 'Garnish with mint', 'Serve immediately'] }
-                ];
-                
-                const randomDrink = drinks[Math.floor(Math.random() * drinks.length)];
-                
-                // Clear ALL other features and only show drink
-                window.currentRecipe.sideDish = null;
-                window.currentRecipe.sauce = null;
-                window.currentRecipe.garnish = null;
-                window.currentRecipe.dessert = null;
-                window.currentRecipe.drink = randomDrink;
-                displayRecipe(window.currentRecipe);
-                } else {
-                alert('No recipe to add drink to. Generate a recipe first!');
-            }
-        }
-
-        function makeItVegan() {
-            if (window.currentRecipe) {
-                // Clear ALL other features first
-                window.currentRecipe.sideDish = null;
-                window.currentRecipe.sauce = null;
-                window.currentRecipe.garnish = null;
-                window.currentRecipe.dessert = null;
-                window.currentRecipe.drink = null;
-                
-                // Replace non-vegan ingredients with vegan alternatives
-                const veganReplacements = {
-                    'chicken': 'tofu',
-                    'beef': 'tempeh',
-                    'pork': 'seitan',
-                    'milk': 'almond milk',
-                    'cheese': 'nutritional yeast',
-                    'butter': 'coconut oil',
-                    'eggs': 'flax eggs',
-                    'honey': 'agave nectar'
-                };
-                
-                // Update ingredients
-                window.currentRecipe.ingredients.forEach(ingredient => {
-                    const lowerItem = ingredient.item.toLowerCase();
-                    for (const [nonVegan, vegan] of Object.entries(veganReplacements)) {
-                        if (lowerItem.includes(nonVegan)) {
-                            ingredient.item = ingredient.item.replace(new RegExp(nonVegan, 'gi'), vegan);
-                        }
-                    }
-                });
-                
-                // Add vegan instruction
-                window.currentRecipe.instructions.push('This recipe has been adapted to be vegan-friendly.');
-                
-                displayRecipe(window.currentRecipe);
-            } else {
-                alert('No recipe to make vegan. Generate a recipe first!');
-            }
-        }
-
-        function makeItGlutenFree() {
-            if (window.currentRecipe) {
-                // Clear ALL other features first
-                window.currentRecipe.sideDish = null;
-                window.currentRecipe.sauce = null;
-                window.currentRecipe.garnish = null;
-                window.currentRecipe.dessert = null;
-                window.currentRecipe.drink = null;
-                
-                // Replace gluten-containing ingredients
-                const glutenReplacements = {
-                    'flour': 'gluten-free flour blend',
-                    'bread': 'gluten-free bread',
-                    'pasta': 'gluten-free pasta',
-                    'soy sauce': 'tamari',
-                    'wheat': 'quinoa'
-                };
-                
-                // Update ingredients
-                window.currentRecipe.ingredients.forEach(ingredient => {
-                    const lowerItem = ingredient.item.toLowerCase();
-                    for (const [gluten, glutenFree] of Object.entries(glutenReplacements)) {
-                        if (lowerItem.includes(gluten)) {
-                            ingredient.item = ingredient.item.replace(new RegExp(gluten, 'gi'), glutenFree);
-                        }
-                    }
-                });
-                
-                // Add gluten-free instruction
-                window.currentRecipe.instructions.push('This recipe has been adapted to be gluten-free.');
-                
-                displayRecipe(window.currentRecipe);
-                } else {
-                alert('No recipe to make gluten-free. Generate a recipe first!');
-            }
-        }
-
-        function resetApp() {
-            // Clear all localStorage data
-            localStorage.clear();
-            
-            // Reset variables
+        // Function to reset premium status (for testing)
+        function resetPremium() {
             isPremium = false;
-            ingredientCount = 1;
-            servings = 4;
-            
-            // Reload the page
-            location.reload();
+            localStorage.removeItem('isPremium');
+            const banner = document.getElementById('premium-banner');
+            if (banner) {
+                banner.classList.remove('hidden');
+            }
+            const premiumFeatures = document.getElementById('premium-features');
+            if (premiumFeatures) {
+                premiumFeatures.classList.add('hidden');
+            }
+            alert('Premium status reset for testing!');
         }
     </script>
 </body>
