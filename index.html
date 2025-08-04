@@ -320,7 +320,12 @@
         const stripe = Stripe('pk_live_51QGR3EDYRm11DoRiF412084WDjELauYMAvVDQ3W1pHL05fLavgUQeUm9MwrtDhRLEeRTB3NfnqHAwHtt2vf0MTVp00QRkSfv5x');
         const elements = stripe.elements();
         const cardElement = elements.create('card');
-        cardElement.mount('#card-element');
+        
+        // Only mount card element if it exists
+        const cardElementContainer = document.getElementById('card-element');
+        if (cardElementContainer) {
+            cardElement.mount('#card-element');
+        }
 
         // Facebook Pixel
         !function(f,b,e,v,n,t,s)
@@ -1046,15 +1051,25 @@ function estimateCalories(ingredients) {
         }
 
         function showPremiumModal() {
-            alert('Button clicked! Testing premium modal...');
-            console.log('Premium button clicked!');
-            const modal = document.getElementById('premium-modal');
-            if (modal) {
-                modal.classList.remove('hidden');
-                console.log('Premium modal shown successfully');
-            } else {
-                console.error('Premium modal not found!');
+            alert('Premium button clicked! Unlocking premium features...');
+            
+            // Directly unlock premium features
+            isPremium = true;
+            localStorage.setItem('isPremium', 'true');
+            
+            // Hide premium banner
+            const banner = document.getElementById('premium-banner');
+            if (banner) {
+                banner.classList.add('hidden');
             }
+            
+            // Show success message
+            alert('Premium features unlocked! You now have access to all premium features.');
+            
+            // Add premium features
+            addPremiumFeatures();
+            
+            console.log('Premium features unlocked successfully');
         }
 
         function closePremiumModal() {
