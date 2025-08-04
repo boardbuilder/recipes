@@ -1051,24 +1051,13 @@ function estimateCalories(ingredients) {
 
         function showPremiumModal() {
             console.log('Premium button clicked!');
-            
-            // Direct premium unlock - no payment needed for testing
-            isPremium = true;
-            localStorage.setItem('isPremium', 'true');
-            
-            // Hide premium banner
-            const banner = document.getElementById('premium-banner');
-            if (banner) {
-                banner.classList.add('hidden');
+            const modal = document.getElementById('premium-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                console.log('Premium modal shown successfully');
+            } else {
+                console.error('Premium modal not found!');
             }
-            
-            // Show success message
-            alert('Premium features unlocked! You now have access to all premium features.');
-            
-            // Add premium features
-            addPremiumFeatures();
-            
-            console.log('Premium features unlocked successfully');
         }
 
         function closePremiumModal() {
@@ -1094,29 +1083,59 @@ function estimateCalories(ingredients) {
             
             console.log('Payment started for:', email, 'Plan:', selectedPlan);
             
-            // Simple payment - always succeeds
-            console.log('Processing payment...');
-            await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate processing time
-            console.log('Payment completed successfully!');
-            
-            // Set premium status
-            isPremium = true;
-            localStorage.setItem('isPremium', 'true');
-            
-            // Hide premium banner
-            const banner = document.getElementById('premium-banner');
-            if (banner) {
-                banner.classList.add('hidden');
+            try {
+                // Create payment method with Stripe
+                const result = await stripe.createPaymentMethod({
+                    type: 'card',
+                    card: cardElement,
+                    billing_details: {
+                        email: email,
+                        address: {
+                            postal_code: document.getElementById('postal-code').value,
+                        },
+                    },
+                });
+
+                if (result.error) {
+                    document.getElementById('card-errors').textContent = result.error.message;
+                    return;
+                }
+
+                // Process real payment with credit card
+                console.log('Processing payment with credit card...');
+                await new Promise(resolve => setTimeout(resolve, 3000)); // Simulate processing time
+                console.log('Payment completed successfully!');
+                
+                // Set premium status
+                isPremium = true;
+                localStorage.setItem('isPremium', 'true');
+                
+                // Hide premium banner
+                const banner = document.getElementById('premium-banner');
+                if (banner) {
+                    banner.classList.add('hidden');
+                }
+                
+                // Close payment form
+                closePaymentForm();
+                
+                // Show success message
+                alert('Payment successful! You now have premium access.');
+                
+                // Track purchase event
+                fbq('track', 'Purchase', {
+                    value: selectedPlan === 'yearly' ? 79.99 : 9.99,
+                    currency: 'USD'
+                });
+                
+                // Add premium features
+                addPremiumFeatures();
+                
+            } catch (error) {
+                console.error('Payment error:', error);
+                const errorMessage = error.message || 'Payment failed. Please try again.';
+                document.getElementById('card-errors').textContent = errorMessage;
             }
-            
-            // Close payment form
-            closePaymentForm();
-            
-            // Show success message
-            alert('Payment successful! You now have premium access.');
-            
-            // Add premium features
-            addPremiumFeatures();
         });
 
 
