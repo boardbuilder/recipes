@@ -99,6 +99,13 @@
                     </button>
                 </div>
             </div>
+            
+            <!-- Simple Test Button -->
+            <div class="text-center mt-4">
+                <button onclick="alert('Test button works!')" class="btn-primary px-4 py-2 text-sm bg-green-500">
+                    Test Button (Click Me)
+                </button>
+            </div>
         </div>
 
         <!-- Input Form -->
@@ -315,17 +322,6 @@
         let isPremium = false;
         let selectedPlan = '';
         let servings = 4;
-
-        // Initialize Stripe
-        const stripe = Stripe('pk_live_51QGR3EDYRm11DoRiF412084WDjELauYMAvVDQ3W1pHL05fLavgUQeUm9MwrtDhRLEeRTB3NfnqHAwHtt2vf0MTVp00QRkSfv5x');
-        const elements = stripe.elements();
-        const cardElement = elements.create('card');
-        
-        // Only mount card element if it exists
-        const cardElementContainer = document.getElementById('card-element');
-        if (cardElementContainer) {
-            cardElement.mount('#card-element');
-        }
 
         // Facebook Pixel
         !function(f,b,e,v,n,t,s)
