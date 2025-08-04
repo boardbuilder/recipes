@@ -1073,6 +1073,8 @@ function estimateCalories(ingredients) {
                     return;
                 }
 
+                console.log('Payment method created:', result.paymentMethod.id);
+                
                 // Check if we're on localhost (development) or live site
                 const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
                 console.log('Payment mode:', isLocalhost ? 'localhost (real payments)' : 'live site (demo mode)');
@@ -1093,7 +1095,7 @@ function estimateCalories(ingredients) {
                     });
 
                     if (!response.ok) {
-                        throw new Error('Payment failed');
+                        throw new Error(`Payment failed: ${response.statusText}`);
                     }
 
                     const result2 = await response.json();
@@ -1101,6 +1103,8 @@ function estimateCalories(ingredients) {
                     if (result2.error) {
                         throw new Error(result2.error);
                     }
+                    
+                    console.log('Real payment successful:', result2);
                 } else {
                     // Demo mode for live site - simulate successful payment
                     console.log('Demo payment mode - simulating successful payment');
