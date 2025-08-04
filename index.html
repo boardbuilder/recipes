@@ -1108,16 +1108,12 @@ function estimateCalories(ingredients) {
                     
                     console.log('Real payment successful:', result2);
                 } else {
-                    // For live site, use a public backend service
-                    console.log('Live site payment - using public backend');
-                    
-                    // Try multiple backend options
-                    let response;
-                    let result2;
+                    // For live site, try to use deployed backend
+                    console.log('Live site payment - trying deployed backend...');
+                    const deployedUrl = 'https://recipe-app-server-production.up.railway.app';
                     
                     try {
-                        // Try the main backend
-                        response = await fetch('https://recipe-app-backend.onrender.com/api/create-subscription', {
+                        const response = await fetch(`${deployedUrl}/api/create-subscription`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -1128,22 +1124,23 @@ function estimateCalories(ingredients) {
                                 paymentMethodId: result.paymentMethod.id
                             })
                         });
-                        
-                        if (response.ok) {
-                            result2 = await response.json();
-                            if (!result2.error) {
-                                console.log('Live site payment successful:', result2);
-                            } else {
-                                throw new Error(result2.error);
-                            }
-                        } else {
-                            throw new Error('Backend not available');
+
+                        if (!response.ok) {
+                            throw new Error('Deployed server payment failed');
                         }
-                    } catch (error) {
-                        console.log('Backend not available, using demo mode for live site');
-                        // Fallback to demo mode for live site
+
+                        const result2 = await response.json();
+                        
+                        if (result2.error) {
+                            throw new Error(result2.error);
+                        }
+                        
+                        console.log('Deployed server payment successful:', result2);
+                    } catch (deployedError) {
+                        console.log('Deployed server failed, falling back to demo mode');
+                        // Fallback to demo mode if deployed server fails
                         await new Promise(resolve => setTimeout(resolve, 2000));
-                        console.log('Demo payment completed for live site');
+                        console.log('Demo payment completed');
                     }
                 }
                 
