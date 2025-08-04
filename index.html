@@ -1056,10 +1056,10 @@ function estimateCalories(ingredients) {
             const email = document.getElementById('email').value;
             const selectedPlan = document.getElementById('plan-select').value;
             
-            console.log('Starting simple payment process...');
+            console.log('Payment started for:', email, 'Plan:', selectedPlan);
             
             try {
-                // Simple payment - always succeeds
+                // Simple guaranteed payment - always succeeds
                 console.log('Processing payment...');
                 await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate processing time
                 console.log('Payment completed successfully!');
