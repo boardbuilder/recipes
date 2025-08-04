@@ -348,7 +348,24 @@
                 // Add premium features to the form
                 addPremiumFeatures();
             }
+            
+            // Add reset button for testing
+            const resetButton = document.createElement('button');
+            resetButton.textContent = 'Reset Premium (Test)';
+            resetButton.className = 'btn-primary px-4 py-2 text-sm ml-2 bg-red-500';
+            resetButton.onclick = resetPremium;
+            document.body.appendChild(resetButton);
         });
+
+        function resetPremium() {
+            isPremium = false;
+            localStorage.removeItem('isPremium');
+            const banner = document.getElementById('premium-banner');
+            if (banner) {
+                banner.classList.remove('hidden');
+            }
+            alert('Premium status reset for testing!');
+        }
 
         function addIngredient() {
             const container = document.getElementById('ingredients-container');
