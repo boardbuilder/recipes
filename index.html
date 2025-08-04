@@ -80,23 +80,23 @@
                 <div class="text-center mt-2">
                     <button onclick="testPremiumModal()" class="text-xs bg-blue-500 text-white px-2 py-1 rounded">
                         Test Modal
-                    </button>
-                </div>
-            </div>
+            </button>
         </div>
+                        </div>
+                    </div>
 
-        <!-- Input Form -->
-        <div class="card p-6 mb-6">
-            <div class="mb-4">
-                <label class="block text-gray-700 font-semibold mb-2">Ingredients:</label>
-                <div id="ingredients-container">
-                    <div class="flex gap-2 mb-2">
-                        <input type="text" class="input-field flex-1" placeholder="Enter an ingredient..." id="ingredient-0">
-                        <button onclick="addIngredient()" class="btn-primary">+</button>
+                    <!-- Input Form -->
+                    <div class="card p-6 mb-6">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 font-semibold mb-2">Ingredients:</label>
+                            <div id="ingredients-container">
+                                <div class="flex gap-2 mb-2">
+                                    <input type="text" class="input-field flex-1" placeholder="Enter an ingredient..." id="ingredient-0">
+                                    <button onclick="addIngredient()" class="btn-primary">+</button>
                 <button onclick="removeIngredient(this)" class="btn-primary">-</button>
-                </div>
-                </div>
-                </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="mb-4">
                             <label class="block text-gray-700 font-semibold mb-2">Dietary Restrictions:</label>
@@ -123,47 +123,47 @@
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Servings:</label>
                         <select id="servings-select" class="input-field">
-                            <option value="2">2 servings</option>
-                            <option value="4" selected>4 servings</option>
-                            <option value="6">6 servings</option>
-                            <option value="8">8 servings</option>
-                        </select>
-                    </div>
+                                <option value="2">2 servings</option>
+                                <option value="4" selected>4 servings</option>
+                                <option value="6">6 servings</option>
+                                <option value="8">8 servings</option>
+                            </select>
+                        </div>
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Cooking Time:</label>
                         <select id="time-select" class="input-field">
-                            <option value="any">Any time</option>
-                            <option value="quick">Quick (15 min or less)</option>
-                            <option value="medium">Medium (15-30 min)</option>
-                            <option value="slow">Slow (30+ min)</option>
-                        </select>
-                    </div>
+                                <option value="any">Any time</option>
+                                <option value="quick">Quick (15 min or less)</option>
+                                <option value="medium">Medium (15-30 min)</option>
+                                <option value="slow">Slow (30+ min)</option>
+                            </select>
+                        </div>
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Cuisine Style:</label>
                         <select id="cuisine-select" class="input-field">
-                            <option value="any">Any cuisine</option>
-                            <option value="italian">Italian</option>
-                            <option value="asian">Asian</option>
-                            <option value="mexican">Mexican</option>
-                            <option value="mediterranean">Mediterranean</option>
-                            <option value="indian">Indian</option>
-                            <option value="american">American</option>
-                        </select>
-                    </div>
+                                <option value="any">Any cuisine</option>
+                                <option value="italian">Italian</option>
+                                <option value="asian">Asian</option>
+                                <option value="mexican">Mexican</option>
+                                <option value="mediterranean">Mediterranean</option>
+                                <option value="indian">Indian</option>
+                                <option value="american">American</option>
+                            </select>
+                        </div>
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Difficulty Level:</label>
                         <select id="difficulty-select" class="input-field">
-                            <option value="any">Any difficulty</option>
-                            <option value="easy">Easy (Beginner)</option>
-                            <option value="medium">Medium (Intermediate)</option>
-                            <option value="hard">Hard (Advanced)</option>
-                        </select>
-                    </div>
-                </div>
+                                <option value="any">Any difficulty</option>
+                                <option value="easy">Easy (Beginner)</option>
+                                <option value="medium">Medium (Intermediate)</option>
+                                <option value="hard">Hard (Advanced)</option>
+                            </select>
+                        </div>
+                            </div>
                 <div class="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
                     <p class="text-sm text-green-700">✅ Premium features are now active! You can customize your recipes with advanced options.</p>
-                </div>
-            </div>
+                            </div>
+                        </div>
 
                         <button onclick="generateRecipe()" class="btn-primary w-full py-3">
                             Generate Recipe
@@ -353,7 +353,7 @@
                 if (banner) {
                     banner.classList.remove('hidden');
                     console.log('Premium banner should be visible now');
-                } else {
+            } else {
                     console.error('Premium banner element not found!');
                 }
             }
@@ -789,7 +789,7 @@
                 showPremiumFeatures();
                 
                 // Force refresh the page to show premium features
-                setTimeout(() => {
+            setTimeout(() => {
                     location.reload();
                 }, 1500);
                 
@@ -811,7 +811,7 @@
             if (premiumFeatures) {
                 premiumFeatures.classList.remove('hidden');
                 console.log('Premium features are now visible');
-            } else {
+                } else {
                 console.error('Premium features element not found');
             }
         }
