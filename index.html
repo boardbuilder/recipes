@@ -76,6 +76,12 @@
                         Upgrade Now
                     </button>
                 </div>
+                <!-- Debug button for testing -->
+                <div class="text-center mt-2">
+                    <button onclick="testPremiumModal()" class="text-xs bg-blue-500 text-white px-2 py-1 rounded">
+                        Test Modal
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -209,7 +215,7 @@
                     </div>
                     
                     <!-- Premium Modal -->
-        <div id="premium-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div id="premium-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
             <div class="flex items-center justify-center min-h-screen p-4">
                 <div class="card p-8 max-w-md w-full">
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">Upgrade to Premium</h2>
@@ -320,9 +326,13 @@
 
         // Check if user is premium on page load
         window.addEventListener('load', function() {
+            console.log('Page loaded, checking premium status...');
             const premiumStatus = localStorage.getItem('isPremium');
+            console.log('Premium status from localStorage:', premiumStatus);
+            
             if (premiumStatus === 'true') {
                 isPremium = true;
+                console.log('User is premium, hiding banner and showing features');
                 // Hide the premium banner and show premium features
                 const banner = document.getElementById('premium-banner');
                 if (banner) {
@@ -333,6 +343,7 @@
             } else {
                 // Ensure premium features are hidden if not paid
                 isPremium = false;
+                console.log('User is NOT premium, showing banner and hiding features');
                 const premiumFeatures = document.getElementById('premium-features');
                 if (premiumFeatures) {
                     premiumFeatures.classList.add('hidden');
@@ -341,6 +352,9 @@
                 const banner = document.getElementById('premium-banner');
                 if (banner) {
                     banner.classList.remove('hidden');
+                    console.log('Premium banner should be visible now');
+                } else {
+                    console.error('Premium banner element not found!');
                 }
             }
         });
@@ -862,6 +876,12 @@
                 return false;
             }
             return true;
+        }
+
+        // Function to test the premium modal
+        function testPremiumModal() {
+            console.log('Test button clicked!');
+            showPremiumModal();
         }
     </script>
 </body>
