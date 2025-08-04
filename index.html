@@ -365,13 +365,6 @@
                 // Add premium features to the form
                 addPremiumFeatures();
             }
-            
-            // Add reset button for testing
-            const resetButton = document.createElement('button');
-            resetButton.textContent = 'Reset Premium (Test)';
-            resetButton.className = 'btn-primary px-4 py-2 text-sm ml-2 bg-red-500';
-            resetButton.onclick = resetPremium;
-            document.body.appendChild(resetButton);
         });
 
         function resetPremium() {
@@ -1103,7 +1096,6 @@ function estimateCalories(ingredients) {
                     card: cardElement,
                     billing_details: {
                         email: email,
-                        name: document.getElementById('name').value,
                         address: {
                             postal_code: postalCode,
                         },
@@ -1115,31 +1107,44 @@ function estimateCalories(ingredients) {
                     return;
                 }
 
-                // Real payment processing - sends to backend server
-                console.log('Processing real payment...');
-                const response = await fetch('http://localhost:3001/api/create-subscription', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        email: email,
-                        plan: selectedPlan,
-                        paymentMethodId: result.paymentMethod.id
-                    })
-                });
+                // Check if we're on localhost (development) or live site
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                console.log('Payment mode:', isLocalhost ? 'localhost (real payments)' : 'live site (demo mode)');
+                
+                if (isLocalhost) {
+                    // Use real server for local development
+                    console.log('Sending payment to localhost server...');
+                    const response = await fetch('http://localhost:3001/api/create-subscription', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            plan: selectedPlan,
+                            paymentMethodId: result.paymentMethod.id
+                        })
+                    });
 
-                if (!response.ok) {
-                    throw new Error('Payment failed');
+                    if (!response.ok) {
+                        throw new Error('Payment failed');
+                    }
+
+                    const result2 = await response.json();
+                    
+                    if (result2.error) {
+                        throw new Error(result2.error);
+                    }
+                } else {
+                    // Demo mode for live site - simulate successful payment
+                    console.log('Demo payment mode - simulating successful payment');
+                    await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate processing time
+                    console.log('Demo payment completed successfully');
                 }
 
-                const result2 = await response.json();
-                
-                if (result2.error) {
-                    throw new Error(result2.error);
-                }
-                
-                console.log('Real payment completed successfully!');
+                // Payment succeeded
+                console.log('Payment succeeded!');
+                document.getElementById('card-errors').textContent = ''; // Clear errors
                 
                 // Set premium status
                 isPremium = true;
@@ -1404,7 +1409,7 @@ function estimateCalories(ingredients) {
                 window.currentRecipe.dessert = null;
                 window.currentRecipe.drink = randomDrink;
                 displayRecipe(window.currentRecipe);
-                } else {
+            } else {
                 alert('No recipe to add drink to. Generate a recipe first!');
             }
         }
