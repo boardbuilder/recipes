@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Recipe Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fbbf24 100%);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+            color: white;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #fce7f3;
+            border-radius: 8px;
+            outline: none;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border: 1px solid #fce7f3;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">🍳 Simple Recipe Generator</h1>
+            <p class="text-gray-600">Enter your ingredients and get delicious recipes!</p>
+        </div>
+
+        <!-- Input Form -->
+        <div class="card p-6 mb-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">What ingredients do you have?</h2>
+            
+            <div id="ingredients-container">
+                <div class="flex gap-2 mb-2">
+                    <input type="text" class="input-field flex-1" placeholder="Enter an ingredient..." id="ingredient-0">
+                    <button onclick="addIngredient()" class="btn-primary">+</button>
+                    <button onclick="removeIngredient(this)" class="btn-primary">-</button>
+                </div>
+            </div>
+
+            <button onclick="generateRecipe()" class="btn-primary w-full py-3 mt-4">
+                Generate Recipe
+            </button>
+        </div>
+
+        <!-- Recipe Display -->
+        <div id="recipe-display" class="hidden">
+            <div class="card p-8">
+                <h2 id="recipe-title" class="text-3xl font-bold text-gray-800 mb-4"></h2>
+                <p id="recipe-description" class="text-gray-600 mb-6"></p>
+                
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Ingredients:</h3>
+                        <ul id="recipe-ingredients" class="space-y-2"></ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">Instructions:</h3>
+                        <ol id="recipe-instructions" class="space-y-3"></ol>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 mb-6">
+                    <div class="flex items-center">
+                        <span class="font-semibold">⏱️ Cooking Time:</span>
+                        <span id="cooking-time" class="ml-2"></span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="font-semibold">👥 Servings:</span>
+                        <span id="servings" class="ml-2"></span>
+                    </div>
+                </div>
+                
+                <button onclick="generateNewRecipe()" class="btn-primary px-6 py-2">
+                    🔄 Generate New Recipe
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let ingredientCount = 1;
+
+        function addIngredient() {
+            console.log('Adding ingredient');
+            const container = document.getElementById('ingredients-container');
+            const newDiv = document.createElement('div');
+            newDiv.className = 'flex gap-2 mb-2';
+            newDiv.innerHTML = `
+                <input type="text" class="input-field flex-1" placeholder="Enter an ingredient..." id="ingredient-${ingredientCount}">
+                <button onclick="addIngredient()" class="btn-primary">+</button>
+                <button onclick="removeIngredient(this)" class="btn-primary">-</button>
+            `;
+            container.appendChild(newDiv);
+            ingredientCount++;
+        }
+
+        function removeIngredient(button) {
+            console.log('Removing ingredient');
+            button.parentElement.remove();
+        }
+
+        function generateRecipe() {
+            console.log('Generate Recipe clicked!');
+            
+            const ingredients = [];
+            for (let i = 0; i < ingredientCount; i++) {
+                const input = document.getElementById(`ingredient-${i}`);
+                if (input && input.value.trim()) {
+                    ingredients.push(input.value.trim());
+                }
+            }
+
+            console.log('Ingredients found:', ingredients);
+
+            if (ingredients.length === 0) {
+                alert('Please add at least one ingredient!');
+                return;
+            }
+
+            // Create a simple recipe
+            const recipe = createSimpleRecipe(ingredients);
+            displayRecipe(recipe);
+        }
+
+        function createSimpleRecipe(ingredients) {
+            const mainIngredient = ingredients[0];
+            const recipeName = `${mainIngredient.charAt(0).toUpperCase() + mainIngredient.slice(1)} Delight`;
+            
+            return {
+                title: recipeName,
+                description: `A delicious recipe featuring ${ingredients.join(', ')}.`,
+                ingredients: ingredients.map(ingredient => ({
+                    item: ingredient,
+                    amount: '1',
+                    unit: 'portion'
+                })),
+                instructions: [
+                    'Prepare your ingredients',
+                    'Heat a pan with oil',
+                    `Add ${ingredients[0]} and cook for 5 minutes`,
+                    'Add remaining ingredients',
+                    'Cook for another 10 minutes',
+                    'Season to taste and serve!'
+                ],
+                cookingTime: '20 minutes',
+                servings: '4 servings'
+            };
+        }
+
+        function displayRecipe(recipe) {
+            console.log('Displaying recipe:', recipe);
+            
+            document.getElementById('recipe-title').textContent = recipe.title;
+            document.getElementById('recipe-description').textContent = recipe.description;
+            document.getElementById('cooking-time').textContent = recipe.cookingTime;
+            document.getElementById('servings').textContent = recipe.servings;
+
+            // Display ingredients
+            const ingredientsList = document.getElementById('recipe-ingredients');
+            ingredientsList.innerHTML = '';
+            recipe.ingredients.forEach(ingredient => {
+                const li = document.createElement('li');
+                li.textContent = `${ingredient.amount} ${ingredient.unit} ${ingredient.item}`;
+                ingredientsList.appendChild(li);
+            });
+
+            // Display instructions
+            const instructionsList = document.getElementById('recipe-instructions');
+            instructionsList.innerHTML = '';
+            recipe.instructions.forEach((instruction, index) => {
+                const li = document.createElement('li');
+                li.textContent = instruction;
+                instructionsList.appendChild(li);
+            });
+
+            // Show the recipe
+            document.getElementById('recipe-display').classList.remove('hidden');
+        }
+
+        function generateNewRecipe() {
+            console.log('Generating new recipe');
+            generateRecipe();
+        }
+
+        // Test function
+        function testButton() {
+            alert('Test button works!');
+        }
+    </script>
+</body>
+</html> 
