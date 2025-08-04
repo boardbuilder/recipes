@@ -1071,27 +1071,36 @@ function estimateCalories(ingredients) {
                 return;
             }
 
-                // Send payment to deployed server
-                const response = await fetch('http://localhost:3001/api/create-subscription', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: email,
-                    plan: selectedPlan,
-                        paymentMethodId: result.paymentMethod.id
-                    })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Payment failed');
-                }
-
-                const result2 = await response.json();
+                // Check if we're on localhost (development) or live site
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
                 
-                if (!result2.success) {
-                    throw new Error(result2.error || 'Payment failed');
+                if (isLocalhost) {
+                    // Use real server for local development
+                    const response = await fetch('http://localhost:3001/api/create-subscription', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            plan: selectedPlan,
+                            paymentMethodId: result.paymentMethod.id
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Payment failed');
+                    }
+
+                    const result2 = await response.json();
+                    
+                    if (!result2.success) {
+                        throw new Error(result2.error || 'Payment failed');
+                    }
+                } else {
+                    // Demo mode for live site - simulate successful payment
+                    console.log('Demo payment mode - simulating successful payment');
+                    await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate processing time
                 }
                 
                 // Set premium status
