@@ -97,6 +97,9 @@
                     <button onclick="showPremiumModal()" class="btn-primary px-4 py-2 text-sm">
                         Upgrade Now
                     </button>
+                    <button onclick="testPayment()" class="btn-primary px-4 py-2 text-sm ml-2 bg-blue-500">
+                        Test Payment
+                    </button>
                 </div>
             </div>
         </div>
@@ -1103,6 +1106,7 @@ function estimateCalories(ingredients) {
                     // Demo mode for live site - simulate successful payment
                     console.log('Demo payment mode - simulating successful payment');
                     await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate processing time
+                    console.log('Demo payment completed successfully');
                 }
                 
                 // Set premium status
@@ -1137,6 +1141,28 @@ function estimateCalories(ingredients) {
             }
 
         });
+
+        function testPayment() {
+            console.log('Testing payment system...');
+            
+            // Simulate successful payment
+            isPremium = true;
+            localStorage.setItem('isPremium', 'true');
+            
+            // Hide premium banner
+            const banner = document.getElementById('premium-banner');
+            if (banner) {
+                banner.classList.add('hidden');
+            }
+            
+            // Show success message
+            alert('Test payment successful! Premium features unlocked.');
+            
+            // Add premium features
+            addPremiumFeatures();
+            
+            console.log('Test payment completed');
+        }
 
         function addPremiumFeatures() {
             // Premium features are already in the HTML, just need to show them
