@@ -1208,9 +1208,11 @@ function estimateCalories(ingredients) {
                 
                 const randomSideDish = sideDishes[Math.floor(Math.random() * sideDishes.length)];
                 
-                // Clear other features and only show side dish
+                // Clear ALL other features and only show side dish
                 window.currentRecipe.sauce = null;
                 window.currentRecipe.garnish = null;
+                window.currentRecipe.dessert = null;
+                window.currentRecipe.drink = null;
                 window.currentRecipe.sideDish = randomSideDish;
                 displayRecipe(window.currentRecipe);
             } else {
@@ -1230,9 +1232,11 @@ function estimateCalories(ingredients) {
                 
                 const randomSauce = sauces[Math.floor(Math.random() * sauces.length)];
                 
-                // Clear other features and only show sauce
+                // Clear ALL other features and only show sauce
                 window.currentRecipe.sideDish = null;
                 window.currentRecipe.garnish = null;
+                window.currentRecipe.dessert = null;
+                window.currentRecipe.drink = null;
                 window.currentRecipe.sauce = randomSauce;
                 displayRecipe(window.currentRecipe);
             } else {
@@ -1252,9 +1256,11 @@ function estimateCalories(ingredients) {
                 
                 const randomGarnish = garnishes[Math.floor(Math.random() * garnishes.length)];
                 
-                // Clear other features and only show garnish
+                // Clear ALL other features and only show garnish
                 window.currentRecipe.sideDish = null;
                 window.currentRecipe.sauce = null;
+                window.currentRecipe.dessert = null;
+                window.currentRecipe.drink = null;
                 window.currentRecipe.garnish = randomGarnish;
                 displayRecipe(window.currentRecipe);
             } else {
@@ -1321,10 +1327,11 @@ function estimateCalories(ingredients) {
                 
                 const randomDessert = desserts[Math.floor(Math.random() * desserts.length)];
                 
-                // Clear other features and only show dessert
+                // Clear ALL other features and only show dessert
                 window.currentRecipe.sideDish = null;
                 window.currentRecipe.sauce = null;
                 window.currentRecipe.garnish = null;
+                window.currentRecipe.drink = null;
                 window.currentRecipe.dessert = randomDessert;
                 displayRecipe(window.currentRecipe);
             } else {
@@ -1344,10 +1351,11 @@ function estimateCalories(ingredients) {
                 
                 const randomDrink = drinks[Math.floor(Math.random() * drinks.length)];
                 
-                // Clear other features and only show drink
+                // Clear ALL other features and only show drink
                 window.currentRecipe.sideDish = null;
                 window.currentRecipe.sauce = null;
                 window.currentRecipe.garnish = null;
+                window.currentRecipe.dessert = null;
                 window.currentRecipe.drink = randomDrink;
                 displayRecipe(window.currentRecipe);
             } else {
