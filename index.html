@@ -1050,7 +1050,7 @@ function estimateCalories(ingredients) {
         }
 
         function showPremiumModal() {
-            alert('Testing premium button - modal should appear!');
+            alert('Testing payment system - button clicked!');
             console.log('Premium button clicked!');
             const modal = document.getElementById('premium-modal');
             if (modal) {
@@ -1099,8 +1099,8 @@ function estimateCalories(ingredients) {
 
                 if (result.error) {
                     document.getElementById('card-errors').textContent = result.error.message;
-                    return;
-                }
+                return;
+            }
 
                 // Check if we're on localhost (development) or live site
                 const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -1110,13 +1110,13 @@ function estimateCalories(ingredients) {
                     // Use real server for local development
                     console.log('Sending payment to localhost server...');
                     const response = await fetch('http://localhost:3001/api/create-subscription', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            email: email,
-                            plan: selectedPlan,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    plan: selectedPlan,
                             paymentMethodId: result.paymentMethod.id
                         })
                     });
@@ -1401,7 +1401,7 @@ function estimateCalories(ingredients) {
                 window.currentRecipe.dessert = null;
                 window.currentRecipe.drink = randomDrink;
                 displayRecipe(window.currentRecipe);
-                } else {
+            } else {
                 alert('No recipe to add drink to. Generate a recipe first!');
             }
         }
