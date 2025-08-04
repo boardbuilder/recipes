@@ -219,8 +219,9 @@
         <div id="premium-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
             <div class="flex items-center justify-center min-h-screen p-4">
                 <div class="card p-8 max-w-md w-full">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Upgrade to Premium</h2>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">💰 Upgrade to Premium</h2>
                     <p class="text-gray-600 mb-6">Get unlimited recipes and advanced features!</p>
+                    <p class="text-sm text-red-600 mb-4">⚠️ This requires a REAL payment with your credit card</p>
                     
                     <div class="space-y-4 mb-6">
                         <div class="flex items-center justify-between p-4 border rounded-lg">
@@ -229,7 +230,7 @@
                                 <p class="text-sm text-gray-600">$9.99/month</p>
                                     </div>
                             <button onclick="selectPlan('monthly')" class="btn-primary px-4 py-2">
-                                Choose Monthly
+                                💳 Choose Monthly
                                     </button>
                             </div>
                             
@@ -239,7 +240,7 @@
                                 <p class="text-sm text-gray-600">$79.99/year (Save 33%)</p>
                                     </div>
                             <button onclick="selectPlan('yearly')" class="btn-primary px-4 py-2">
-                                Choose Yearly
+                                💳 Choose Yearly
                                     </button>
                                 </div>
                             </div>
@@ -252,16 +253,16 @@
                     </div>
                     
         <!-- Payment Form -->
-        <div id="payment-form" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div id="payment-form" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
             <div class="flex items-center justify-center min-h-screen p-4">
                 <div class="card p-8 max-w-md w-full">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Complete Payment</h2>
-                    <div id="plan-details" class="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">💳 Complete Payment</h2>
+                    <div id="plan-details" class="mb-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
                         <p class="text-sm text-gray-600">You're subscribing to: <span id="selected-plan-text" class="font-semibold">Monthly Plan</span></p>
-                        <p class="text-sm text-gray-600">Amount: <span id="selected-plan-price" class="font-semibold">$9.99/month</span></p>
-                        <p class="text-xs text-blue-600 mt-1">✅ Secure payment processing</p>
+                        <p class="text-sm text-gray-600">Amount: <span id="selected-plan-price" class="font-semibold text-red-600">$9.99/month</span></p>
+                        <p class="text-xs text-red-600 mt-1">⚠️ REAL PAYMENT - Your card will be charged immediately!</p>
                     </div>
-                    <p class="text-gray-600 mb-6">Enter your payment details to upgrade to premium.</p>
+                    <p class="text-gray-600 mb-6">Enter your payment details to upgrade to premium. This is a REAL payment.</p>
                     
                     <form id="payment-form-element">
                         <div class="mb-4">
@@ -277,19 +278,19 @@
                     </div>
                         
                         <div class="mb-6">
-                            <label class="block text-gray-700 font-semibold mb-2">Card Details:</label>
+                            <label class="block text-gray-700 font-semibold mb-2">💳 Card Details:</label>
                             <div id="card-element" class="input-field p-3"></div>
                             <div id="card-errors" class="text-red-500 text-sm mt-2"></div>
-                            <p class="text-xs text-gray-500 mt-1">Your payment is secure and encrypted</p>
+                            <p class="text-xs text-red-600 mt-1">⚠️ REAL PAYMENT - Your card will be charged!</p>
                                     </div>
                                     
                         <button type="submit" class="btn-primary w-full py-3">
-                            Subscribe Now
+                            💳 Pay Now - $9.99
                         </button>
                     </form>
                     
                     <button onclick="closePaymentForm()" class="text-gray-500 hover:text-gray-700 mt-4">
-                        Cancel
+                        Cancel Payment
                                     </button>
                                 </div>
                             </div>
@@ -732,8 +733,11 @@
                 // Show processing message
                 const submitButton = document.querySelector('#payment-form-element button[type="submit"]');
                 const originalText = submitButton.textContent;
-                submitButton.textContent = 'Processing Real Payment...';
+                submitButton.textContent = '💳 Processing REAL Payment...';
                 submitButton.disabled = true;
+                
+                // Show processing alert
+                alert('⚠️ Processing REAL payment with your credit card...\nYour card will be charged immediately!');
                 
                 // Create payment method with Stripe for REAL payment
                 const result = await stripe.createPaymentMethod({
@@ -784,7 +788,7 @@
                 
                 // Show success message for REAL payment
                 const planText = selectedPlan === 'monthly' ? 'Monthly ($9.99/month)' : 'Yearly ($79.99/year)';
-                alert(`REAL payment successful! Your card has been charged for ${planText}.\nYou now have premium access!`);
+                alert(`✅ REAL payment successful! Your card has been charged for ${planText}.\nYou now have premium access!`);
                 
                 // Show premium features immediately
                 showPremiumFeatures();
