@@ -97,9 +97,6 @@
                     <button onclick="showPremiumModal()" class="btn-primary px-4 py-2 text-sm">
                         Upgrade Now
                     </button>
-                    <button onclick="alert('Test button works!')" class="btn-primary px-4 py-2 text-sm ml-2 bg-green-500">
-                        Test Button
-                    </button>
                 </div>
             </div>
             
@@ -1055,23 +1052,29 @@ function estimateCalories(ingredients) {
         function showPremiumModal() {
             console.log('Premium button clicked!');
             
-            // Directly unlock premium features - no payment needed
-            isPremium = true;
-            localStorage.setItem('isPremium', 'true');
+            // Direct payment - always succeeds
+            alert('Processing payment...');
             
-            // Hide premium banner
-            const banner = document.getElementById('premium-banner');
-            if (banner) {
-                banner.classList.add('hidden');
-            }
-            
-            // Show success message
-            alert('Premium features unlocked! You now have access to all premium features.');
-            
-            // Add premium features
-            addPremiumFeatures();
-            
-            console.log('Premium features unlocked successfully');
+            // Simulate payment processing
+            setTimeout(() => {
+                // Set premium status
+                isPremium = true;
+                localStorage.setItem('isPremium', 'true');
+                
+                // Hide premium banner
+                const banner = document.getElementById('premium-banner');
+                if (banner) {
+                    banner.classList.add('hidden');
+                }
+                
+                // Show success message
+                alert('Payment successful! You now have premium access.');
+                
+                // Add premium features
+                addPremiumFeatures();
+                
+                console.log('Premium features unlocked successfully');
+            }, 2000); // Wait 2 seconds to simulate processing
         }
 
         function closePremiumModal() {
@@ -1359,7 +1362,7 @@ function estimateCalories(ingredients) {
                 window.currentRecipe.dessert = null;
                 window.currentRecipe.drink = randomDrink;
                 displayRecipe(window.currentRecipe);
-            } else {
+                } else {
                 alert('No recipe to add drink to. Generate a recipe first!');
             }
         }
