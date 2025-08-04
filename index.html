@@ -1056,14 +1056,12 @@ function estimateCalories(ingredients) {
             console.log('Payment started for:', email, 'Plan:', selectedPlan);
             
             try {
-                // Create real payment method with Stripe
-                console.log('Creating payment method...');
+                // Create payment method with Stripe
                 const result = await stripe.createPaymentMethod({
                     type: 'card',
                     card: cardElement,
                     billing_details: {
                         email: email,
-                        name: document.getElementById('name').value,
                         address: {
                             postal_code: document.getElementById('postal-code').value
                         }
@@ -1077,8 +1075,7 @@ function estimateCalories(ingredients) {
 
                 console.log('Payment method created:', result.paymentMethod.id);
                 
-                // Process real payment
-                console.log('Processing real payment...');
+                // Send to server for real payment processing
                 const response = await fetch('http://localhost:3001/api/create-subscription', {
                     method: 'POST',
                     headers: {
