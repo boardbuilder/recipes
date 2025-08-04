@@ -1287,6 +1287,13 @@ function estimateCalories(ingredients) {
                 const spicyIngredients = ['Chili peppers', 'Cayenne pepper', 'Red pepper flakes', 'Hot sauce', 'Jalapeños'];
                 const randomSpicy = spicyIngredients[Math.floor(Math.random() * spicyIngredients.length)];
                 
+                // Clear ALL other features first
+                window.currentRecipe.sideDish = null;
+                window.currentRecipe.sauce = null;
+                window.currentRecipe.garnish = null;
+                window.currentRecipe.dessert = null;
+                window.currentRecipe.drink = null;
+                
                 // Add to ingredients
                 window.currentRecipe.ingredients.push({
                     item: randomSpicy,
@@ -1308,6 +1315,13 @@ function estimateCalories(ingredients) {
                 // Add healthy ingredients to the recipe
                 const healthyIngredients = ['Spinach', 'Kale', 'Quinoa', 'Avocado', 'Greek yogurt'];
                 const randomHealthy = healthyIngredients[Math.floor(Math.random() * healthyIngredients.length)];
+                
+                // Clear ALL other features first
+                window.currentRecipe.sideDish = null;
+                window.currentRecipe.sauce = null;
+                window.currentRecipe.garnish = null;
+                window.currentRecipe.dessert = null;
+                window.currentRecipe.drink = null;
                 
                 // Add to ingredients
                 window.currentRecipe.ingredients.push({
@@ -1378,6 +1392,13 @@ function estimateCalories(ingredients) {
 
         function makeItVegan() {
             if (window.currentRecipe) {
+                // Clear ALL other features first
+                window.currentRecipe.sideDish = null;
+                window.currentRecipe.sauce = null;
+                window.currentRecipe.garnish = null;
+                window.currentRecipe.dessert = null;
+                window.currentRecipe.drink = null;
+                
                 // Replace non-vegan ingredients with vegan alternatives
                 const veganReplacements = {
                     'chicken': 'tofu',
@@ -1411,6 +1432,13 @@ function estimateCalories(ingredients) {
 
         function makeItGlutenFree() {
             if (window.currentRecipe) {
+                // Clear ALL other features first
+                window.currentRecipe.sideDish = null;
+                window.currentRecipe.sauce = null;
+                window.currentRecipe.garnish = null;
+                window.currentRecipe.dessert = null;
+                window.currentRecipe.drink = null;
+                
                 // Replace gluten-containing ingredients
                 const glutenReplacements = {
                     'flour': 'gluten-free flour blend',
