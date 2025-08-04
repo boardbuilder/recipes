@@ -362,12 +362,6 @@
         }
 
         function generateRecipe() {
-            // Check payment status first
-            if (!checkPaymentStatus()) {
-                alert('Please upgrade to premium to access advanced features!');
-                return;
-            }
-
             const ingredients = [];
             for (let i = 0; i < ingredientCount; i++) {
                 const input = document.getElementById(`ingredient-${i}`);
@@ -387,15 +381,31 @@
                 restrictions.push(cb.value);
             });
 
-            // Get premium features if available
+            // Check if user has premium access for advanced features
             let premiumSettings = {};
             if (isPremium && checkPaymentStatus()) {
+                console.log('User has premium access, using advanced features');
                 premiumSettings = {
                     servings: document.getElementById('servings-select').value,
                     cookingTime: document.getElementById('time-select').value,
                     cuisine: document.getElementById('cuisine-select').value,
                     difficulty: document.getElementById('difficulty-select').value
                 };
+            } else {
+                console.log('User does not have premium access, using basic features');
+                // Show upgrade prompt if they try to use premium features
+                const servingsSelect = document.getElementById('servings-select');
+                const timeSelect = document.getElementById('time-select');
+                const cuisineSelect = document.getElementById('cuisine-select');
+                const difficultySelect = document.getElementById('difficulty-select');
+                
+                if (servingsSelect && servingsSelect.value !== '4' || 
+                    timeSelect && timeSelect.value !== 'any' ||
+                    cuisineSelect && cuisineSelect.value !== 'any' ||
+                    difficultySelect && difficultySelect.value !== 'any') {
+                    alert('Premium features require payment. Please upgrade to access advanced options!');
+                    return;
+                }
             }
 
             // Generate recipe
