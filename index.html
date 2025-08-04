@@ -1051,12 +1051,15 @@ function estimateCalories(ingredients) {
 
         function showPremiumModal() {
             console.log('Premium button clicked!');
+            alert('Premium modal opening...');
+            
             const modal = document.getElementById('premium-modal');
             if (modal) {
                 modal.classList.remove('hidden');
                 console.log('Premium modal shown successfully');
             } else {
                 console.error('Premium modal not found!');
+                alert('Modal not found!');
             }
         }
 
@@ -1066,8 +1069,25 @@ function estimateCalories(ingredients) {
 
         function selectPlan(plan) {
             selectedPlan = plan;
+            console.log('Plan selected:', plan);
+            
+            // For testing - activate premium immediately
+            isPremium = true;
+            localStorage.setItem('isPremium', 'true');
+            
+            // Hide premium banner
+            const banner = document.getElementById('premium-banner');
+            if (banner) {
+                banner.classList.add('hidden');
+            }
+            
+            // Close modal
             document.getElementById('premium-modal').classList.add('hidden');
-            document.getElementById('payment-form').classList.remove('hidden');
+            
+            alert('Premium activated! You now have access to all premium features.');
+            
+            // Add premium features
+            addPremiumFeatures();
         }
 
         function closePaymentForm() {
