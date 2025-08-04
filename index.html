@@ -1052,24 +1052,21 @@ function estimateCalories(ingredients) {
         function showPremiumModal() {
             console.log('Premium button clicked!');
             
-            // Guaranteed premium unlock
+            // Direct premium unlock - no payment needed for testing
             isPremium = true;
             localStorage.setItem('isPremium', 'true');
             
-            // Hide premium banner immediately
+            // Hide premium banner
             const banner = document.getElementById('premium-banner');
             if (banner) {
-                banner.style.display = 'none';
                 banner.classList.add('hidden');
             }
             
             // Show success message
             alert('Premium features unlocked! You now have access to all premium features.');
             
-            // Force page refresh to show premium features
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
+            // Add premium features
+            addPremiumFeatures();
             
             console.log('Premium features unlocked successfully');
         }
