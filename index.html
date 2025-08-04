@@ -291,6 +291,18 @@
                             <button onclick="makeItHealthy()" class="btn-primary w-full">
                                 Make It Healthy
                             </button>
+                            <button onclick="addDessert()" class="btn-primary w-full">
+                                Add Dessert
+                            </button>
+                            <button onclick="addDrink()" class="btn-primary w-full">
+                                Add Drink
+                            </button>
+                            <button onclick="makeItVegan()" class="btn-primary w-full">
+                                Make It Vegan
+                            </button>
+                            <button onclick="makeItGlutenFree()" class="btn-primary w-full">
+                                Make It Gluten Free
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -932,6 +944,50 @@ function estimateCalories(ingredients) {
                 document.getElementById('recipe-display').appendChild(garnishSection);
             }
 
+            // Display dessert if added
+            if (recipe.dessert) {
+                const dessertSection = document.createElement('div');
+                dessertSection.className = 'mt-4 p-4 bg-pink-50 rounded-lg border-l-4 border-pink-400';
+                dessertSection.innerHTML = `
+                    <h4 class="font-semibold text-pink-800 mb-2">🍰 ${recipe.dessert.name}</h4>
+                    <div class="mb-3">
+                        <h5 class="font-medium text-pink-700 mb-1">Ingredients:</h5>
+                        <ul class="list-disc list-inside text-sm text-pink-600">
+                            ${recipe.dessert.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 class="font-medium text-pink-700 mb-1">Instructions:</h5>
+                        <ol class="list-decimal list-inside text-sm text-pink-600">
+                            ${recipe.dessert.instructions.map((inst, i) => `<li>${inst}</li>`).join('')}
+                        </ol>
+                    </div>
+                `;
+                document.getElementById('recipe-display').appendChild(dessertSection);
+            }
+
+            // Display drink if added
+            if (recipe.drink) {
+                const drinkSection = document.createElement('div');
+                drinkSection.className = 'mt-4 p-4 bg-cyan-50 rounded-lg border-l-4 border-cyan-400';
+                drinkSection.innerHTML = `
+                    <h4 class="font-semibold text-cyan-800 mb-2">🥤 ${recipe.drink.name}</h4>
+                    <div class="mb-3">
+                        <h5 class="font-medium text-cyan-700 mb-1">Ingredients:</h5>
+                        <ul class="list-disc list-inside text-sm text-cyan-600">
+                            ${recipe.drink.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 class="font-medium text-cyan-700 mb-1">Instructions:</h5>
+                        <ol class="list-decimal list-inside text-sm text-cyan-600">
+                            ${recipe.drink.instructions.map((inst, i) => `<li>${inst}</li>`).join('')}
+                        </ol>
+                    </div>
+                `;
+                document.getElementById('recipe-display').appendChild(drinkSection);
+            }
+
             document.getElementById('recipe-display').classList.remove('hidden');
             
             // Store current recipe for enhancements
@@ -1151,6 +1207,10 @@ function estimateCalories(ingredients) {
                 ];
                 
                 const randomSideDish = sideDishes[Math.floor(Math.random() * sideDishes.length)];
+                
+                // Clear other features and only show side dish
+                window.currentRecipe.sauce = null;
+                window.currentRecipe.garnish = null;
                 window.currentRecipe.sideDish = randomSideDish;
                 displayRecipe(window.currentRecipe);
             } else {
@@ -1169,6 +1229,10 @@ function estimateCalories(ingredients) {
                 ];
                 
                 const randomSauce = sauces[Math.floor(Math.random() * sauces.length)];
+                
+                // Clear other features and only show sauce
+                window.currentRecipe.sideDish = null;
+                window.currentRecipe.garnish = null;
                 window.currentRecipe.sauce = randomSauce;
                 displayRecipe(window.currentRecipe);
             } else {
@@ -1187,6 +1251,10 @@ function estimateCalories(ingredients) {
                 ];
                 
                 const randomGarnish = garnishes[Math.floor(Math.random() * garnishes.length)];
+                
+                // Clear other features and only show garnish
+                window.currentRecipe.sideDish = null;
+                window.currentRecipe.sauce = null;
                 window.currentRecipe.garnish = randomGarnish;
                 displayRecipe(window.currentRecipe);
             } else {
@@ -1238,6 +1306,115 @@ function estimateCalories(ingredients) {
                 displayRecipe(window.currentRecipe);
             } else {
                 alert('No recipe to make healthy. Generate a recipe first!');
+            }
+        }
+
+        function addDessert() {
+            if (window.currentRecipe) {
+                const desserts = [
+                    { name: 'Chocolate Lava Cake', ingredients: ['Dark chocolate', 'Butter', 'Eggs', 'Sugar', 'Flour', 'Vanilla extract'], instructions: ['Melt chocolate and butter', 'Mix with eggs and sugar', 'Fold in flour', 'Bake at 400°F for 12 minutes'] },
+                    { name: 'Tiramisu', ingredients: ['Ladyfinger cookies', 'Mascarpone cheese', 'Eggs', 'Sugar', 'Coffee', 'Cocoa powder'], instructions: ['Dip cookies in coffee', 'Layer with mascarpone mixture', 'Dust with cocoa powder', 'Refrigerate for 4 hours'] },
+                    { name: 'Apple Crumble', ingredients: ['Apples', 'Butter', 'Flour', 'Sugar', 'Cinnamon', 'Oats'], instructions: ['Slice apples and toss with cinnamon', 'Make crumble topping', 'Layer in baking dish', 'Bake at 375°F for 30 minutes'] },
+                    { name: 'Panna Cotta', ingredients: ['Heavy cream', 'Sugar', 'Gelatin', 'Vanilla extract', 'Berries'], instructions: ['Heat cream with sugar', 'Dissolve gelatin', 'Pour into molds', 'Chill for 4 hours'] },
+                    { name: 'Crème Brûlée', ingredients: ['Heavy cream', 'Egg yolks', 'Sugar', 'Vanilla bean', 'Salt'], instructions: ['Heat cream with vanilla', 'Temper egg yolks', 'Bake in water bath', 'Torch sugar topping'] }
+                ];
+                
+                const randomDessert = desserts[Math.floor(Math.random() * desserts.length)];
+                
+                // Clear other features and only show dessert
+                window.currentRecipe.sideDish = null;
+                window.currentRecipe.sauce = null;
+                window.currentRecipe.garnish = null;
+                window.currentRecipe.dessert = randomDessert;
+                displayRecipe(window.currentRecipe);
+            } else {
+                alert('No recipe to add dessert to. Generate a recipe first!');
+            }
+        }
+
+        function addDrink() {
+            if (window.currentRecipe) {
+                const drinks = [
+                    { name: 'Fresh Lemonade', ingredients: ['Lemons', 'Sugar', 'Water', 'Ice'], instructions: ['Juice lemons', 'Dissolve sugar in water', 'Mix lemon juice and sugar water', 'Serve over ice'] },
+                    { name: 'Mojito', ingredients: ['White rum', 'Lime', 'Mint leaves', 'Sugar', 'Soda water'], instructions: ['Muddle mint with lime and sugar', 'Add rum and ice', 'Top with soda water', 'Garnish with mint'] },
+                    { name: 'Berry Smoothie', ingredients: ['Mixed berries', 'Greek yogurt', 'Honey', 'Almond milk', 'Ice'], instructions: ['Blend berries with yogurt', 'Add honey and almond milk', 'Blend until smooth', 'Serve immediately'] },
+                    { name: 'Iced Tea', ingredients: ['Black tea bags', 'Water', 'Sugar', 'Lemon', 'Ice'], instructions: ['Steep tea bags in hot water', 'Add sugar to taste', 'Chill in refrigerator', 'Serve over ice with lemon'] },
+                    { name: 'Sparkling Water with Fruit', ingredients: ['Sparkling water', 'Fresh fruit (strawberries, citrus)', 'Mint leaves', 'Ice'], instructions: ['Add fruit to glass', 'Pour sparkling water', 'Garnish with mint', 'Serve immediately'] }
+                ];
+                
+                const randomDrink = drinks[Math.floor(Math.random() * drinks.length)];
+                
+                // Clear other features and only show drink
+                window.currentRecipe.sideDish = null;
+                window.currentRecipe.sauce = null;
+                window.currentRecipe.garnish = null;
+                window.currentRecipe.drink = randomDrink;
+                displayRecipe(window.currentRecipe);
+            } else {
+                alert('No recipe to add drink to. Generate a recipe first!');
+            }
+        }
+
+        function makeItVegan() {
+            if (window.currentRecipe) {
+                // Replace non-vegan ingredients with vegan alternatives
+                const veganReplacements = {
+                    'chicken': 'tofu',
+                    'beef': 'tempeh',
+                    'pork': 'seitan',
+                    'milk': 'almond milk',
+                    'cheese': 'nutritional yeast',
+                    'butter': 'coconut oil',
+                    'eggs': 'flax eggs',
+                    'honey': 'agave nectar'
+                };
+                
+                // Update ingredients
+                window.currentRecipe.ingredients.forEach(ingredient => {
+                    const lowerItem = ingredient.item.toLowerCase();
+                    for (const [nonVegan, vegan] of Object.entries(veganReplacements)) {
+                        if (lowerItem.includes(nonVegan)) {
+                            ingredient.item = ingredient.item.replace(new RegExp(nonVegan, 'gi'), vegan);
+                        }
+                    }
+                });
+                
+                // Add vegan instruction
+                window.currentRecipe.instructions.push('This recipe has been adapted to be vegan-friendly.');
+                
+                displayRecipe(window.currentRecipe);
+            } else {
+                alert('No recipe to make vegan. Generate a recipe first!');
+            }
+        }
+
+        function makeItGlutenFree() {
+            if (window.currentRecipe) {
+                // Replace gluten-containing ingredients
+                const glutenReplacements = {
+                    'flour': 'gluten-free flour blend',
+                    'bread': 'gluten-free bread',
+                    'pasta': 'gluten-free pasta',
+                    'soy sauce': 'tamari',
+                    'wheat': 'quinoa'
+                };
+                
+                // Update ingredients
+                window.currentRecipe.ingredients.forEach(ingredient => {
+                    const lowerItem = ingredient.item.toLowerCase();
+                    for (const [gluten, glutenFree] of Object.entries(glutenReplacements)) {
+                        if (lowerItem.includes(gluten)) {
+                            ingredient.item = ingredient.item.replace(new RegExp(gluten, 'gi'), glutenFree);
+                        }
+                    }
+                });
+                
+                // Add gluten-free instruction
+                window.currentRecipe.instructions.push('This recipe has been adapted to be gluten-free.');
+                
+                displayRecipe(window.currentRecipe);
+            } else {
+                alert('No recipe to make gluten-free. Generate a recipe first!');
             }
         }
 
