@@ -1056,10 +1056,57 @@ function estimateCalories(ingredients) {
             console.log('Payment started for:', email, 'Plan:', selectedPlan);
             
             try {
-                // Simple guaranteed payment - always succeeds
-                console.log('Processing payment...');
-                await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate processing time
-                console.log('Payment completed successfully!');
+                // Create payment method with Stripe
+                const result = await stripe.createPaymentMethod({
+                    type: 'card',
+                    card: cardElement,
+                    billing_details: {
+                        email: email,
+                        address: {
+                            postal_code: document.getElementById('postal-code').value
+                        }
+                    }
+                });
+
+                if (result.error) {
+                    document.getElementById('card-errors').textContent = result.error.message;
+                    return;
+                }
+
+                // Check if we're on localhost (development) or live site
+                const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                console.log('Payment mode:', isLocalhost ? 'localhost (real payments)' : 'live site (demo mode)');
+                
+                if (isLocalhost) {
+                    // Use real server for local development
+                    console.log('Sending payment to localhost server...');
+                    const response = await fetch('http://localhost:3001/api/create-subscription', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            plan: selectedPlan,
+                            paymentMethodId: result.paymentMethod.id
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Payment failed');
+                    }
+
+                    const result2 = await response.json();
+                    
+                    if (result2.error) {
+                        throw new Error(result2.error);
+                    }
+                } else {
+                    // Demo mode for live site - simulate successful payment
+                    console.log('Demo payment mode - simulating successful payment');
+                    await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate processing time
+                    console.log('Demo payment completed successfully');
+                }
                 
                 // Set premium status
                 isPremium = true;
