@@ -94,8 +94,11 @@
                         <h3 class="text-lg font-bold text-gray-800">Upgrade to Premium</h3>
                         <p class="text-sm text-gray-600">Unlock advanced features and unlimited recipes!</p>
                     </div>
-                    <button onclick="alert('Premium unlocked!'); isPremium=true; localStorage.setItem('isPremium','true'); document.getElementById('premium-banner').classList.add('hidden');" class="btn-primary px-4 py-2 text-sm">
+                    <button onclick="showPremiumModal()" class="btn-primary px-4 py-2 text-sm">
                         Upgrade Now
+                    </button>
+                    <button onclick="alert('Test button works!')" class="btn-primary px-4 py-2 text-sm bg-green-500">
+                        Test Button
                     </button>
                 </div>
             </div>
