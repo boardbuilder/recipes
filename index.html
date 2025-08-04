@@ -362,6 +362,12 @@
         }
 
         function generateRecipe() {
+            // Check payment status first
+            if (!checkPaymentStatus()) {
+                alert('Please upgrade to premium to access advanced features!');
+                return;
+            }
+
             const ingredients = [];
             for (let i = 0; i < ingredientCount; i++) {
                 const input = document.getElementById(`ingredient-${i}`);
@@ -383,7 +389,7 @@
 
             // Get premium features if available
             let premiumSettings = {};
-            if (isPremium) {
+            if (isPremium && checkPaymentStatus()) {
                 premiumSettings = {
                     servings: document.getElementById('servings-select').value,
                     cookingTime: document.getElementById('time-select').value,
@@ -798,6 +804,53 @@
                 premiumFeatures.classList.add('hidden');
             }
             alert('Premium status reset for testing!');
+        }
+
+        // Function to clear all premium access and force payment
+        function clearAllPremiumAccess() {
+            isPremium = false;
+            localStorage.removeItem('isPremium');
+            localStorage.removeItem('savedRecipes');
+            
+            // Hide premium features
+            const premiumFeatures = document.getElementById('premium-features');
+            if (premiumFeatures) {
+                premiumFeatures.classList.add('hidden');
+            }
+            
+            // Show premium banner
+            const banner = document.getElementById('premium-banner');
+            if (banner) {
+                banner.classList.remove('hidden');
+            }
+            
+            // Hide recipe display
+            const recipeDisplay = document.getElementById('recipe-display');
+            if (recipeDisplay) {
+                recipeDisplay.classList.add('hidden');
+            }
+            
+            alert('All premium access cleared. Users must pay to access premium features.');
+        }
+
+        // Function to check if user has actually paid
+        function checkPaymentStatus() {
+            const premiumStatus = localStorage.getItem('isPremium');
+            if (premiumStatus !== 'true') {
+                // Force hide premium features if not paid
+                isPremium = false;
+                const premiumFeatures = document.getElementById('premium-features');
+                if (premiumFeatures) {
+                    premiumFeatures.classList.add('hidden');
+                }
+                // Show premium banner
+                const banner = document.getElementById('premium-banner');
+                if (banner) {
+                    banner.classList.remove('hidden');
+                }
+                return false;
+            }
+            return true;
         }
     </script>
 </body>
