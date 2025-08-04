@@ -1073,17 +1073,19 @@ function estimateCalories(ingredients) {
 
                 // Check if we're on localhost (development) or live site
                 const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                console.log('Payment mode:', isLocalhost ? 'localhost (real payments)' : 'live site (demo mode)');
                 
                 if (isLocalhost) {
                     // Use real server for local development
+                    console.log('Sending payment to localhost server...');
                     const response = await fetch('http://localhost:3001/api/create-subscription', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            email: email,
-                            plan: selectedPlan,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    plan: selectedPlan,
                             paymentMethodId: result.paymentMethod.id
                         })
                     });
@@ -1094,8 +1096,8 @@ function estimateCalories(ingredients) {
 
                     const result2 = await response.json();
                     
-                    if (!result2.success) {
-                        throw new Error(result2.error || 'Payment failed');
+                    if (result2.error) {
+                        throw new Error(result2.error);
                     }
                 } else {
                     // Demo mode for live site - simulate successful payment
@@ -1130,7 +1132,8 @@ function estimateCalories(ingredients) {
                 
             } catch (error) {
                 console.error('Payment error:', error);
-                document.getElementById('card-errors').textContent = 'Payment failed. Please try again.';
+                const errorMessage = error.message || 'Payment failed. Please try again.';
+                document.getElementById('card-errors').textContent = errorMessage;
             }
 
         });
