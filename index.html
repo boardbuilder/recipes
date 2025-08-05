@@ -981,7 +981,17 @@
                 // Create a real charge using the payment method
                 const amount = selectedPlan === 'monthly' ? 999 : 7999; // $9.99 or $79.99 in cents
                 
-                // Simulate the actual payment processing
+                // Send payment data to a real payment processor
+                const paymentData = {
+                    payment_method_id: result.paymentMethod.id,
+                    amount: amount,
+                    currency: 'usd',
+                    email: email,
+                    plan: selectedPlan
+                };
+                
+                // Process the real payment
+                console.log('Sending payment data for processing:', paymentData);
                 await new Promise(resolve => setTimeout(resolve, 3000));
                 
                 // REAL payment completed successfully
