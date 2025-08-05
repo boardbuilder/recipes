@@ -134,6 +134,8 @@
                                 <option value="4" selected>4 servings</option>
                                 <option value="6">6 servings</option>
                                 <option value="8">8 servings</option>
+                                <option value="10">10 servings</option>
+                                <option value="12">12 servings (Party)</option>
                             </select>
                         </div>
                     <div>
@@ -143,6 +145,7 @@
                                 <option value="quick">Quick (15 min or less)</option>
                                 <option value="medium">Medium (15-30 min)</option>
                                 <option value="slow">Slow (30+ min)</option>
+                                <option value="overnight">Overnight (Slow cooker)</option>
                             </select>
                         </div>
                     <div>
@@ -155,6 +158,13 @@
                                 <option value="mediterranean">Mediterranean</option>
                                 <option value="indian">Indian</option>
                                 <option value="american">American</option>
+                                <option value="french">French</option>
+                                <option value="thai">Thai</option>
+                                <option value="greek">Greek</option>
+                                <option value="japanese">Japanese</option>
+                                <option value="chinese">Chinese</option>
+                                <option value="spanish">Spanish</option>
+                                <option value="moroccan">Moroccan</option>
                             </select>
                         </div>
                     <div>
@@ -164,11 +174,63 @@
                                 <option value="easy">Easy (Beginner)</option>
                                 <option value="medium">Medium (Intermediate)</option>
                                 <option value="hard">Hard (Advanced)</option>
+                                <option value="expert">Expert (Chef level)</option>
+                            </select>
+                        </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Cooking Method:</label>
+                        <select id="method-select" class="input-field">
+                                <option value="any">Any method</option>
+                                <option value="stovetop">Stovetop</option>
+                                <option value="oven">Oven/Baking</option>
+                                <option value="grill">Grill/BBQ</option>
+                                <option value="slow-cooker">Slow Cooker</option>
+                                <option value="instant-pot">Instant Pot</option>
+                                <option value="air-fryer">Air Fryer</option>
+                                <option value="microwave">Microwave</option>
+                                <option value="raw">Raw/No Cook</option>
+                            </select>
+                        </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Spice Level:</label>
+                        <select id="spice-select" class="input-field">
+                                <option value="any">Any spice level</option>
+                                <option value="mild">Mild</option>
+                                <option value="medium">Medium</option>
+                                <option value="hot">Hot</option>
+                                <option value="extra-hot">Extra Hot</option>
+                                <option value="custom">Custom (Adjustable)</option>
+                            </select>
+                        </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Nutrition Focus:</label>
+                        <select id="nutrition-select" class="input-field">
+                                <option value="any">Any nutrition</option>
+                                <option value="low-calorie">Low Calorie</option>
+                                <option value="high-protein">High Protein</option>
+                                <option value="low-carb">Low Carb</option>
+                                <option value="keto">Keto</option>
+                                <option value="paleo">Paleo</option>
+                                <option value="heart-healthy">Heart Healthy</option>
+                                <option value="diabetic-friendly">Diabetic Friendly</option>
+                                <option value="gluten-free">Gluten Free</option>
+                                <option value="dairy-free">Dairy Free</option>
+                            </select>
+                        </div>
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">Budget Level:</label>
+                        <select id="budget-select" class="input-field">
+                                <option value="any">Any budget</option>
+                                <option value="budget">Budget Friendly</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="premium">Premium Ingredients</option>
+                                <option value="luxury">Luxury/High End</option>
                             </select>
                         </div>
                             </div>
                 <div class="mt-4 p-3 bg-green-50 rounded-lg border border-green-200">
                     <p class="text-sm text-green-700">✅ Premium features are now active! You can customize your recipes with advanced options.</p>
+                    <p class="text-sm text-blue-700 mt-1">🌟 New features: Cooking Method, Spice Level, Nutrition Focus, Budget Level!</p>
                             </div>
                         </div>
 
@@ -411,7 +473,11 @@
                     servings: document.getElementById('servings-select').value,
                     cookingTime: document.getElementById('time-select').value,
                     cuisine: document.getElementById('cuisine-select').value,
-                    difficulty: document.getElementById('difficulty-select').value
+                    difficulty: document.getElementById('difficulty-select').value,
+                    method: document.getElementById('method-select').value,
+                    spice: document.getElementById('spice-select').value,
+                    nutrition: document.getElementById('nutrition-select').value,
+                    budget: document.getElementById('budget-select').value
                 };
             } else {
                 console.log('User does not have premium access, using basic features');
