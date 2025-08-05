@@ -981,22 +981,45 @@
                 // Create a real charge using the payment method
                 const amount = selectedPlan === 'monthly' ? 999 : 7999; // $9.99 or $79.99 in cents
                 
-                // Send payment data to a real payment processor
-                const paymentData = {
-                    payment_method_id: result.paymentMethod.id,
-                    amount: amount,
-                    currency: 'usd',
-                    email: email,
-                    plan: selectedPlan
-                };
+                // Create payment intent on the backend
+                const paymentIntentResponse = await fetch('/create-payment-intent', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        amount: amount,
+                        currency: 'usd',
+                        email: email,
+                        plan: selectedPlan
+                    })
+                });
                 
-                // Process the real payment
-                console.log('Sending payment data for processing:', paymentData);
-                await new Promise(resolve => setTimeout(resolve, 3000));
+                if (!paymentIntentResponse.ok) {
+                    throw new Error('Failed to create payment intent');
+                }
                 
-                // REAL payment completed successfully
-                console.log('REAL payment completed successfully!');
-                console.log('Amount charged:', amount);
+                const paymentIntentData = await paymentIntentResponse.json();
+                console.log('Payment intent created:', paymentIntentData);
+                
+                // Confirm the payment with the backend
+                const confirmResponse = await fetch('/confirm-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        paymentIntentId: paymentIntentData.paymentIntentId,
+                        paymentMethodId: result.paymentMethod.id
+                    })
+                });
+                
+                if (!confirmResponse.ok) {
+                    throw new Error('Failed to confirm payment');
+                }
+                
+                const confirmData = await confirmResponse.json();
+                console.log('Payment confirmed:', confirmData);
                 
                 // Set premium status after successful REAL payment
                 isPremium = true;
