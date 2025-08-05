@@ -982,7 +982,7 @@
                 const amount = selectedPlan === 'monthly' ? 999 : 7999; // $9.99 or $79.99 in cents
                 
                 // Create payment intent on the backend
-                const paymentIntentResponse = await fetch('https://recipes.wrk.vercel.app/create-payment-intent', {
+                const paymentIntentResponse = await fetch('http://localhost:3000/create-payment-intent', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1003,7 +1003,7 @@
                 console.log('Payment intent created:', paymentIntentData);
                 
                 // Confirm the payment with the backend
-                const confirmResponse = await fetch('https://recipes.wrk.vercel.app/confirm-payment', {
+                const confirmResponse = await fetch('http://localhost:3000/confirm-payment', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
