@@ -84,11 +84,11 @@
                 <div class="text-center mt-2">
                     <button onclick="testPremiumModal()" class="text-xs bg-blue-500 text-white px-2 py-1 rounded">
                         Test Modal
-                    </button>
+            </button>
                     <button onclick="unlockPremiumForTesting()" class="text-xs bg-green-500 text-white px-2 py-1 rounded ml-2">
                         Unlock Premium (Test)
-                    </button>
-                </div>
+                        </button>
+                            </div>
                         </div>
                     </div>
 
@@ -190,7 +190,7 @@
                                 <option value="microwave">Microwave</option>
                                 <option value="raw">Raw/No Cook</option>
                             </select>
-                        </div>
+                            </div>
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Spice Level:</label>
                         <select id="spice-select" class="input-field">
@@ -216,7 +216,7 @@
                                 <option value="gluten-free">Gluten Free</option>
                                 <option value="dairy-free">Dairy Free</option>
                             </select>
-                        </div>
+                            </div>
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Budget Level:</label>
                         <select id="budget-select" class="input-field">
@@ -503,7 +503,7 @@
 
         function generateRecipeFromIngredients(ingredients, restrictions, premiumSettings = {}) {
             const recipeTitle = generateRecipeTitle(ingredients, premiumSettings.cuisine);
-            const recipeDescription = generateRecipeDescription(ingredients, premiumSettings.cuisine);
+            const recipeDescription = generateRecipeDescription(ingredients, premiumSettings.cuisine, premiumSettings);
             
             // Scale ingredients based on servings
             const servings = parseInt(premiumSettings.servings) || 4;
@@ -519,16 +519,26 @@
                 };
             });
             
-            // Add common complementary ingredients
-            const complementaryIngredients = getComplementaryIngredients(ingredients, premiumSettings.cuisine);
+            // Add common complementary ingredients based on cuisine and premium settings
+            const complementaryIngredients = getComplementaryIngredients(ingredients, premiumSettings.cuisine, premiumSettings);
             recipeIngredients.push(...complementaryIngredients);
             
-            // Generate cooking instructions
-            const instructions = generateCookingInstructions(ingredients, premiumSettings.cuisine, premiumSettings.difficulty);
+            // Generate cooking instructions based on all premium settings
+            const instructions = generateCookingInstructions(ingredients, premiumSettings.cuisine, premiumSettings.difficulty, premiumSettings.method, premiumSettings.spice);
             
-            // Calculate cooking time and calories
-            const cookingTime = calculateCookingTime(ingredients, premiumSettings.cookingTime);
-            const calories = estimateCalories(recipeIngredients);
+            // Calculate cooking time and calories based on premium settings
+            const cookingTime = calculateCookingTime(ingredients, premiumSettings.cookingTime, premiumSettings.method);
+            const calories = estimateCalories(recipeIngredients, premiumSettings.nutrition);
+            
+            // Add premium information to the recipe
+            const premiumInfo = {
+                cuisine: premiumSettings.cuisine || 'any',
+                difficulty: premiumSettings.difficulty || 'any',
+                method: premiumSettings.method || 'any',
+                spice: premiumSettings.spice || 'any',
+                nutrition: premiumSettings.nutrition || 'any',
+                budget: premiumSettings.budget || 'any'
+            };
             
             return {
                 title: recipeTitle,
@@ -537,7 +547,8 @@
                 instructions: instructions,
                 cookingTime: cookingTime,
                 servings: servings,
-                calories: calories
+                calories: calories,
+                premiumInfo: premiumInfo
             };
         }
 
@@ -547,8 +558,14 @@
             return `${cuisineName.charAt(0).toUpperCase() + cuisineName.slice(1)} ${mainIngredient.charAt(0).toUpperCase() + mainIngredient.slice(1)} Recipe`;
         }
 
-        function generateRecipeDescription(ingredients, cuisine) {
-            return `A delicious ${cuisine === 'any' ? '' : cuisine + ' '}recipe featuring ${ingredients.join(', ')}. Perfect for any occasion!`;
+        function generateRecipeDescription(ingredients, cuisine, premiumSettings) {
+            const cuisineName = cuisine === 'any' ? '' : cuisine + ' ';
+            const method = premiumSettings.method === 'any' ? '' : premiumSettings.method + ' ';
+            const spice = premiumSettings.spice === 'any' ? '' : premiumSettings.spice + ' ';
+            const nutrition = premiumSettings.nutrition === 'any' ? '' : premiumSettings.nutrition + ' ';
+            const budget = premiumSettings.budget === 'any' ? '' : premiumSettings.budget + ' ';
+
+            return `A delicious ${cuisineName}${method}${spice}${nutrition}${budget}recipe featuring ${ingredients.join(', ')}. Perfect for any occasion!`;
         }
 
         function estimateIngredientAmount(ingredient, servings) {
@@ -584,12 +601,27 @@
             return { amount: 1 * scaleFactor, unit: 'cup' };
         }
 
-        function getComplementaryIngredients(ingredients, cuisine) {
+        function getComplementaryIngredients(ingredients, cuisine, premiumSettings) {
             const complementary = [];
             complementary.push({ item: 'olive oil', amount: 2, unit: 'tbsp' });
             complementary.push({ item: 'salt', amount: 1, unit: 'tsp' });
             complementary.push({ item: 'black pepper', amount: 1, unit: 'tsp' });
             
+            // Add spices based on spice level
+            if (premiumSettings.spice === 'mild') {
+                complementary.push({ item: 'paprika', amount: 1, unit: 'tsp' });
+            } else if (premiumSettings.spice === 'medium') {
+                complementary.push({ item: 'chili powder', amount: 1, unit: 'tsp' });
+                complementary.push({ item: 'cayenne pepper', amount: 1/2, unit: 'tsp' });
+            } else if (premiumSettings.spice === 'hot') {
+                complementary.push({ item: 'hot sauce', amount: 2, unit: 'tbsp' });
+                complementary.push({ item: 'jalapeño', amount: 2, unit: 'pieces' });
+            } else if (premiumSettings.spice === 'extra-hot') {
+                complementary.push({ item: 'habanero pepper', amount: 1, unit: 'piece' });
+                complementary.push({ item: 'ghost pepper sauce', amount: 1, unit: 'tsp' });
+            }
+            
+            // Add ingredients based on cuisine
             if (cuisine === 'italian') {
                 complementary.push({ item: 'garlic', amount: 3, unit: 'cloves' });
                 complementary.push({ item: 'basil', amount: 1/4, unit: 'cup' });
@@ -602,18 +634,63 @@
                 complementary.push({ item: 'lime', amount: 2, unit: 'pieces' });
                 complementary.push({ item: 'cilantro', amount: 1/4, unit: 'cup' });
                 complementary.push({ item: 'cumin', amount: 1, unit: 'tsp' });
+            } else if (cuisine === 'thai') {
+                complementary.push({ item: 'fish sauce', amount: 2, unit: 'tbsp' });
+                complementary.push({ item: 'lemongrass', amount: 2, unit: 'stalks' });
+                complementary.push({ item: 'coconut milk', amount: 1, unit: 'can' });
+            } else if (cuisine === 'indian') {
+                complementary.push({ item: 'turmeric', amount: 1, unit: 'tsp' });
+                complementary.push({ item: 'cumin', amount: 1, unit: 'tsp' });
+                complementary.push({ item: 'coriander', amount: 1, unit: 'tsp' });
             } else {
                 complementary.push({ item: 'garlic', amount: 3, unit: 'cloves' });
+            }
+            
+            // Add ingredients based on nutrition focus
+            if (premiumSettings.nutrition === 'low-calorie') {
+                complementary.push({ item: 'vegetable broth', amount: 1, unit: 'cup' });
+            } else if (premiumSettings.nutrition === 'high-protein') {
+                complementary.push({ item: 'protein powder', amount: 1, unit: 'scoop' });
+            } else if (premiumSettings.nutrition === 'keto') {
+                complementary.push({ item: 'butter', amount: 2, unit: 'tbsp' });
+                complementary.push({ item: 'heavy cream', amount: 1/2, unit: 'cup' });
             }
             
             return complementary;
         }
 
-        function generateCookingInstructions(ingredients, cuisine, difficulty) {
+        function generateCookingInstructions(ingredients, cuisine, difficulty, method, spice) {
             const instructions = [];
             instructions.push(`Prepare and chop all ingredients: ${ingredients.join(', ')}.`);
-            instructions.push('Heat oil in a large pan or skillet over medium heat.');
             
+            // Add cooking method specific instructions
+            if (method === 'stovetop') {
+                instructions.push('Heat oil in a large pan or skillet over medium heat.');
+            } else if (method === 'oven') {
+                instructions.push('Preheat oven to 375°F (190°C).');
+                instructions.push('Grease a baking dish with oil or butter.');
+            } else if (method === 'grill') {
+                instructions.push('Preheat grill to medium-high heat.');
+                instructions.push('Oil the grill grates to prevent sticking.');
+            } else if (method === 'slow-cooker') {
+                instructions.push('Add ingredients to slow cooker.');
+                instructions.push('Set to LOW for 6-8 hours or HIGH for 3-4 hours.');
+            } else if (method === 'instant-pot') {
+                instructions.push('Set Instant Pot to SAUTÉ mode.');
+                instructions.push('Add oil and heat until hot.');
+            } else if (method === 'air-fryer') {
+                instructions.push('Preheat air fryer to 375°F (190°C).');
+                instructions.push('Lightly oil the air fryer basket.');
+            } else if (method === 'microwave') {
+                instructions.push('Place ingredients in a microwave-safe dish.');
+                instructions.push('Cover with microwave-safe lid or plastic wrap.');
+            } else if (method === 'raw') {
+                instructions.push('No cooking required - this is a raw recipe.');
+            } else {
+                instructions.push('Heat oil in a large pan or skillet over medium heat.');
+            }
+            
+            // Add cuisine-specific instructions
             if (cuisine === 'italian') {
                 instructions.push('Add garlic and sauté until fragrant, about 1 minute.');
                 instructions.push('Add main ingredients and cook until tender.');
@@ -629,20 +706,71 @@
                 instructions.push('Add main ingredients and cook until tender.');
                 instructions.push('Season with cumin, salt, and pepper.');
                 instructions.push('Garnish with cilantro and lime wedges.');
+            } else if (cuisine === 'thai') {
+                instructions.push('Add lemongrass and garlic, stir-fry for 30 seconds.');
+                instructions.push('Add main ingredients and stir-fry for 3-5 minutes.');
+                instructions.push('Add fish sauce and coconut milk, simmer for 5 minutes.');
+                instructions.push('Garnish with fresh herbs and serve hot.');
+            } else if (cuisine === 'indian') {
+                instructions.push('Add spices and sauté until fragrant, about 1 minute.');
+                instructions.push('Add main ingredients and cook until tender.');
+                instructions.push('Season with turmeric, cumin, and coriander.');
+                instructions.push('Garnish with fresh cilantro and serve hot.');
             } else {
                 instructions.push('Add garlic and sauté until fragrant, about 1 minute.');
                 instructions.push('Add main ingredients and cook until tender.');
                 instructions.push('Season with salt and pepper to taste.');
                 instructions.push('Cook until all ingredients are well combined.');
-                instructions.push('Serve hot and enjoy!');
             }
+            
+            // Add spice level instructions
+            if (spice === 'mild') {
+                instructions.push('Add mild spices and seasonings to taste.');
+            } else if (spice === 'medium') {
+                instructions.push('Add medium heat spices and adjust to taste.');
+            } else if (spice === 'hot') {
+                instructions.push('Add hot spices and peppers - be careful with heat!');
+            } else if (spice === 'extra-hot') {
+                instructions.push('Add extra hot spices - this will be very spicy!');
+            }
+            
+            // Add difficulty-specific instructions
+            if (difficulty === 'easy') {
+                instructions.push('This is a simple recipe perfect for beginners.');
+            } else if (difficulty === 'medium') {
+                instructions.push('This recipe requires some cooking experience.');
+            } else if (difficulty === 'hard') {
+                instructions.push('This is an advanced recipe with complex techniques.');
+            } else if (difficulty === 'expert') {
+                instructions.push('This is a chef-level recipe with advanced techniques.');
+            }
+            
+            instructions.push('Serve hot and enjoy!');
             
             return instructions;
         }
 
-        function calculateCookingTime(ingredients, timePreference) {
-            const baseTime = 20;
+        function calculateCookingTime(ingredients, timePreference, method) {
+            let baseTime = 20;
             const ingredientTime = ingredients.length * 5;
+            
+            // Adjust time based on cooking method
+            if (method === 'slow-cooker') {
+                baseTime = 240; // 4 hours minimum
+            } else if (method === 'oven') {
+                baseTime = 45; // Baking takes longer
+            } else if (method === 'grill') {
+                baseTime = 30; // Grilling takes medium time
+            } else if (method === 'instant-pot') {
+                baseTime = 15; // Pressure cooking is faster
+            } else if (method === 'air-fryer') {
+                baseTime = 25; // Air frying is medium-fast
+            } else if (method === 'microwave') {
+                baseTime = 10; // Microwave is fastest
+            } else if (method === 'raw') {
+                baseTime = 5; // Raw recipes are instant
+            }
+            
             const totalTime = baseTime + ingredientTime;
             
             if (timePreference === 'quick') {
@@ -651,12 +779,14 @@
                 return Math.min(totalTime, 30) + ' minutes';
             } else if (timePreference === 'slow') {
                 return Math.max(totalTime, 30) + ' minutes';
+            } else if (timePreference === 'overnight') {
+                return '6-8 hours (overnight)';
             }
             
             return totalTime + ' minutes';
         }
 
-        function estimateCalories(ingredients) {
+        function estimateCalories(ingredients, nutrition) {
             let totalCalories = 0;
             ingredients.forEach(ingredient => {
                 const item = ingredient.item.toLowerCase();
@@ -678,7 +808,20 @@
                 }
             });
             
-            return Math.round(totalCalories);
+            // Adjust calories based on nutrition focus
+            if (nutrition === 'low-calorie') {
+                totalCalories = Math.round(totalCalories * 0.7); // 30% reduction
+            } else if (nutrition === 'high-protein') {
+                totalCalories = Math.round(totalCalories * 1.2); // 20% increase for protein
+            } else if (nutrition === 'keto') {
+                totalCalories = Math.round(totalCalories * 1.3); // 30% increase for fats
+            } else if (nutrition === 'paleo') {
+                totalCalories = Math.round(totalCalories * 1.1); // 10% increase
+            } else if (nutrition === 'heart-healthy') {
+                totalCalories = Math.round(totalCalories * 0.9); // 10% reduction
+            }
+            
+            return totalCalories;
         }
 
         function displayRecipe(recipe) {
@@ -782,8 +925,8 @@
             // Validate inputs
             if (!email || !postalCode) {
                 alert('Please fill in all required fields.');
-                return;
-            }
+                    return;
+                }
             
             // Validate email format
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -884,7 +1027,7 @@
             if (premiumFeatures) {
                 premiumFeatures.classList.remove('hidden');
                 console.log('Premium features are now visible');
-                } else {
+            } else {
                 console.error('Premium features element not found');
             }
         }
