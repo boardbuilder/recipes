@@ -84,8 +84,11 @@
                 <div class="text-center mt-2">
                     <button onclick="testPremiumModal()" class="text-xs bg-blue-500 text-white px-2 py-1 rounded">
                         Test Modal
-            </button>
-        </div>
+                    </button>
+                    <button onclick="unlockPremiumForTesting()" class="text-xs bg-green-500 text-white px-2 py-1 rounded ml-2">
+                        Unlock Premium (Test)
+                    </button>
+                </div>
                         </div>
                     </div>
 
@@ -121,7 +124,7 @@
                         </div>
 
                         <!-- Premium Features -->
-            <div id="premium-features" class="mb-4 hidden">
+            <div id="premium-features" class="mb-4">
                 <h3 class="text-lg font-semibold text-gray-800 mb-3">🎉 Premium Features Unlocked!</h3>
                 <div class="grid md:grid-cols-2 gap-4">
                     <div>
@@ -886,6 +889,22 @@
         function testPremiumModal() {
             console.log('Test button clicked!');
             showPremiumModal();
+        }
+
+        // Function to unlock premium features for testing
+        function unlockPremiumForTesting() {
+            console.log('Unlocking premium features for testing...');
+            isPremium = true;
+            localStorage.setItem('isPremium', 'true');
+            const banner = document.getElementById('premium-banner');
+            if (banner) {
+                banner.classList.add('hidden');
+            }
+            const premiumFeatures = document.getElementById('premium-features');
+            if (premiumFeatures) {
+                premiumFeatures.classList.remove('hidden');
+            }
+            alert('Premium features unlocked for testing!');
         }
     </script>
 </body>
